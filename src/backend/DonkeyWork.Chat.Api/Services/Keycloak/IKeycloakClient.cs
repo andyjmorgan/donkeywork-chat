@@ -23,13 +23,6 @@ public interface IKeycloakClient
     Task<JsonElement?> ExchangeCodeForTokensAsync(string code, string codeVerifier, string redirectUri);
 
     /// <summary>
-    /// Refreshes access token using a refresh token.
-    /// </summary>
-    /// <param name="refreshToken">The refresh token.</param>
-    /// <returns>The token response if successful, or null if failed.</returns>
-    Task<JsonElement?> RefreshTokensAsync(string refreshToken);
-
-    /// <summary>
     /// Logs out by invalidating the refresh token.
     /// </summary>
     /// <param name="refreshToken">The refresh token to invalidate.</param>

@@ -13,11 +13,14 @@ using DonkeyWork.Chat.Api.Services.Authentication;
 using DonkeyWork.Chat.Api.Services.Conversation;
 using DonkeyWork.Chat.Api.Services.Keycloak;
 using DonkeyWork.Chat.Common.Extensions;
+using DonkeyWork.Chat.Persistence;
 using DonkeyWork.Chat.Persistence.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Serilog;
+using Serilog.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +41,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache(); // For session storage
 builder.Services.AddOpenApi();
+builder.Services.AddHealthChecks();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Register authentication services
@@ -157,10 +161,21 @@ app.UseSession();
 app.UseAuthentication();
 app.UseMiddleware<UserMiddleware>();
 app.UseAuthorization();
+app.MapHealthChecks("/healthz")
+    .AllowAnonymous();
 
 // No middleware for token refresh - using simpler approach
 app.MapControllers();
 app.MapScalarApiReference();
 
 using var scope = app.Services.CreateScope();
+using var context = scope.ServiceProvider.GetRequiredService<ApiPersistenceContext>();
+
+if (context.Database.GetPendingMigrations().Any())
+{
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Performing migrations.");
+    await context.Database.MigrateAsync();
+}
+
 app.Run();

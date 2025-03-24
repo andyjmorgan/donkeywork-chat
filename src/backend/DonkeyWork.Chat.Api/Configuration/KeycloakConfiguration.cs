@@ -27,6 +27,11 @@ public record KeycloakConfiguration
     public string ValidIssuer { get; init; } = string.Empty;
 
     /// <summary>
+    /// Gets the issuer.
+    /// </summary>
+    public string BackChannelAddress { get; init; } = string.Empty;
+
+    /// <summary>
     /// Gets the audience.
     /// </summary>
     public string Audience { get; init; } = string.Empty;

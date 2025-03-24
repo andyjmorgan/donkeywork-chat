@@ -7,8 +7,12 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Packages.props", "."]
 COPY ["src/backend/DonkeyWork.Chat.Api/DonkeyWork.Chat.Api.csproj", "src/backend/DonkeyWork.Chat.Api/"]
 COPY ["src/lib/DonkeyWork.Chat.Common/DonkeyWork.Chat.Common.csproj", "src/lib/DonkeyWork.Chat.Common/"]
+COPY ["src/lib/persistence/DonkeyWork.Chat.Persistence/DonkeyWork.Chat.Persistence.csproj", "src/lib/persistence/DonkeyWork.Chat.Persistence/"]
+COPY ["src/lib/DonkeyWork.Chat.AiTooling/DonkeyWork.Chat.AiTooling.csproj", "src/lib/DonkeyWork.Chat.AiTooling/"]
+COPY ["src/lib/DonkeyWork.Chat.AiServices/DonkeyWork.Chat.AiServices.csproj", "src/lib/DonkeyWork.Chat.AiServices/"]
 RUN dotnet restore "src/backend/DonkeyWork.Chat.Api/DonkeyWork.Chat.Api.csproj"
 COPY . .
 WORKDIR "/src/src/backend/DonkeyWork.Chat.Api"

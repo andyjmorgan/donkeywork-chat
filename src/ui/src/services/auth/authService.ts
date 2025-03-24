@@ -6,10 +6,10 @@ import ApiBase from '../api/apiBase';
 
 // Using ApiBase for URL handling
 class AuthServiceBase extends ApiBase {
-  // We can override getApiBaseUrl if needed
-  // protected getApiBaseUrl(): string {
-  //   return super.getApiBaseUrl();
-  // }
+  // We need to make getApiBaseUrl public to use it directly
+  public getApiBaseUrl(): string {
+    return super.getApiBaseUrl();
+  }
 }
 
 const authServiceBase = new AuthServiceBase();

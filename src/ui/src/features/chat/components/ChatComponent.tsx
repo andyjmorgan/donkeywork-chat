@@ -98,8 +98,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
         window.addEventListener('popstate', updateConversationId);
         
         const originalReplaceState = window.history.replaceState;
-        window.history.replaceState = function() {
-            const result = originalReplaceState.apply(this, arguments);
+        window.history.replaceState = function(data: any, unused: string, url?: string | URL | null) {
+            const result = originalReplaceState.call(this, data, unused, url);
             setTimeout(updateConversationId, 0);
             return result;
         };

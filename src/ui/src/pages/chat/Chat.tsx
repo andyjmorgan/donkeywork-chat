@@ -204,7 +204,7 @@ const Chat: React.FC = () => {
         };
       });
       
-      chatMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      chatMessages.sort((a, b) => (a.timestamp?.getTime() || 0) - (b.timestamp?.getTime() || 0));
       setConversationMessages(chatMessages);
       
     } catch (error) {

@@ -1,6 +1,7 @@
 ﻿services:
-  donkeywork.chat.api:
-    image: donkeywork.chat.api
+  donkeywork-chat-api:
+    image: 192.168.0.140:8443/donkeywork-chat-api:latest
+    platform: linux/amd64
     build:
       context: .
       dockerfile: src/backend/DonkeyWork.Chat.Api/Dockerfile
@@ -16,6 +17,16 @@
       - "5532:5432"
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - donkeywork
+  donkeywork-chat-ui:
+    image: 192.168.0.140:8443/donkeywork-chat-ui:latest
+    platform: linux/amd64
+    build:
+      context: ./src/ui
+      dockerfile: Dockerfile
+    ports:
+      - "8012:8000"
     networks:
       - donkeywork
 networks:

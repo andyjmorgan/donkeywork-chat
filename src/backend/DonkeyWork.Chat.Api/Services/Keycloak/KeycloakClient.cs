@@ -52,7 +52,7 @@ public class KeycloakClient : IKeycloakClient
             });
 
             var response = await client.PostAsync(
-                $"{this.keycloakConfig.ValidIssuer}/protocol/openid-connect/token",
+                $"{this.keycloakConfig.BackChannelAddress}/protocol/openid-connect/token",
                 content);
 
             if (!response.IsSuccessStatusCode)
@@ -73,41 +73,6 @@ public class KeycloakClient : IKeycloakClient
     }
 
     /// <inheritdoc/>
-    public async Task<JsonElement?> RefreshTokensAsync(string refreshToken)
-    {
-        try
-        {
-            var client = this.httpClientFactory.CreateClient();
-            var content = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                ["grant_type"] = "refresh_token",
-                ["client_id"] = this.keycloakConfig.ClientId,
-                ["client_secret"] = this.keycloakConfig.ClientSecret,
-                ["refresh_token"] = refreshToken,
-            });
-
-            var response = await client.PostAsync(
-                $"{this.keycloakConfig.ValidIssuer}/protocol/openid-connect/token",
-                content);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorText = await response.Content.ReadAsStringAsync();
-                this.logger.LogError("Token refresh failed: {Error}", errorText);
-                return null;
-            }
-
-            return JsonSerializer.Deserialize<JsonElement>(
-                await response.Content.ReadAsStringAsync());
-        }
-        catch (Exception ex)
-        {
-            this.logger.LogError(ex, "Failed to refresh tokens");
-            return null;
-        }
-    }
-
-    /// <inheritdoc/>
     public async Task<bool> LogoutAsync(string refreshToken)
     {
         try
@@ -121,7 +86,7 @@ public class KeycloakClient : IKeycloakClient
             });
 
             var response = await client.PostAsync(
-                $"{this.keycloakConfig.ValidIssuer}/protocol/openid-connect/logout",
+                $"{this.keycloakConfig.BackChannelAddress}/protocol/openid-connect/logout",
                 content);
 
             if (!response.IsSuccessStatusCode)
