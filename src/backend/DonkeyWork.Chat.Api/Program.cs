@@ -17,6 +17,7 @@ using DonkeyWork.Chat.Persistence.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Scalar.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,9 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services));
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache(); // For session storage
@@ -54,7 +58,7 @@ builder.Services.AddSession(options =>
     var secureOnly = cookieSettings.GetValue("SecureOnly", true);
     var httpOnly = cookieSettings.GetValue("HttpOnly", true);
 
-    options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.IdleTimeout = TimeSpan.FromDays(7);
     options.Cookie.Name = "DonkeyWork.Session";
     options.Cookie.HttpOnly = httpOnly;
     options.Cookie.IsEssential = true;
@@ -123,10 +127,9 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         // Get allowed origins from configuration
-        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
-            ?? new[] { "http://localhost:3000", "http://localhost:3001", "http://localhost:5173", "https://donkeywork.chat", "https://chat.donkeywork.dev" };
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
-        policy.WithOrigins(allowedOrigins)
+        policy.WithOrigins(allowedOrigins ?? [])
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials(); // Important for cookies!
@@ -148,7 +151,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Use middleware
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseCors();
 app.UseSession();
 app.UseAuthentication();
