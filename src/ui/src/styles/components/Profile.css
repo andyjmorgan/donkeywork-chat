@@ -1,0 +1,80 @@
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.profile-page .card {
+  background-color: var(--surface-card);
+  border-radius: 12px;
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+
+.profile-page .card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Header card specific styles */
+.profile-page .col-12:first-child .card {
+  background: linear-gradient(to right, var(--primary-color), var(--primary-800));
+  color: var(--primary-color-text);
+}
+
+.profile-page .col-12:first-child .card h2 {
+  color: white !important;
+  font-weight: 700;
+}
+
+.profile-page .col-12:first-child .card p {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+}
+
+.profile-field {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.profile-field:last-child {
+  border-bottom: none;
+}
+
+.profile-field-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-field-value {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.profile-avatar {
+  background-color: var(--primary-color);
+  color: var(--primary-color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 5rem !important;
+  height: 5rem !important;
+  font-size: 2rem !important;
+}
+
+/* Remove border from grid items */
+.profile-page .grid .col-12 .profile-field {
+  border-bottom: none;
+}
+
+@media screen and (max-width: 768px) {
+  .profile-page {
+    padding: 1rem;
+  }
+}

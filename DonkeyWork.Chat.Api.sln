@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonkeyWork.Chat.Api", "src\backend\DonkeyWork.Chat.Api\DonkeyWork.Chat.Api.csproj", "{7B021CF2-D54D-4B9D-AFFC-DCFDF01D0380}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{44294636-4644-4A91-96A8-00216C7475C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{72B7B33A-2A3E-43EB-B724-15B51F3CBDC1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{EE54E483-B001-43DA-98BC-8ADC84CD9595}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonkeyWork.Chat.AiServices", "src\lib\DonkeyWork.Chat.AiServices\DonkeyWork.Chat.AiServices.csproj", "{BE6E3009-153A-4828-A7CF-EBD6E51335F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonkeyWork.Chat.AiTooling", "src\lib\DonkeyWork.Chat.AiTooling\DonkeyWork.Chat.AiTooling.csproj", "{AF33AA8B-3699-4ABB-992D-EC917CDE7860}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonkeyWork.Chat.Persistence", "src\lib\persistence\DonkeyWork.Chat.Persistence\DonkeyWork.Chat.Persistence.csproj", "{24C7FEC9-0A3B-4E44-8DBF-0BF21070F68A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonkeyWork.Chat.Common", "src\lib\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj", "{A900EE12-0530-418E-9F6A-88CD6D4BC1FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{826F8D9E-D8A8-4A9E-BEAB-E41022CC149F}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B021CF2-D54D-4B9D-AFFC-DCFDF01D0380}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B021CF2-D54D-4B9D-AFFC-DCFDF01D0380}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B021CF2-D54D-4B9D-AFFC-DCFDF01D0380}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B021CF2-D54D-4B9D-AFFC-DCFDF01D0380}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE6E3009-153A-4828-A7CF-EBD6E51335F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE6E3009-153A-4828-A7CF-EBD6E51335F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE6E3009-153A-4828-A7CF-EBD6E51335F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE6E3009-153A-4828-A7CF-EBD6E51335F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF33AA8B-3699-4ABB-992D-EC917CDE7860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF33AA8B-3699-4ABB-992D-EC917CDE7860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF33AA8B-3699-4ABB-992D-EC917CDE7860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF33AA8B-3699-4ABB-992D-EC917CDE7860}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24C7FEC9-0A3B-4E44-8DBF-0BF21070F68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24C7FEC9-0A3B-4E44-8DBF-0BF21070F68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24C7FEC9-0A3B-4E44-8DBF-0BF21070F68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24C7FEC9-0A3B-4E44-8DBF-0BF21070F68A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A900EE12-0530-418E-9F6A-88CD6D4BC1FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A900EE12-0530-418E-9F6A-88CD6D4BC1FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A900EE12-0530-418E-9F6A-88CD6D4BC1FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A900EE12-0530-418E-9F6A-88CD6D4BC1FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B021CF2-D54D-4B9D-AFFC-DCFDF01D0380} = {44294636-4644-4A91-96A8-00216C7475C2}
+		{BE6E3009-153A-4828-A7CF-EBD6E51335F3} = {72B7B33A-2A3E-43EB-B724-15B51F3CBDC1}
+		{AF33AA8B-3699-4ABB-992D-EC917CDE7860} = {72B7B33A-2A3E-43EB-B724-15B51F3CBDC1}
+		{24C7FEC9-0A3B-4E44-8DBF-0BF21070F68A} = {EE54E483-B001-43DA-98BC-8ADC84CD9595}
+		{EE54E483-B001-43DA-98BC-8ADC84CD9595} = {72B7B33A-2A3E-43EB-B724-15B51F3CBDC1}
+		{A900EE12-0530-418E-9F6A-88CD6D4BC1FF} = {72B7B33A-2A3E-43EB-B724-15B51F3CBDC1}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,1 @@
+A simple .net backend for ai chat and a vibe coding frontend full of squirrels.

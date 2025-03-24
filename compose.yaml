@@ -1,0 +1,22 @@
+﻿services:
+  donkeywork.chat.api:
+    image: donkeywork.chat.api
+    build:
+      context: .
+      dockerfile: src/backend/DonkeyWork.Chat.Api/Dockerfile
+    networks:
+        - donkeywork
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: donkeywork
+      POSTGRES_PASSWORD: donkeywork
+      POSTGRES_DB: donkeywork
+    ports:
+      - "5532:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - donkeywork
+networks:
+  donkeywork:

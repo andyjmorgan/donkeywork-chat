@@ -1,0 +1,61 @@
+/* Styles for prompt dialog */
+.prompt-textarea {
+  font-family: monospace;
+}
+
+/* Dialog fullscreen support */
+.p-dialog-maximized .p-fluid {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.p-dialog-maximized .field:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.p-dialog-maximized .field:last-child .prompt-textarea {
+  flex: 1;
+}
+
+/* Ensure dialog content takes full height in maximized mode */
+.p-dialog-maximized .p-dialog-content {
+  height: calc(100vh - 130px); /* Adjust for header and footer */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Styled header with icon */
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-icon {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+/* Colorful field labels that work in both light and dark mode */
+.field-label {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Enhanced focus states */
+.p-inputtext:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 1px var(--primary-color) !important;
+}
+
+/* Clickable rows in the prompts table */
+.cursor-pointer .p-datatable-tbody > tr:hover {
+  background-color: var(--surface-hover) !important;
+  transition: background-color 0.2s;
+}

@@ -1,0 +1,164 @@
+/* Menu styling for chat interface */
+
+/* Main menubar styling */
+.chat-settings-menubar {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--surface-border) !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Hide root menu list since we use start/end containers */
+.chat-settings-menubar .p-menubar-button,
+.chat-settings-menubar .p-menubar-root-list {
+  display: none !important;
+}
+
+/* Ensure start/end containers are visible */
+.chat-settings-menubar .p-menubar-start,
+.chat-settings-menubar .p-menubar-end {
+  display: flex !important;
+  padding: 0 !important;
+}
+
+/* Menu container styling - horizontal by default (desktop) */
+.menu-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  width: 100%;
+  align-items: center;
+}
+
+.dropdown-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Dropdown sizing */
+.provider-group .provider-dropdown {
+  min-width: 8rem;
+  width: auto;
+}
+
+.model-group .model-dropdown {
+  min-width: 10rem;
+  width: auto;
+}
+
+.prompt-group .prompt-dropdown {
+  min-width: 12rem;
+  width: auto;
+}
+
+/* Menu separator */
+.menu-separator {
+  display: inline-block;
+  width: 1px;
+  height: 24px;
+  background-color: var(--surface-border, #dee2e6);
+  margin: 0 0.25rem;
+  vertical-align: middle;
+}
+
+/* Style tooltip icons */
+.p-tooltip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--surface-hover);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.p-tooltip-icon:hover {
+  background-color: var(--surface-300);
+}
+
+
+/* Screens up to 1090px - stacked layout */
+@media screen and (max-width: 1090px) {
+  /* Settings for vertical stacking */
+  .chat-settings-menubar {
+    display: flex !important;
+    padding: 1rem !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  
+  /* Menu container stacks vertically */
+  .menu-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+  
+  /* Each dropdown group takes full width */
+  .dropdown-group {
+    width: 100% !important;
+    margin-bottom: 0.75rem !important;
+    justify-content: space-between !important;
+  }
+  
+  /* Expand dropdown to fill width */
+  .dropdown-group .p-dropdown {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+  }
+  
+  /* Hide separator in stacked view */
+  .desktop-only {
+    display: none !important;
+  }
+  
+  /* Full width prompt dropdown */
+  .prompt-dropdown {
+    width: 100% !important;
+  }
+  
+  /* Position the New Chat button at the bottom */
+  .chat-settings-menubar .p-menubar-end {
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+  
+  .chat-settings-menubar .p-menubar-end .p-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Additional tweaks for larger screens in stacked layout (768px-1090px) */
+@media screen and (min-width: 768px) and (max-width: 1090px) {
+  /* Adjust padding and spacing for larger screens */
+  .chat-settings-menubar {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  /* Make dropdowns a bit more compact */
+  .dropdown-group {
+    margin-bottom: 0.5rem !important;
+  }
+  
+  /* Different provider and model layout for tablet/small desktop */
+  .provider-group .provider-dropdown,
+  .model-group .model-dropdown {
+    min-width: 0;
+  }
+  
+  /* Slightly more compact prompt dropdown */
+  .prompt-group .prompt-dropdown {
+    min-width: 0;
+  }
+}

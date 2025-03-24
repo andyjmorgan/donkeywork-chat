@@ -1,0 +1,265 @@
+/* Styling for the Conversation List component */
+
+.conversation-list-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Summary Card Styling */
+.conversation-summary-card {
+  background-color: var(--surface-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.conversation-summary-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.conversation-summary-card .p-card-content {
+  padding: 0.5rem 1rem !important;
+}
+
+/* Adjust table style for compact view */
+.p-datatable-sm .p-datatable-thead > tr > th {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.p-datatable-sm .p-datatable-tbody > tr > td {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+/* Line clamp for text truncation */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tag styling */
+.p-tag {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* Button styling */
+.p-button-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* Hover effect on rows */
+.p-datatable .p-datatable-tbody > tr:hover {
+  background-color: var(--surface-hover);
+  cursor: pointer;
+}
+
+/* Search input styling */
+.p-input-icon-left > .p-inputtext {
+  padding-left: 2rem;
+}
+
+.p-inputtext-sm {
+  font-size: 0.875rem;
+}
+
+/* Header styling */
+.p-datatable .p-datatable-header {
+  padding: 0.75rem 1rem;
+  background-color: var(--surface-card);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+/* Empty message styling */
+.p-datatable .p-datatable-tbody > tr.p-datatable-emptymessage > td {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-color-secondary);
+}
+
+/* Pagination styling */
+.p-paginator {
+  padding: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.p-paginator .p-paginator-element {
+  min-width: 2rem;
+  height: 2rem;
+}
+
+/* Skeleton styling */
+.p-skeleton {
+  background-color: var(--surface-200);
+  border-radius: 4px;
+}
+
+.p-skeleton.p-skeleton-circle {
+  border-radius: 50%;
+}
+
+/* Add animation for skeletons */
+.p-skeleton {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Default light mode shimmer */
+.p-skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0), 
+    rgba(255, 255, 255, 0.2), 
+    rgba(255, 255, 255, 0));
+  animation: shimmer 1.5s infinite;
+}
+
+/* Dark mode skeleton styles */
+html[data-bs-theme="dark"] .p-skeleton {
+  background-color: var(--surface-800);
+}
+
+html[data-bs-theme="dark"] .p-skeleton::after {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0), 
+    rgba(255, 255, 255, 0.05), 
+    rgba(255, 255, 255, 0));
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Column width classes for non-stacked mode */
+.w-1 {
+  width: 10% !important;
+}
+
+.w-2 {
+  width: 15% !important;
+}
+
+.w-3 {
+  width: 25% !important;
+}
+
+.w-5 {
+  width: 40% !important;
+}
+
+/* Enhanced responsive stacking layout for DataTable */
+@media screen and (max-width: 960px) {
+  /* Remove width classes in stacked mode */
+  .p-datatable.p-datatable-responsive-stack .w-1,
+  .p-datatable.p-datatable-responsive-stack .w-2,
+  .p-datatable.p-datatable-responsive-stack .w-3,
+  .p-datatable.p-datatable-responsive-stack .w-5 {
+    width: auto !important;
+  }
+  
+  /* Header is hidden in stacked mode */
+  .p-datatable.p-datatable-responsive-stack .p-datatable-thead {
+    display: none;
+  }
+  
+  /* Style each row as a card */
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr {
+    display: block;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    border: 1px solid var(--surface-border);
+    background-color: var(--surface-card);
+  }
+  
+  /* Consistent styling for all cells */
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr > td {
+    text-align: left;
+    display: flex;
+    align-items: center;
+    border: 0 none;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--surface-hover);
+    min-height: 3.5rem;
+  }
+  
+  /* No border on last cell */
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr > td:last-child {
+    border-bottom: 0;
+  }
+  
+  /* Column title styling */
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr > td:before {
+    content: attr(data-label);
+    font-weight: 600;
+    min-width: 30%;
+    display: inline-block;
+    margin-right: 1rem;
+    color: var(--text-color-secondary);
+  }
+  
+  /* Fix text alignment in all cells */
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr > td .text-sm,
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr > td .font-semibold,
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr > td span:not(.p-column-title):not(.p-button-icon) {
+    text-align: left;
+  }
+  
+  /* Show the labels on buttons */  
+  .p-datatable.p-datatable-responsive-stack .p-button {
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .p-datatable.p-datatable-responsive-stack .p-button .p-button-label {
+    display: block !important;
+    margin-left: 0.5rem;
+  }
+  
+  /* Improved hover effect */
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+}
+
+/* Extra styling for very small screens */
+@media screen and (max-width: 480px) {
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr > td {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .p-datatable.p-datatable-responsive-stack .p-datatable-tbody > tr > td:before {
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+  
+  .p-datatable.p-datatable-responsive-stack .p-button {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .p-datatable.p-datatable-responsive-stack .flex.gap-2 {
+    flex-direction: column;
+    width: 100%;
+  }
+}
