@@ -26,7 +26,6 @@ public static class OpenAiExtensions
             toolDefinition.Name,
             toolDefinition.Description,
             functionParameters: BinaryData.FromBytes(
-                Encoding.UTF8.GetBytes(toolDefinition.Parameters))
-        );
+                Encoding.UTF8.GetBytes(toolDefinition.Parameters)));
     }
 }

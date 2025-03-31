@@ -47,10 +47,30 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Logs the user out.
     /// </summary>
-    /// <returns>A success result.</returns>
+    /// <param name="redirectUrl">Optional URL to redirect after Keycloak logout.</param>
+    /// <returns>A success result or redirect to Keycloak logout.</returns>
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout()
+    public async Task<IActionResult> Logout([FromQuery] string? redirectUrl = null)
     {
-        return await this.authService.LogoutAsync(this.HttpContext);
+        return await this.authService.LogoutAsync(this.HttpContext, redirectUrl);
+    }
+
+    /// <summary>
+    /// Provides the Keycloak logout URL without performing logout.
+    /// </summary>
+    /// <param name="redirectUrl">URL to redirect after Keycloak logout.</param>
+    /// <returns>The Keycloak logout URL.</returns>
+    [HttpGet("logout-url")]
+    public IActionResult GetLogoutUrl([FromQuery] string redirectUrl)
+    {
+        if (string.IsNullOrEmpty(redirectUrl))
+        {
+            redirectUrl = $"{this.Request.Scheme}://{this.Request.Host}";
+        }
+
+        var keycloakClient = this.HttpContext.RequestServices.GetRequiredService<IKeycloakClient>();
+        var logoutUrl = keycloakClient.GetKeycloakLogoutUrl(redirectUrl);
+
+        return this.Ok(new { logoutUrl });
     }
 }

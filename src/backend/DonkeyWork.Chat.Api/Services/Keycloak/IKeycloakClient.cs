@@ -28,4 +28,11 @@ public interface IKeycloakClient
     /// <param name="refreshToken">The refresh token to invalidate.</param>
     /// <returns>True if logout was successful, otherwise false.</returns>
     Task<bool> LogoutAsync(string refreshToken);
+
+    /// <summary>
+    /// Gets the complete Keycloak logout URL that will invalidate the SSO session.
+    /// </summary>
+    /// <param name="redirectUri">The URI to redirect to after logout.</param>
+    /// <returns>The URL to redirect to for complete Keycloak logout.</returns>
+    string GetKeycloakLogoutUrl(string redirectUri);
 }

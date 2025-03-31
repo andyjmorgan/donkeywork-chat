@@ -54,19 +54,10 @@ const Logout: React.FC = () => {
         // Clear all client-side state immediately
         updateAuthState(false);
         
-        // Clear cookies and localStorage
+        // Save theme preference before clearing storage
         const theme = localStorage.getItem('theme');
-        const cookieNames = document.cookie.split(';').map(cookie => cookie.trim().split('=')[0]);
         
-        cookieNames.forEach(name => {
-          if (!name) return;
-          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure;`;
-          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
-          // Try other paths as well
-          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/api; secure;`;
-          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/auth; secure;`;
-        });
-        
+        // Clear local storage and session storage
         localStorage.clear();
         sessionStorage.clear();
         
@@ -75,28 +66,71 @@ const Logout: React.FC = () => {
           localStorage.setItem('theme', theme);
         }
         
-        // Call the API logout endpoint
-        const response = await fetch(`${authService.api.defaults.baseURL}/auth/logout`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache'
-          },
-          body: JSON.stringify({
-            clearAll: true,
-            clientTime: new Date().toISOString(),
-            source: 'dedicated-logout-page'
-          })
-        });
+        // Get the origin for the redirect URL
+        const origin = window.location.origin;
+        const redirectUrl = `${origin}/`;
         
-        // Process the logout result
-        if (response.ok) {
-          setLogoutStatus('success');
-          setMessage('cya later, calculator.');
+        // First get the Keycloak logout URL from the backend
+        const logoutUrlResponse = await fetch(
+          `${authService.api.defaults.baseURL}/auth/logout-url?redirectUrl=${encodeURIComponent(redirectUrl)}`, 
+          {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache'
+            }
+          }
+        );
+        
+        if (logoutUrlResponse.ok) {
+          const { logoutUrl } = await logoutUrlResponse.json();
+          
+          // Change approach to avoid CORS issues:
+          // 1. First perform a normal API logout to clear application session
+          const response = await fetch(`${authService.api.defaults.baseURL}/auth/logout`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache'
+            }
+          });
+
+          // 2. Then we'll use an iframe approach to clear the Keycloak session
+          if (response.ok) {
+            setLogoutStatus('success');
+            setMessage('cya later, calculator.');
+            
+            // Create a hidden iframe to load the Keycloak logout URL
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = logoutUrl;
+            
+            // Add event listener to handle iframe load/error
+            iframe.onload = () => {
+              console.log('Keycloak logout iframe loaded');
+              // Remove iframe after small delay
+              setTimeout(() => {
+                document.body.removeChild(iframe);
+              }, 1000);
+            };
+            
+            iframe.onerror = () => {
+              console.error('Keycloak logout iframe failed to load');
+              // Remove iframe on error
+              document.body.removeChild(iframe);
+            };
+            
+            // Add iframe to body to trigger the load
+            document.body.appendChild(iframe);
+          } else {
+            setLogoutStatus('error');
+            setMessage('There was an issue logging you out completely. For security, your browser session has been cleared.');
+          }
         } else {
-          console.error('Logout API call failed with status:', response.status);
+          console.error('Failed to get Keycloak logout URL');
           setLogoutStatus('error');
           setMessage('There was an issue logging you out completely. For security, your browser session has been cleared.');
         }

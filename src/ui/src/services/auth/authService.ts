@@ -150,13 +150,16 @@ const handleAuthCallback = async (code: string, state: string): Promise<boolean>
   }
 };
 
-// Logout the user - simplified to use the dedicated logout page
+// Logout the user - redirects to dedicated logout page which handles both app and Keycloak logout
 const logout = async (): Promise<void> => {
   try {
     // Clear any local state immediately (for UI feedback)
     lastAuthCheck = 0;
     
-    // Simply redirect to the dedicated logout page which will handle everything
+    // Redirect to the dedicated logout page which will handle:
+    // 1. Local app session termination
+    // 2. API call to logout
+    // 3. Redirecting to Keycloak's logout endpoint to clear the SSO session
     window.location.href = '/logout';
   } catch (error) {
     console.error('Logout redirect failed:', error);

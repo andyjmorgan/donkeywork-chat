@@ -113,7 +113,7 @@ public class AuthenticationService : IAuthenticationService
     }
 
     /// <inheritdoc/>
-    public async Task<IActionResult> LogoutAsync(HttpContext httpContext)
+    public async Task<IActionResult> LogoutAsync(HttpContext httpContext, string? frontendRedirectUrl = null)
     {
         try
         {
@@ -133,7 +133,26 @@ public class AuthenticationService : IAuthenticationService
             await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             httpContext.Session.Clear();
 
-            return new OkObjectResult(new { success = true });
+            // If a redirect URL is provided, return a redirect to Keycloak logout
+            // This ensures the Keycloak session cookie is also cleared
+            if (!string.IsNullOrEmpty(frontendRedirectUrl))
+            {
+                // Get the full Keycloak logout URL with the frontend redirect
+                var keycloakLogoutUrl = this.keycloakClient.GetKeycloakLogoutUrl(frontendRedirectUrl);
+                return new RedirectResult(keycloakLogoutUrl);
+            }
+
+            // Otherwise just return a success response with the Keycloak logout URL
+            // Always use the current origin for the redirect - this should NOT be used as frontendRedirectUrl should be provided
+            // This is just a fallback with a strong default that won't work properly in development
+            var defaultRedirectUrl = "https://chat.donkeywork.dev/";
+
+            // Frontend can use this URL to redirect the user
+            return new OkObjectResult(new
+            {
+                success = true,
+                keycloakLogoutUrl = this.keycloakClient.GetKeycloakLogoutUrl(defaultRedirectUrl),
+            });
         }
         catch (Exception ex)
         {
@@ -143,7 +162,17 @@ public class AuthenticationService : IAuthenticationService
             await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             httpContext.Session.Clear();
 
-            return new OkObjectResult(new { success = true, error = "Logout partially completed" });
+            // Still provide the Keycloak logout URL even if there was an error
+            // Use the same default redirect URL as the success case - frontendRedirectUrl should always be provided
+            var defaultRedirectUrl = "https://chat.donkeywork.dev/";
+
+            return new OkObjectResult(
+                new
+                {
+                    success = true,
+                    error = "Logout partially completed",
+                    keycloakLogoutUrl = this.keycloakClient.GetKeycloakLogoutUrl(defaultRedirectUrl),
+                });
         }
     }
 

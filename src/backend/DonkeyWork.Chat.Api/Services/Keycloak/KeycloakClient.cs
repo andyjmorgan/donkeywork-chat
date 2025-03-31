@@ -36,6 +36,18 @@ public class KeycloakClient : IKeycloakClient
     }
 
     /// <inheritdoc/>
+    public string GetKeycloakLogoutUrl(string redirectUri)
+    {
+        // Ensure the redirect URI is properly encoded
+        var encodedRedirectUri = Uri.EscapeDataString(redirectUri);
+
+        // Build the complete logout URL that will end the SSO session
+        return $"{this.keycloakConfig.ValidIssuer}/protocol/openid-connect/logout" +
+               $"?client_id={this.keycloakConfig.ClientId}" +
+               $"&post_logout_redirect_uri={encodedRedirectUri}";
+    }
+
+    /// <inheritdoc/>
     public async Task<JsonElement?> ExchangeCodeForTokensAsync(string code, string codeVerifier, string redirectUri)
     {
         try

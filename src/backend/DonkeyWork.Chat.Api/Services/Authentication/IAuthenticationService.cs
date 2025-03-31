@@ -27,8 +27,9 @@ public interface IAuthenticationService
     /// Processes a logout request.
     /// </summary>
     /// <param name="httpContext">The HTTP context.</param>
+    /// <param name="frontendRedirectUrl">Optional URL to redirect after logout. If provided, returns a redirect to Keycloak logout.</param>
     /// <returns>Result of the logout operation.</returns>
-    Task<IActionResult> LogoutAsync(HttpContext httpContext);
+    Task<IActionResult> LogoutAsync(HttpContext httpContext, string? frontendRedirectUrl = null);
 
     /// <summary>
     /// Gets user information for the authenticated user.
