@@ -6,6 +6,7 @@
 
 using DonkeyWork.Chat.Persistence.Interceptors;
 using DonkeyWork.Chat.Persistence.Repository.Conversation;
+using DonkeyWork.Chat.Persistence.Repository.Integration;
 using DonkeyWork.Chat.Persistence.Repository.Prompt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +32,7 @@ public static class ServiceCollectionExtensions
         return serviceCollection
             .AddScoped<IConversationRepository, ConversationRepository>()
             .AddScoped<IPromptRepository, PromptRepository>()
+            .AddScoped<IIntegrationRepository, IntegrationRepository>()
             .AddScoped<CreatedOrUpdatedInterceptor>()
             .AddDbContext<ApiPersistenceContext>(
                 (serviceProvider, options) =>

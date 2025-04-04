@@ -6,7 +6,7 @@
 
 using System.ComponentModel;
 using System.Text.Json;
-using DonkeyWork.Chat.AiTooling.Base.Attributes;
+using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Api;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Tool;

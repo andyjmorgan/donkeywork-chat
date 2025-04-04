@@ -5,14 +5,17 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Chat.AiTooling.Base;
+using DonkeyWork.Chat.AiTooling.Base.Models;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.CurrentDateTime.Tool;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Tool;
+using DonkeyWork.Chat.Common.Contracts;
+using DonkeyWork.Chat.Common.Providers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Chat.AiTooling.Services;
 
 /// <inheritdoc />
-public class ToolService(IServiceProvider serviceProvider)
+public class ToolService(IServiceProvider serviceProvider, IUserPostureService userPostureService)
     : IToolService
 {
     /// <inheritdoc />
@@ -24,5 +27,22 @@ public class ToolService(IServiceProvider serviceProvider)
             serviceProvider.GetRequiredService<ISerpTool>(),
             serviceProvider.GetRequiredService<ICurrentDateTimeTool>(),
         };
+    }
+
+    /// <summary>
+    /// Gets a list of tools that are scoped to the user.
+    /// </summary>
+    /// <param name="userPosture">The user posture.</param>
+    /// <returns>The tools the user has access to.</returns>
+    public List<ToolDefinition> GetUserScopedTools(List<UserProviderPosture> userPosture)
+    {
+        var tools = serviceProvider.GetServices<ITool>().ToList();
+        List<ToolDefinition> userScopedTools = [];
+        foreach (var tool in tools)
+        {
+            userScopedTools.AddRange(tool.GetToolDefinitions(userPosture));
+        }
+
+        return userScopedTools;
     }
 }

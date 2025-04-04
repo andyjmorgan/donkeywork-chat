@@ -9,9 +9,11 @@
 
     <ItemGroup>
       <PackageReference Include="google-search-results-dotnet" />
+      <PackageReference Include="Microsoft.Extensions.Http" />
       <PackageReference Include="Microsoft.Extensions.Options" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
       <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
+      <PackageReference Include="Microsoft.Graph" />
       <PackageReference Include="StyleCop.Analyzers">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,6 +24,10 @@
       <AdditionalFiles Include="..\..\..\stylecop.json">
         <Link>stylecop.json</Link>
       </AdditionalFiles>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj" />
     </ItemGroup>
 
 </Project>

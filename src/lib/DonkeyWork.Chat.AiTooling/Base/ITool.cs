@@ -6,6 +6,7 @@
 
 using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Base.Models;
+using DonkeyWork.Chat.Common.Providers;
 
 namespace DonkeyWork.Chat.AiTooling.Base;
 
@@ -17,8 +18,9 @@ public interface ITool
     /// <summary>
     /// Gets the tool definitions.
     /// </summary>
+    /// <param name="userProviderPosture">The user posture.</param>
     /// <returns>A list of <see cref="ToolDefinition"/>.</returns>
-    public List<ToolDefinition> GetToolDefinitions();
+    public List<ToolDefinition> GetToolDefinitions(List<UserProviderPosture> userProviderPosture);
 
     /// <summary>
     /// A function to invoke a function on the tool.

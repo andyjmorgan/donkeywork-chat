@@ -4,3 +4,4 @@ export { chatService } from './chatService';
 export { conversationService } from './conversationService';
 export { promptService } from './promptService';
 export { modelsService } from './modelsService';
+export { providerService } from './providerService';

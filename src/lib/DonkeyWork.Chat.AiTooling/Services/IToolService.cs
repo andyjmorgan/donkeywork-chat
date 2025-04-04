@@ -5,6 +5,8 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Chat.AiTooling.Base;
+using DonkeyWork.Chat.AiTooling.Base.Models;
+using DonkeyWork.Chat.Common.Providers;
 
 namespace DonkeyWork.Chat.AiTooling.Services;
 
@@ -18,4 +20,11 @@ public interface IToolService
     /// </summary>
     /// <returns>A list of <see cref="ITool"/>.</returns>
     public List<ITool> GetPublicTools();
+
+    /// <summary>
+    /// Gets a list of user scoped tools.
+    /// </summary>
+    /// <param name="userPosture">The users posture.</param>
+    /// <returns>A list of <see cref="ToolDefinition"/>.</returns>
+    public List<ToolDefinition> GetUserScopedTools(List<UserProviderPosture> userPosture);
 }

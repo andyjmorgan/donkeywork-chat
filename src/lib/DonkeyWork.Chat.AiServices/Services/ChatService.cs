@@ -12,8 +12,9 @@ using DonkeyWork.Chat.AiServices.Clients;
 using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Streaming;
 using DonkeyWork.Chat.AiServices.Streaming.Request;
-using DonkeyWork.Chat.AiTooling.Base.Exceptions;
+using DonkeyWork.Chat.AiTooling.Exceptions;
 using DonkeyWork.Chat.AiTooling.Services;
+using DonkeyWork.Chat.Common.Contracts;
 
 namespace DonkeyWork.Chat.AiServices.Services;
 
@@ -22,18 +23,20 @@ public class ChatService
     : IChatService
 {
     private readonly IAIChatProviderFactory chatProviderFactory;
-
     private readonly IToolService toolService;
+    private readonly IUserPostureService userPostureService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChatService"/> class.
     /// </summary>
     /// <param name="chatClient">The chat client.</param>
     /// <param name="toolService">The tool service.</param>
-    public ChatService(IAIChatProviderFactory chatClient, IToolService toolService)
+    /// <param name="userPostureService">The user posture service.</param>
+    public ChatService(IAIChatProviderFactory chatClient, IToolService toolService, IUserPostureService userPostureService)
     {
         this.chatProviderFactory = chatClient;
         this.toolService = toolService;
+        this.userPostureService = userPostureService;
     }
 
     /// <inheritdoc />
@@ -48,10 +51,7 @@ public class ChatService
         {
             ExecutionId = chatServiceRequest.ExecutionId,
         };
-
-        // TODO: create a tools service for this.
-        var currentTools = this.toolService.GetPublicTools();
-        var toolDefinitions = currentTools.SelectMany(x => x.GetToolDefinitions()).ToList();
+        var toolDefinitions = toolService.GetUserScopedTools(await userPostureService.GetUserPosturesAsync(cancellationToken));
         var request = new ChatRequest()
         {
             ModelName = chatServiceRequest.Model,

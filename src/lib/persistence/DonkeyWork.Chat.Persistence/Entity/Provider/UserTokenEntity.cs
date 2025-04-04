@@ -5,6 +5,7 @@
 // ------------------------------------------------------
 
 using System.ComponentModel.DataAnnotations.Schema;
+using DonkeyWork.Chat.Common.Providers;
 using DonkeyWork.Chat.Persistence.Entity.Base;
 
 namespace DonkeyWork.Chat.Persistence.Entity.Provider;
@@ -28,7 +29,8 @@ public class UserTokenEntity : BaseUserEntity
     /// <summary>
     /// Gets or sets the token metadata.
     /// </summary>
-    public Dictionary<string, string> Data { get; set; } = [];
+    [Column(TypeName = "jsonb")]
+    public Dictionary<UserProviderDataKeyType, string> Data { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the expiry of the token.

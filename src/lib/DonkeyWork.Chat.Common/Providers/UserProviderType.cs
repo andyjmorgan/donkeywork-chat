@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-namespace DonkeyWork.Chat.Persistence.Entity.Provider;
+namespace DonkeyWork.Chat.Common.Providers;
 
 /// <summary>
 /// An oauth token provider type.

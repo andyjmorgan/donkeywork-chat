@@ -26,6 +26,13 @@ public record ToolFunctionParameterDefinition
     public List<string>? Enum { get; init; }
 
     /// <summary>
+    /// Gets the items schema if this parameter is an array.
+    /// </summary>
+    [JsonPropertyName("items")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ToolFunctionParameterDefinition? Items { get; init; }
+
+    /// <summary>
     /// Gets the description.
     /// </summary>
     [JsonPropertyName("description")]

@@ -5,7 +5,7 @@
 // ------------------------------------------------------
 
 using System.ComponentModel;
-using DonkeyWork.Chat.AiTooling.Base.Attributes;
+using DonkeyWork.Chat.AiTooling.Attributes;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.CurrentDateTime.Tool;
 

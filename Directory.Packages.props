@@ -17,6 +17,7 @@
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.3" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.75.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="OpenAI" Version="2.1.0" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.1.1" />

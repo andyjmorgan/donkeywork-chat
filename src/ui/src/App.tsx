@@ -8,6 +8,8 @@ import Chat from './pages/chat/Chat';
 import Conversations from './pages/chat/Conversations';
 import Prompts from './pages/Prompts';
 import Integrations from './pages/Integrations';
+import IntegrationCallback from './pages/integrations/Callback';
+import SimpleCallback from './pages/integrations/SimpleCallback';
 import AuthCallback from './pages/auth/AuthCallback';
 import Logout from './pages/auth/Logout';
 import Login from './pages/auth/Login';
@@ -67,6 +69,20 @@ const App: React.FC = () => {
                 <Integrations />
               </AppLayout>
             </ProtectedRoute>
+          } />
+          
+          {/* Protected callback route (requires login) */}
+          <Route path="/integrations/callback/:provider" element={
+            <ProtectedRoute>
+              <AppLayout>
+                <IntegrationCallback />
+              </AppLayout>
+            </ProtectedRoute>
+          } />
+          
+          {/* Unprotected callback route for direct OAuth returns */}
+          <Route path="/integrations/simple-callback/:provider" element={
+            <SimpleCallback />
           } />
           
           <Route path="/prompts" element={

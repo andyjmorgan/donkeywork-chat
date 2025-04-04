@@ -5,12 +5,14 @@
 // ------------------------------------------------------
 
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using DonkeyWork.Chat.AiTooling.Base.Attributes;
-using DonkeyWork.Chat.AiTooling.Base.Exceptions;
+using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.Base.Models;
+using DonkeyWork.Chat.AiTooling.Exceptions;
+using DonkeyWork.Chat.Common.Providers;
 
 namespace DonkeyWork.Chat.AiTooling.Base;
 
@@ -20,14 +22,28 @@ namespace DonkeyWork.Chat.AiTooling.Base;
 public class Tool : ITool
 {
     /// <inheritdoc />
-    public List<ToolDefinition> GetToolDefinitions()
+    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1101:Prefix local calls with this", Justification = "Record")]
+    public List<ToolDefinition> GetToolDefinitions(List<UserProviderPosture> userProviderPosture)
     {
         List<ToolDefinition> toolDefinitions = new ();
         Type toolType = this.GetType();
-        var methods = toolType.GetMethods().Where(x => x.GetCustomAttribute<ToolFunctionAttribute>() is not null);
 
+        // Check if tool requires a specific provider
+        var providerAttribute = toolType.GetCustomAttribute<ToolProviderAttribute>();
+        if (providerAttribute is not null && !HasRequiredProvider(providerAttribute, userProviderPosture))
+        {
+            return [];
+        }
+
+        var methods = toolType.GetMethods().Where(x => x.GetCustomAttribute<ToolFunctionAttribute>() is not null);
         foreach (var method in methods)
         {
+            // Check method-level scope requirements
+            if (providerAttribute is not null && !HasRequiredScopes(method, providerAttribute, userProviderPosture))
+            {
+                continue;
+            }
+
             ToolDefinition toolDefinition = new ToolDefinition
             {
                 Name = method.Name,
@@ -37,33 +53,47 @@ public class Tool : ITool
 
             var parameters = method.GetParameters()
                 .Where(x =>
-                    x.GetCustomAttribute<IgnoredToolParameterAttribute>() is null
-                && x.HasDefaultValue == false);
+                    x.GetCustomAttribute<ToolIgnoredParameterAttribute>() is null)
+                .ToList();
 
-            var parameterDescriptions = parameters
-                .Select(p => new
-            {
-                Name = p.Name ?? string.Empty,
-                Type = p.ParameterType.Name,
-                p.GetCustomAttribute<DescriptionAttribute>()?.Description,
-            }).ToList();
-
-            var functionParameters = new ToolFunctionDefinition()
+            var functionParameters = new ToolFunctionDefinition
             {
                 Type = "object",
-                Properties = parameterDescriptions.Select(x => new
-                    {
-                        x.Name,
-                        ToolFunctionParameterDefinition = new ToolFunctionParameterDefinition
+                Properties = parameters
+                    .Where(p => p.Name is not null)
+                    .ToDictionary(
+                        p => p.Name!,
+                        p =>
                         {
-                            // todo: handle enum
-                            Type = x.Type.ToLower(),
-                            Description = x.Description ?? string.Empty,
-                        },
-                    })
-                    .ToDictionary(x => x.Name, x => x.ToolFunctionParameterDefinition),
+                            var schema = GetJsonSchema(p.ParameterType);
 
-                Required = method.GetParameters().Where(p => !p.IsOptional && p.Name != null).Select(p => p.Name ?? string.Empty).ToList(),
+                            // Add description if present
+                            var descriptionAttr = p.GetCustomAttribute<DescriptionAttribute>();
+                            if (descriptionAttr is not null)
+                            {
+                                schema = schema with
+                                {
+                                    Description = descriptionAttr.Description,
+                                };
+                            }
+
+                            // Add enum values if applicable
+                            if (p.ParameterType.IsEnum)
+                            {
+                                var enumValues = Enum.GetNames(p.ParameterType).ToList();
+                                schema = schema with
+                                {
+                                    Enum = enumValues,
+                                };
+                            }
+
+                            return schema;
+                        }),
+
+                Required = parameters
+                    .Where(p => !p.IsOptional && p.Name is not null)
+                    .Select(p => p.Name!)
+                    .ToList(),
             };
 
             var functionParametersJson = JsonSerializer.Serialize(
@@ -97,48 +127,126 @@ public class Tool : ITool
         var parameters = method.GetParameters();
         var parameterValues = new object?[parameters.Length];
 
-        for (int i = 0; i < parameters.Length; i++)
+        try
         {
-            var param = parameters[i];
-            if (param.Name is null)
+            for (int i = 0; i < parameters.Length; i++)
             {
-                throw new ToolParameterMissingException(param.Name ?? "Unknown Name");
-            }
+                var param = parameters[i];
+                if (param.Name is null)
+                {
+                    throw new ToolParameterMissingException(param.Name ?? "Unknown Name");
+                }
 
-            if (param.ParameterType == typeof(CancellationToken))
-            {
-                parameterValues[i] = cancellationToken;
-                continue;
-            }
+                if (param.ParameterType == typeof(CancellationToken))
+                {
+                    parameterValues[i] = cancellationToken;
+                    continue;
+                }
 
-            if (arguments.RootElement.TryGetProperty(param.Name, out var element))
-            {
-                parameterValues[i] = DeserializeParameter(element, param.ParameterType);
-            }
-            else if (!param.IsOptional)
-            {
-                throw new ToolArgumentMissingException(param.Name ?? "Unknown Name");
-            }
-            else
-            {
-                parameterValues[i] = param.DefaultValue;
+                if (arguments.RootElement.TryGetProperty(param.Name, out var element))
+                {
+                    parameterValues[i] = DeserializeParameter(element, param.ParameterType);
+                }
+                else if (!param.IsOptional)
+                {
+                    throw new ToolArgumentMissingException(param.Name ?? "Unknown Name");
+                }
+                else
+                {
+                    parameterValues[i] = param.DefaultValue;
+                }
             }
         }
-
-        var result = method.Invoke(this, parameterValues);
-
-        if (result is Task task)
+        catch (Exception ex)
         {
-            await task.WaitAsync(cancellationToken);
-            if (method.ReturnType.IsGenericType)
+            // Return this error to the llm and attempt to allow it to self correct.
+            return JsonDocument.Parse(JsonSerializer.Serialize(new
             {
-                return ((dynamic)task).Result;
-            }
-
-            return null;
+                FunctionName = functionName,
+                Success = false,
+                arguments = arguments,
+                Exception = ex.Message,
+            }));
         }
 
-        return result;
+        try
+        {
+            var result = method.Invoke(this, parameterValues);
+
+            if (result is Task task)
+            {
+                await task.WaitAsync(cancellationToken);
+                if (method.ReturnType.IsGenericType)
+                {
+                    return ((dynamic)task).Result;
+                }
+
+                return null;
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return JsonDocument.Parse(JsonSerializer.Serialize(
+                new
+                {
+                    methodName = functionName,
+                    sucess = false,
+                    exception = ex.Message,
+                }));
+        }
+    }
+
+    private static ToolFunctionParameterDefinition GetJsonSchema(Type type)
+    {
+        Type actualType = Nullable.GetUnderlyingType(type) ?? type;
+
+        // Don't treat string as IEnumerable<char>
+        if (actualType != typeof(string) && IsEnumerableType(actualType, out var elementType))
+        {
+            return new ToolFunctionParameterDefinition
+            {
+                Type = "array",
+                Items = elementType is not null ? GetJsonSchema(elementType) : null,
+            };
+        }
+
+        string typeString = actualType switch
+        {
+            { } t when t == typeof(int) || t == typeof(long) || t == typeof(short) || t == typeof(byte) => "integer",
+            { } t when t == typeof(float) || t == typeof(double) || t == typeof(decimal) => "number",
+            { } t when t == typeof(bool) => "boolean",
+            { } t when t == typeof(string) || t == typeof(DateTime) || t == typeof(DateTimeOffset) => "string",
+            _ => "object"
+        };
+
+        return new ToolFunctionParameterDefinition
+        {
+            Type = typeString,
+        };
+    }
+
+    private static bool IsEnumerableType(Type type, out Type? elementType)
+    {
+        elementType = null;
+
+        if (type.IsArray)
+        {
+            elementType = type.GetElementType();
+            return true;
+        }
+
+        if (type.IsGenericType &&
+            type.GetInterfaces().Any(i =>
+                i.IsGenericType &&
+                i.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
+        {
+            elementType = type.GetGenericArguments()[0];
+            return true;
+        }
+
+        return false;
     }
 
     private static object? DeserializeParameter(JsonElement element, Type targetType)
@@ -172,5 +280,36 @@ public class Tool : ITool
             element.GetRawText(),
             targetType,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    }
+
+    private bool HasRequiredProvider(ToolProviderAttribute providerAttribute, List<UserProviderPosture>? userProviderPostures)
+    {
+        var requiredProviderType = providerAttribute.ProviderType;
+        var requiredPosture = userProviderPostures?.FirstOrDefault(p => p.ProviderType == requiredProviderType);
+        return requiredPosture is not null;
+    }
+
+    private bool HasRequiredScopes(MethodInfo method, ToolProviderAttribute providerAttribute, List<UserProviderPosture>? userProviderPostures)
+    {
+        var scopeAttribute = method.GetCustomAttribute<ToolProviderScopesAttribute>();
+        if (scopeAttribute is null)
+        {
+            return true; // No scope requirements
+        }
+
+        var requiredProviderType = providerAttribute.ProviderType;
+        var requiredPosture = userProviderPostures?.FirstOrDefault(p => p.ProviderType == requiredProviderType);
+
+        if (requiredPosture is null)
+        {
+            return false;
+        }
+
+        if (scopeAttribute.ScopeHandleType == UserProviderScopeHandleType.Any)
+        {
+            return scopeAttribute.Scopes.Any(scope => requiredPosture.Scopes.Contains(scope));
+        }
+
+        return true; // Default case, can be expanded for other ScopeHandleTypes
     }
 }

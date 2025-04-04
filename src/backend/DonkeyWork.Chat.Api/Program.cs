@@ -9,12 +9,16 @@ using DonkeyWork.Chat.AiServices.Extensions;
 using DonkeyWork.Chat.AiTooling.Extensions;
 using DonkeyWork.Chat.Api.Configuration;
 using DonkeyWork.Chat.Api.Middleware;
+using DonkeyWork.Chat.Api.Services;
 using DonkeyWork.Chat.Api.Services.Authentication;
 using DonkeyWork.Chat.Api.Services.Conversation;
 using DonkeyWork.Chat.Api.Services.Keycloak;
+using DonkeyWork.Chat.Api.Workers;
+using DonkeyWork.Chat.Common.Contracts;
 using DonkeyWork.Chat.Common.Extensions;
 using DonkeyWork.Chat.Persistence;
 using DonkeyWork.Chat.Persistence.Extensions;
+using DonkeyWork.Chat.Providers.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -118,10 +122,12 @@ builder.Services.AddAuthentication(options =>
 
 // Configure authorization
 builder.Services.AddAuthorization();
-
+builder.Services.AddHostedService<TokenRefreshWorker>();
 builder.Services.AddUserContext();
 builder.Services.AddAiServices();
 builder.Services.AddToolServices();
+builder.Services.AddProviderConfiguration(builder.Configuration);
+builder.Services.AddScoped<IUserPostureService, UserPostureService>();
 builder.Services.AddCredentialsPersistence(builder.Configuration);
 
 // Add CORS

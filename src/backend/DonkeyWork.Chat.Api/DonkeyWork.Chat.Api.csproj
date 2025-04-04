@@ -29,6 +29,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\lib\DonkeyWork.Chat.AiServices\DonkeyWork.Chat.AiServices.csproj" />
       <ProjectReference Include="..\..\lib\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj" />
+      <ProjectReference Include="..\..\lib\DonkeyWork.Chat.Providers\DonkeyWork.Chat.Providers.csproj" />
       <ProjectReference Include="..\..\lib\persistence\DonkeyWork.Chat.Persistence\DonkeyWork.Chat.Persistence.csproj" />
     </ItemGroup>
 

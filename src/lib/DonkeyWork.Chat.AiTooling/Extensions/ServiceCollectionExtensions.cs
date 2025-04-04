@@ -4,8 +4,12 @@
 // </copyright>
 // ------------------------------------------------------
 
+using DonkeyWork.Chat.AiTooling.Base;
 using DonkeyWork.Chat.AiTooling.Services;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.CurrentDateTime.Tool;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common.Api;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Drive.Tool;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Mail.Tool;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Api;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Configuration;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Tool;
@@ -33,6 +37,13 @@ public static class ServiceCollectionExtensions
         return serviceCollection.AddScoped<IToolService, ToolService>()
             .AddScoped<ISerpApiSearch, SerpApiSearch>()
             .AddScoped<ISerpTool, SerpTool>()
+            .AddScoped<ITool, SerpTool>()
+            .AddScoped<ITool, CurrentDateTimeTool>()
+            .AddScoped<ITool, MicrosoftGraphDriveTool>()
+            .AddScoped<ITool, MicrosoftGraphMailTool>()
+            .AddScoped<IMicrosoftGraphDriveTool, MicrosoftGraphDriveTool>()
+            .AddScoped<IMicrosoftGraphMailTool, MicrosoftGraphMailTool>()
+            .AddScoped<IMicrosoftGraphApiClientFactory, MicrosoftGraphApiClientFactory>()
             .AddScoped<ICurrentDateTimeTool, CurrentDateTimeTool>();
     }
 }

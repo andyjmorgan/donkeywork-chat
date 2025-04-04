@@ -8,6 +8,7 @@ using DonkeyWork.Chat.Common.UserContext;
 using DonkeyWork.Chat.Persistence.Entity.Base;
 using DonkeyWork.Chat.Persistence.Entity.Conversation;
 using DonkeyWork.Chat.Persistence.Entity.Prompt;
+using DonkeyWork.Chat.Persistence.Entity.Provider;
 using Microsoft.EntityFrameworkCore;
 
 namespace DonkeyWork.Chat.Persistence;
@@ -38,9 +39,16 @@ public class ApiPersistenceContext(DbContextOptions<ApiPersistenceContext> optio
     /// </summary>
     public DbSet<ToolCallEntity> ToolCalls { get; set; }
 
+    /// <summary>
+    /// Gets or sets the provider tokens.
+    /// </summary>
+    public DbSet<UserTokenEntity> UserTokens { get; set; }
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("ApiPersistence");
+
         modelBuilder.Entity<ConversationEntity>()
             .HasMany(c => c.MessageEntities)
             .WithOne(c => c.Conversation)
@@ -68,6 +76,9 @@ public class ApiPersistenceContext(DbContextOptions<ApiPersistenceContext> optio
         modelBuilder.Entity<ToolCallEntity>()
             .HasIndex(c => c.MessagePairId)
             .IsUnique(false);
+
+        modelBuilder.Entity<BaseUserEntity>()
+            .UseTpcMappingStrategy();
 
         // Add the base user filter.
         modelBuilder.Entity<BaseUserEntity>()

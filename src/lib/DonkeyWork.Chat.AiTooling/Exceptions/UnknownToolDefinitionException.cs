@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-namespace DonkeyWork.Chat.AiTooling.Base.Exceptions;
+namespace DonkeyWork.Chat.AiTooling.Exceptions;
 
 /// <summary>
 /// An exception thrown when a tool definition is unknown.
