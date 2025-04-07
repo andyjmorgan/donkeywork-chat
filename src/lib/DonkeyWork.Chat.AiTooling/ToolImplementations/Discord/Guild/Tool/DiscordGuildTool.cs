@@ -68,12 +68,12 @@ public class DiscordGuildTool(IDiscordApiClientFactory discordApiClientFactory)
         var userData = new
         {
             Id = user.Id.ToString(),
-            Username = user.Username,
-            GlobalName = user.GlobalName,
-            Discriminator = user.Discriminator,
-            AvatarId = user.AvatarId,
-            IsBot = user.IsBot,
-            IsMfaEnabled = user.IsMfaEnabled,
+            user.Username,
+            user.GlobalName,
+            user.Discriminator,
+            user.AvatarId,
+            user.IsBot,
+            user.IsMfaEnabled,
         };
 
         return JsonDocument.Parse(JsonSerializer.Serialize(userData, JsonSerializerOptions));

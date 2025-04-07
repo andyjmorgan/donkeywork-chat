@@ -7,7 +7,6 @@
 using DonkeyWork.Chat.Common.Providers;
 using DonkeyWork.Chat.Persistence;
 using DonkeyWork.Chat.Providers.Provider.Implementation.Microsoft.Client;
-using DonkeyWork.Chat.Providers.Workers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -21,7 +20,7 @@ public class TokenRefreshWorker : BackgroundService
     private readonly TokenRefreshWorkerConfiguration options;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TokenRefreshBackgroundService"/> class.
+    /// Initializes a new instance of the <see cref="TokenRefreshWorker"/> class.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
     /// <param name="logger">The logger.</param>

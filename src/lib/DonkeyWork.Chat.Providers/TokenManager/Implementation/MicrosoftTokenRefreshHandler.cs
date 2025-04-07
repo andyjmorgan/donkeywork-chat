@@ -52,9 +52,6 @@ public class MicrosoftTokenRefreshHandler : IOAuthTokenRefreshHandler
 
         try
         {
-            // Format the token URL with tenant ID
-            var tokenUrl = string.Format(this.configuration.TokenUrl, this.configuration.TenantId);
-
             // Use the OAuth HTTP client to refresh the token
             var tokenResponse = await this.oauthHttpClient.RefreshTokenAsync(refreshToken, cancellationToken);
 

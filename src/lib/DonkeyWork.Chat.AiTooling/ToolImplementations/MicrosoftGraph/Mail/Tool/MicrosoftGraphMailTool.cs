@@ -287,7 +287,7 @@ public class MicrosoftGraphMailTool(
     {
         var client = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
         await client.Me.Messages[messageId].Forward.PostAsync(
-            new()
+            new ()
             {
                 ToRecipients = toRecipients.Select(
                     address =>
@@ -319,7 +319,7 @@ public class MicrosoftGraphMailTool(
     {
         var client = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
         await client.Me.Messages[messageId].Reply.PostAsync(
-            new()
+            new ()
             {
                 Comment = comment,
             }, cancellationToken: cancellationToken);
@@ -341,7 +341,7 @@ public class MicrosoftGraphMailTool(
     {
         var client = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
         await client.Me.Messages[messageId].ReplyAll.PostAsync(
-            new()
+            new ()
             {
                 Comment = comment,
             },

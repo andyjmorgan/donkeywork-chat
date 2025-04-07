@@ -23,7 +23,7 @@ public class DiscordGuildDetail : DiscordGuild
     /// Gets or sets the guild features.
     /// </summary>
     [JsonPropertyName("features")]
-    public List<string> Features { get; set; } = new();
+    public List<string> Features { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the guild verification level.

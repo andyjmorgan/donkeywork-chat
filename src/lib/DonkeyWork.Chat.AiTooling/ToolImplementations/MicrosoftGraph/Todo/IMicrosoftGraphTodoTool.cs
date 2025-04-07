@@ -78,5 +78,4 @@ public interface IMicrosoftGraphTodoTool
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<JsonDocument> UpdateTaskAsync(string listId, string taskId, string title, List<string>? categories, string? body = null, Importance? importance = null, TaskStatus? status = null, string? dueDate = null, CancellationToken cancellationToken = default);
-
 }

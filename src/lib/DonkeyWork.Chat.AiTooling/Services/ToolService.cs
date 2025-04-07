@@ -8,14 +8,13 @@ using DonkeyWork.Chat.AiTooling.Base;
 using DonkeyWork.Chat.AiTooling.Base.Models;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.CurrentDateTime.Tool;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Tool;
-using DonkeyWork.Chat.Common.Contracts;
 using DonkeyWork.Chat.Common.Providers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Chat.AiTooling.Services;
 
 /// <inheritdoc />
-public class ToolService(IServiceProvider serviceProvider, IUserPostureService userPostureService)
+public class ToolService(IServiceProvider serviceProvider)
     : IToolService
 {
     /// <inheritdoc />

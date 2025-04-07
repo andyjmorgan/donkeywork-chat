@@ -151,7 +151,6 @@ public class MicrosoftGraphDriveTool(
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
     {
         var graphClient = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
-        var myDrive = await graphClient.Me.Drive.GetAsync(cancellationToken: cancellationToken);
         var requestBody = new DriveItem()
         {
             Name = folderName,

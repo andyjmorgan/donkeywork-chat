@@ -4,6 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using DonkeyWork.Chat.Providers.Models;
 using DonkeyWork.Chat.Providers.Provider.Implementation.Discord.Client;
 using Microsoft.Extensions.Logging;
@@ -30,6 +31,7 @@ public class DiscordTokenRefreshHandler : IOAuthTokenRefreshHandler
     }
 
     /// <inheritdoc />
+    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1101:Prefix local calls with this", Justification = "Just record things.")]
     public async Task<OAuthTokenResult> RefreshTokenAsync(string refreshToken, string userId, CancellationToken cancellationToken = default)
     {
         try

@@ -741,7 +741,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
                                                           if (!toolDetails || !Array.isArray(toolDetails) || toolDetails.length === 0) return '0';
                                                           
                                                           // Count tool occurrences by name
-                                                          const toolCounts = {};
+                                                          const toolCounts: Record<string, number> = {};
                                                           let repeatedTools = false;
                                                           
                                                           toolDetails.forEach(tool => {
@@ -839,7 +839,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
                                 <div className="tools-list">
                                     {(() => {
                                         // Count tool occurrences
-                                        const toolCounts = {};
+                                        const toolCounts: Record<string, number> = {};
                                         toolsUsed.forEach(tool => {
                                             toolCounts[tool] = (toolCounts[tool] || 0) + 1;
                                         });

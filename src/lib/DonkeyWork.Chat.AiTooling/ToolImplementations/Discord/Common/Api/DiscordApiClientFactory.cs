@@ -50,7 +50,7 @@ public class DiscordApiClientFactory : IDiscordApiClientFactory
                 });
 
                 // Configure the client to log messages
-                client.Log += (LogMessage msg) =>
+                client.Log += (msg) =>
                 {
                     var logLevel = msg.Severity switch
                     {
@@ -69,7 +69,6 @@ public class DiscordApiClientFactory : IDiscordApiClientFactory
 
                 // Login with the token from user posture
                 await client.LoginAsync(TokenType.Bearer, thisProvider.Keys[UserProviderDataKeyType.AccessToken]);
-                var thisUser = client.CurrentUser;
                 this.discordRestClient = client;
             }
             catch (Exception ex)

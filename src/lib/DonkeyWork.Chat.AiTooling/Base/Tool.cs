@@ -154,7 +154,7 @@ public class Tool : ITool
             {
                 FunctionName = functionName,
                 Success = false,
-                arguments = arguments,
+                arguments,
                 Exception = ex.Message,
             }));
         }
