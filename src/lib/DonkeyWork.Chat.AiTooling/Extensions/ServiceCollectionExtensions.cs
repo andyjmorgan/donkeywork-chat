@@ -7,9 +7,13 @@
 using DonkeyWork.Chat.AiTooling.Base;
 using DonkeyWork.Chat.AiTooling.Services;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.CurrentDateTime.Tool;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.Discord.Common.Api;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.Discord.Guild.Tool;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common.Api;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Drive.Tool;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Identity;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Mail.Tool;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Todo;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Api;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Configuration;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Tool;
@@ -34,16 +38,32 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
+        FindAndAddIToolImplementations(serviceCollection);
         return serviceCollection.AddScoped<IToolService, ToolService>()
             .AddScoped<ISerpApiSearch, SerpApiSearch>()
             .AddScoped<ISerpTool, SerpTool>()
-            .AddScoped<ITool, SerpTool>()
-            .AddScoped<ITool, CurrentDateTimeTool>()
-            .AddScoped<ITool, MicrosoftGraphDriveTool>()
-            .AddScoped<ITool, MicrosoftGraphMailTool>()
             .AddScoped<IMicrosoftGraphDriveTool, MicrosoftGraphDriveTool>()
             .AddScoped<IMicrosoftGraphMailTool, MicrosoftGraphMailTool>()
+            .AddScoped<IMicrosoftGraphTodoTool, MicrosoftGraphTodoTool>()
+            .AddScoped<IMicrosoftGraphIdentityTool, MicrosoftGraphIdentityTool>()
+            .AddScoped<IDiscordGuildTool, DiscordGuildTool>()
             .AddScoped<IMicrosoftGraphApiClientFactory, MicrosoftGraphApiClientFactory>()
+            .AddScoped<IDiscordApiClientFactory, DiscordApiClientFactory>()
             .AddScoped<ICurrentDateTimeTool, CurrentDateTimeTool>();
+    }
+
+    private static void FindAndAddIToolImplementations(IServiceCollection serviceCollection)
+    {
+        var toolTypes = typeof(ITool).Assembly
+            .GetTypes()
+            .Where(t => typeof(ITool).IsAssignableFrom(t) &&
+                        !t.IsInterface &&
+                        !t.IsAbstract)
+            .ToList();
+
+        foreach (var toolType in toolTypes)
+        {
+            serviceCollection.AddScoped(typeof(ITool), toolType);
+        }
     }
 }

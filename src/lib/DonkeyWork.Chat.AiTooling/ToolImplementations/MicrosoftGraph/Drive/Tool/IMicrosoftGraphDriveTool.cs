@@ -56,12 +56,12 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// Gets a public file sharing link.
     /// </summary>
     /// <param name="driveId">The drive id.</param>
-    /// <param name="fileId">The file id.</param>
+    /// <param name="itemId">The file id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<JsonDocument?> GetPublicFileSharingLinkAsync(
         string driveId,
-        string fileId,
+        string itemId,
         CancellationToken cancellationToken = default);
 
     /// <summary>

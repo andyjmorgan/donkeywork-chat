@@ -1,15 +1,9 @@
 import { UserProviderType } from './UserProviderType';
-import { PascalToCamelCase } from '../../../utils/caseConversion';
 
 /**
- * Original response model matching C# property names (PascalCase)
+ * Frontend model for provider URL responses
  */
-export interface OriginalProviderUrlResponseModel {
-  ProviderType: UserProviderType;
-  AuthorizationUrl: string;
+export interface ProviderUrlResponseModel {
+  providerType: UserProviderType;
+  authorizationUrl: string;
 }
-
-/**
- * Frontend model with camelCase properties
- */
-export type ProviderUrlResponseModel = PascalToCamelCase<OriginalProviderUrlResponseModel>;

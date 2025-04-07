@@ -6,8 +6,8 @@
 
 using System.ComponentModel;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using DonkeyWork.Chat.AiTooling.Attributes;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common.Api;
 using DonkeyWork.Chat.Common.Providers;
 using Microsoft.Graph.Drives.Item.Items.Item.Copy;
@@ -22,13 +22,6 @@ public class MicrosoftGraphDriveTool(
     IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory)
     : Base.Tool, IMicrosoftGraphDriveTool
 {
-    private static readonly JsonSerializerOptions JsonSerializerOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        WriteIndented = true,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-    };
-
     /// <inheritdoc />
     [ToolFunction]
     [Description("A tool to search specific Microsoft Graph drives.")]
@@ -48,7 +41,7 @@ public class MicrosoftGraphDriveTool(
         var graphClient = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
         var searchResult = await graphClient.Drives[driveId].SearchWithQ(query)
             .GetAsSearchWithQGetResponseAsync(cancellationToken: cancellationToken);
-        return JsonDocument.Parse(JsonSerializer.Serialize(searchResult, JsonSerializerOptions));
+        return JsonDocument.Parse(JsonSerializer.Serialize(searchResult, MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
@@ -70,12 +63,12 @@ public class MicrosoftGraphDriveTool(
         var searchResult = await graphClient.Drives[myDrive?.Id]
             .SearchWithQ(query)
             .GetAsSearchWithQGetResponseAsync(cancellationToken: cancellationToken);
-        return JsonDocument.Parse(JsonSerializer.Serialize(searchResult, JsonSerializerOptions));
+        return JsonDocument.Parse(JsonSerializer.Serialize(searchResult, MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
     [ToolFunction]
-    [Description("A tool to list the graph drives the user has access to.")]
+    [Description("A tool to list the Microsoft Graph drives the user has access to.")]
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
         "Files.Read",
@@ -87,12 +80,12 @@ public class MicrosoftGraphDriveTool(
     {
         var graphClient = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
         var result = await graphClient.Me.Drives.GetAsync(cancellationToken: cancellationToken);
-        return JsonDocument.Parse(JsonSerializer.Serialize(result, JsonSerializerOptions));
+        return JsonDocument.Parse(JsonSerializer.Serialize(result, MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
     [ToolFunction]
-    [Description("A tool to Get a file thumbnails preview")]
+    [Description("A tool to Get a file thumbnails preview from the Microsoft Graph api.")]
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
         "Files.Read",
@@ -109,7 +102,7 @@ public class MicrosoftGraphDriveTool(
         var graphClient = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
         var searchResult = await graphClient.Drives[driveId].Items[fileId]
             .Thumbnails.GetAsync(cancellationToken: cancellationToken);
-        return JsonDocument.Parse(JsonSerializer.Serialize(searchResult?.Value, JsonSerializerOptions));
+        return JsonDocument.Parse(JsonSerializer.Serialize(searchResult?.Value, MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
@@ -118,12 +111,12 @@ public class MicrosoftGraphDriveTool(
         UserProviderScopeHandleType.Any,
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    [Description("A tool to Get a public file sharing link")]
+    [Description("A tool to Get a public file sharing link from a Microsoft Graph drive file or folder.")]
     public async Task<JsonDocument?> GetPublicFileSharingLinkAsync(
         [Description("The drive id from which you wish to get the file preview.")]
         string driveId,
         [Description("The file id that you wish to get the preview for.")]
-        string fileId,
+        string itemId,
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
     {
         var requestBody = new CreateLinkPostRequestBody
@@ -136,9 +129,9 @@ public class MicrosoftGraphDriveTool(
 
         var graphClient = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
         var result = await graphClient.Drives[driveId]
-            .Items[fileId]
+            .Items[itemId]
             .CreateLink.PostAsync(requestBody, cancellationToken: cancellationToken);
-        return JsonDocument.Parse(JsonSerializer.Serialize(result, JsonSerializerOptions));
+        return JsonDocument.Parse(JsonSerializer.Serialize(result, MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
@@ -147,7 +140,7 @@ public class MicrosoftGraphDriveTool(
         UserProviderScopeHandleType.Any,
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    [Description("A tool to Create a folder in a drive.")]
+    [Description("A tool to Create a folder in a Microsoft Graph drive.")]
     public async Task<JsonDocument?> CreateFolderInUserDriveAsync(
         [Description("The drive id from which you wish to get the file preview.")]
         string driveId,
@@ -170,7 +163,7 @@ public class MicrosoftGraphDriveTool(
         };
         var result = await graphClient.Drives[driveId].Items[parentId].Children
             .PostAsync(requestBody, cancellationToken: cancellationToken);
-        return JsonDocument.Parse(JsonSerializer.Serialize(result, JsonSerializerOptions));
+        return JsonDocument.Parse(JsonSerializer.Serialize(result, MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
@@ -179,7 +172,7 @@ public class MicrosoftGraphDriveTool(
         UserProviderScopeHandleType.Any,
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    [Description("A tool to copy a file in a user's drive.")]
+    [Description("A tool to copy a file in a user's Microsoft Graph drive.")]
     public async Task<JsonDocument?> CopyItemInDriveAsync(
         [Description("The drive ID where the file exists.")]
         string driveId,
@@ -214,7 +207,7 @@ public class MicrosoftGraphDriveTool(
         UserProviderScopeHandleType.Any,
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    [Description("A tool to move a file in a user's drive.")]
+    [Description("A tool to move a file in a user's Microsoft Graph drive.")]
     public async Task<JsonDocument?> MoveItemInDriveAsync(
         [Description("The drive ID where the file exists.")]
         string driveId,
@@ -240,7 +233,7 @@ public class MicrosoftGraphDriveTool(
         var result = await graphClient.Drives[driveId].Items[itemId]
             .PatchAsync(requestBody, cancellationToken: cancellationToken);
 
-        return JsonDocument.Parse(JsonSerializer.Serialize(result, JsonSerializerOptions));
+        return JsonDocument.Parse(JsonSerializer.Serialize(result, MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
@@ -249,7 +242,7 @@ public class MicrosoftGraphDriveTool(
         UserProviderScopeHandleType.Any,
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    [Description("A tool to delete a file in a user's drive.")]
+    [Description("A tool to delete a file in a user's Microsoft Graph drive.")]
     public async Task<JsonDocument?> DeleteItemInDriveAsync(
         [Description("The drive ID where the file exists.")]
         string driveId,
@@ -272,7 +265,7 @@ public class MicrosoftGraphDriveTool(
         "Files.Read.All",
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    [Description("A tool to list the contents of a folder in a user's drive, with optional pagination.")]
+    [Description("A tool to list the contents of a folder in a user's Microsoft Graph drive, with optional pagination.")]
     public async Task<JsonDocument?> ListFolderContentsAsync(
         [Description("The drive ID containing the folder.")]
         string driveId,
@@ -303,6 +296,6 @@ public class MicrosoftGraphDriveTool(
                 }
             }, cancellationToken: cancellationToken);
 
-        return JsonDocument.Parse(JsonSerializer.Serialize(result?.Value, JsonSerializerOptions));
+        return JsonDocument.Parse(JsonSerializer.Serialize(result?.Value, MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 }

@@ -4,6 +4,7 @@ import { Card } from 'primereact/card';
 import { ProgressBar } from 'primereact/progressbar';
 import { Button } from 'primereact/button';
 import { UserProviderType } from '../../models/api/provider/UserProviderType';
+import { ProviderCallbackResponseModel } from '../../models/api/provider/ProviderCallbackResponseModel';
 
 // Logo component for consistent branding
 const Logo = ({ size = 140 }: { size?: number }) => (
@@ -145,7 +146,10 @@ const SimpleCallback: React.FC = () => {
           return;
       }
       
-      const redirectUrl = window.location.href.split('?')[0];
+      // Create the full redirect URL that was originally used
+      // Important: This needs to match what we sent in the original request 
+      // when starting the OAuth flow in the Integrations.tsx component
+      const redirectUrl = `${window.location.origin}/integrations/simple-callback/${providerFromPath.toLowerCase()}`;
       const callbackUrl = `/api/Provider/callback/${providerType}?code=${encodeURIComponent(code)}&redirectUrl=${encodeURIComponent(redirectUrl)}`;
       
       setMessage(`Connecting to ${providerFromPath}...`);
@@ -175,7 +179,7 @@ const SimpleCallback: React.FC = () => {
           return;
         }
         
-        await response.json();
+        const responseData = await response.json() as ProviderCallbackResponseModel;
         setStatus('success');
         setMessage(`Successfully connected to ${providerFromPath}`);
         

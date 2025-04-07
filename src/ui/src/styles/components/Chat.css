@@ -285,6 +285,27 @@ p {
 .metadata-item.tool-count {
     background-color: rgba(var(--primary-color-rgb), 0.12);
     color: var(--primary-color);
+    position: relative;
+    padding-right: 0.6rem !important;
+}
+
+/* Badge for repeated tool calls */
+.tool-repeat-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);
+    font-size: 0.65rem;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    padding: 0 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 /* User message metadata specific styling */
@@ -292,6 +313,12 @@ p {
 .message-container.user .metadata-item.tool-count {
     background-color: rgba(255, 255, 255, 0.2);
     color: var(--primary-color-text);
+}
+
+/* Badge for repeated tool calls in user messages */
+.message-container.user .tool-repeat-badge {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--primary-color);
 }
 
 .token-item {
@@ -496,7 +523,28 @@ p {
     font-size: 0.7rem;
     border-radius: 4px;
     padding: 0.1rem 0.4rem;
+    padding-right: 0.6rem;
     font-weight: 500;
+    position: relative;
+}
+
+/* Badge for repeated tool calls in chip */
+.tool-chip-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ffffff;
+    color: var(--primary-color);
+    font-size: 0.65rem;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    padding: 0 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 /* Tool call details styling in info dialog */
@@ -524,6 +572,19 @@ p {
 .tool-call-name {
     font-weight: 600;
     font-size: 0.9rem;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.tool-call-repeat-badge {
+    margin-left: 0.4rem;
+    background-color: rgba(var(--primary-color-rgb), 0.12);
+    color: var(--primary-color);
+    font-size: 0.75rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-weight: 500;
 }
 
 .tool-call-duration {
@@ -538,6 +599,26 @@ p {
 .tool-call-result {
     border-top: 1px dashed var(--surface-border);
     background-color: rgba(var(--blue-500-rgb), 0.03);
+}
+
+.tool-result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.result-copy-button {
+    width: 2rem !important;
+    height: 2rem !important;
+    margin-right: -0.5rem;
+}
+
+.result-copy-button .p-button-icon {
+    font-size: 0.875rem;
 }
 
 .collapsible-header {

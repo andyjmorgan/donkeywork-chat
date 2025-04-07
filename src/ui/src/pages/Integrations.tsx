@@ -75,16 +75,12 @@ const Integrations: React.FC = () => {
       const updatedIntegrations = availableProviders.map(providerType => {
         const details = providerDetails[providerType];
         const providerKey = providerType.toString();
-        const isConnected = !!data.ProviderConfiguration && 
-          (!!data.ProviderConfiguration[providerType] || !!data.ProviderConfiguration[providerKey]);
+        const providerConfig = data.ProviderConfiguration as Record<string, string[]>;
+        const isConnected = !!providerConfig && !!providerConfig[providerKey];
         
         let scopes: string[] = [];
-        if (data.ProviderConfiguration) {
-          if (data.ProviderConfiguration[providerType]) {
-            scopes = data.ProviderConfiguration[providerType];
-          } else if (data.ProviderConfiguration[providerKey]) {
-            scopes = data.ProviderConfiguration[providerKey];
-          }
+        if (providerConfig && providerConfig[providerKey]) {
+          scopes = providerConfig[providerKey];
         }
 
         return {
@@ -184,7 +180,7 @@ const Integrations: React.FC = () => {
                   icon="pi pi-link" 
                   className="p-button-primary ml-auto"
                   onClick={() => handleConnect(integration.type)}
-                  disabled={integration.type !== UserProviderType.Microsoft}
+                  disabled={false}
                 />
               )}
             </div>
@@ -221,13 +217,17 @@ const Integrations: React.FC = () => {
                 <p className="m-0 mb-3 text-lg">
                   {integration.type === UserProviderType.Microsoft 
                     ? <><i className="pi pi-microsoft mr-2 text-primary-300"></i>Connect to use Microsoft services</>
-                    : <><i className="pi pi-clock mr-2 text-primary-300"></i>This integration is coming soon</>
+                    : integration.type === UserProviderType.Google
+                      ? <><i className="pi pi-google mr-2 text-primary-300"></i>Connect to use Google services</>
+                      : <><i className="pi pi-discord mr-2 text-primary-300"></i>Connect to use Discord services</>
                   }
                 </p>
                 <p className="text-sm text-500 mt-4">
                   {integration.type === UserProviderType.Microsoft 
                     ? 'Access emails, calendars, files, and more'
-                    : 'Stay tuned for updates on this integration'
+                    : integration.type === UserProviderType.Google
+                      ? 'Access Gmail, Drive, and other Google services'
+                      : 'Access Discord channels, messages, and DMs'
                   }
                 </p>
               </div>

@@ -36,7 +36,11 @@ class ProviderService extends ApiBase {
     }
 
     const data = await response.json();
-    return toCamelCaseKeys(data);
+    return {
+      // Handle either PascalCase or camelCase property names in the API response
+      providerType: data.ProviderType || data.providerType,
+      authorizationUrl: data.AuthorizationUrl || data.authorizationUrl
+    };
   }
 
   async getUserProviders(): Promise<UserProviderResponseModel> {

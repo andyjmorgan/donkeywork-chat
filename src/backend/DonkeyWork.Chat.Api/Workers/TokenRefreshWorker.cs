@@ -76,12 +76,14 @@ public class TokenRefreshWorker : BackgroundService
                         var newToken = await tokenClient.RefreshTokenAsync(value, cancellationToken);
                         token.Data[UserProviderDataKeyType.RefreshToken] = newToken.RefreshToken ?? string.Empty;
                         token.Data[UserProviderDataKeyType.AccessToken] = newToken.AccessToken;
-                        await apiPersistenceContext.UserTokens
+                        var updatedRecords = await apiPersistenceContext.UserTokens
+                            .IgnoreQueryFilters()
                             .Where(t => t.Id == token.Id)
                             .ExecuteUpdateAsync(
                                 s => s
                                     .SetProperty(t => t.Data, token.Data)
                                     .SetProperty(t => t.ExpiresAt, newToken.ExpiresOn)
+                                    .SetProperty(t => t.UpdatedAt, DateTimeOffset.UtcNow)
                                     .SetProperty(t => t.Scopes, newToken.Scopes.ToList()),
                                 cancellationToken);
                     }

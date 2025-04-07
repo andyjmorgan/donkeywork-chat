@@ -77,16 +77,6 @@ public class Tool : ITool
                                 };
                             }
 
-                            // Add enum values if applicable
-                            if (p.ParameterType.IsEnum)
-                            {
-                                var enumValues = Enum.GetNames(p.ParameterType).ToList();
-                                schema = schema with
-                                {
-                                    Enum = enumValues,
-                                };
-                            }
-
                             return schema;
                         }),
 
@@ -202,6 +192,16 @@ public class Tool : ITool
     {
         Type actualType = Nullable.GetUnderlyingType(type) ?? type;
 
+        // Handle enums at the schema creation level
+        if (actualType.IsEnum)
+        {
+            return new ToolFunctionParameterDefinition
+            {
+                Type = "string", // I know this looks wrong, it's not.
+                Enum = Enum.GetNames(actualType).ToList(),
+            };
+        }
+
         // Don't treat string as IEnumerable<char>
         if (actualType != typeof(string) && IsEnumerableType(actualType, out var elementType))
         {
@@ -251,29 +251,30 @@ public class Tool : ITool
 
     private static object? DeserializeParameter(JsonElement element, Type targetType)
     {
-        if (targetType == typeof(string))
+        Type underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+        if (underlyingType == typeof(string))
         {
             return element.GetString() ?? string.Empty;
         }
 
-        if (targetType == typeof(int))
+        if (underlyingType == typeof(int))
         {
             return element.GetInt32();
         }
 
-        if (targetType == typeof(bool))
+        if (underlyingType == typeof(bool))
         {
             return element.GetBoolean();
         }
 
-        if (targetType == typeof(double))
+        if (underlyingType == typeof(double))
         {
             return element.GetDouble();
         }
 
-        if (targetType.IsEnum)
+        if (underlyingType.IsEnum)
         {
-            return Enum.Parse(targetType, element.GetString() ?? string.Empty, true);
+            return Enum.Parse(underlyingType, element.GetString() ?? string.Empty, true);
         }
 
         return JsonSerializer.Deserialize(

@@ -16,16 +16,24 @@ public interface IMicrosoftGraphMailTool
     /// <summary>
     /// Searches the user's mailbox for email messages that match a given query string.
     /// </summary>
-    /// <param name="query">The OData filter query string (e.g., "contains(subject, 'report')").</param>
+    /// <param name="search">The search query.</param>
+    /// <param name="select">The optional select statement.</param>
     /// <param name="maxCount">The maximum number of messages to return.</param>
     /// <param name="skip">The number of messages to skip (for pagination).</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A JSON document representing the matching messages.</returns>
     Task<JsonDocument?> SearchEmailAsync(
-        string query,
+        string search,
+        List<string>? select,
         int? maxCount = null,
         int? skip = null,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the search query language supported by the Microsoft Graph API.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<JsonDocument> GetSearchQueryLanguageAsync();
 
     /// <summary>
     /// Sends an email message on behalf of the authenticated user.

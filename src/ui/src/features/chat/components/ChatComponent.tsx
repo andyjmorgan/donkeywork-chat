@@ -740,13 +740,33 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
                                                           const toolDetails = metadata.toolCallDetails;
                                                           if (!toolDetails || !Array.isArray(toolDetails) || toolDetails.length === 0) return '0';
                                                           
-                                                          // Create a set of tool IDs to get unique count
-                                                          const uniqueTools = new Set();
+                                                          // Count tool occurrences by name
+                                                          const toolCounts = {};
+                                                          let repeatedTools = false;
+                                                          
                                                           toolDetails.forEach(tool => {
-                                                            if (tool && tool.id) uniqueTools.add(tool.id);
+                                                            if (tool && tool.name) {
+                                                              toolCounts[tool.name] = (toolCounts[tool.name] || 0) + 1;
+                                                              if (toolCounts[tool.name] > 1) {
+                                                                repeatedTools = true;
+                                                              }
+                                                            }
                                                           });
                                                           
-                                                          return uniqueTools.size.toString();
+                                                          // Count unique tools
+                                                          const uniqueToolCount = Object.keys(toolCounts).length;
+                                                          
+                                                          // If any tool was used multiple times, show total calls
+                                                          if (repeatedTools) {
+                                                            return (
+                                                              <span>
+                                                                {uniqueToolCount.toString()}
+                                                                <span className="tool-repeat-badge">{toolDetails.length}</span>
+                                                              </span>
+                                                            );
+                                                          }
+                                                          
+                                                          return uniqueToolCount.toString();
                                                         })()}
                                                     </span>
                                                     
@@ -817,9 +837,23 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
                         {toolsUsed.length > 0 && (
                             <div className="usage-report">
                                 <div className="tools-list">
-                                    {toolsUsed.map((tool, index) => (
-                                        <span key={index} className="tool-chip">{tool}</span>
-                                    ))}
+                                    {(() => {
+                                        // Count tool occurrences
+                                        const toolCounts = {};
+                                        toolsUsed.forEach(tool => {
+                                            toolCounts[tool] = (toolCounts[tool] || 0) + 1;
+                                        });
+                                        
+                                        // Create unique list with counts
+                                        return Object.keys(toolCounts).map((tool, index) => (
+                                            <span key={index} className="tool-chip">
+                                                {tool}
+                                                {toolCounts[tool] > 1 && (
+                                                    <span className="tool-chip-badge">{toolCounts[tool]}</span>
+                                                )}
+                                            </span>
+                                        ));
+                                    })()}
                                 </div>
                             </div>
                         )}
