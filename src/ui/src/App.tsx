@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 // Import directly from component files instead of through barrel files
 import AppLayout from './components/layout/AppLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import Home from './pages/Home';
 import Chat from './pages/chat/Chat';
 import Conversations from './pages/chat/Conversations';
 import Prompts from './pages/Prompts';
@@ -34,9 +35,15 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           
           {/* Protected routes with layout */}
-          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/" element={
+            <ProtectedRoute>
+              <AppLayout>
+                <Home />
+              </AppLayout>
+            </ProtectedRoute>
+          } />
           
-          <Route path="/" element={<Navigate to="/chat" replace />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
           
           <Route path="/chat" element={
             <ProtectedRoute>

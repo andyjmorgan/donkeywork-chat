@@ -26,4 +26,18 @@ public class UserPostureService(IIntegrationRepository integrationRepository)
                 Keys = x.Metadata,
             }).ToList();
     }
+
+    /// <inheritdoc />
+    public async Task<UserProviderPosture?> GetUserPostureAsync(UserProviderType providerType, CancellationToken cancellationToken = default)
+    {
+        var userIntegrations = await integrationRepository.GetUserOAuthTokenAsync(providerType, cancellationToken);
+        return userIntegrations == null
+            ? null
+            : new UserProviderPosture()
+            {
+                ProviderType = userIntegrations.Provider,
+                Scopes = userIntegrations.Scopes,
+                Keys = userIntegrations.Metadata,
+            };
+    }
 }

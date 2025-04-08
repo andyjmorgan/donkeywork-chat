@@ -42,6 +42,25 @@ public class IntegrationRepository(ApiPersistenceContext persistenceContext)
     }
 
     /// <inheritdoc />
+    public async Task<UserOAuthTokenItem?> GetUserOAuthTokenAsync(UserProviderType providerType, CancellationToken cancellationToken = default)
+    {
+        var userToken = await persistenceContext.UserTokens
+            .AsNoTracking()
+            .Where(x => x.ProviderType == providerType)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return userToken == null
+            ? null
+            : new UserOAuthTokenItem
+            {
+                Provider = userToken.ProviderType,
+                Scopes = userToken.Scopes,
+                Metadata = userToken.Data,
+                Expiration = userToken.ExpiresAt,
+            };
+    }
+
+    /// <inheritdoc />
     public async Task DeleteIntegrationAsync(UserProviderType type, CancellationToken cancellationToken = default)
     {
         persistenceContext.UserTokens.RemoveRange(

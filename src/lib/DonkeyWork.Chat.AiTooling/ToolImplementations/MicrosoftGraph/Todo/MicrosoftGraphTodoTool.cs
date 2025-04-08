@@ -1,5 +1,5 @@
 // ------------------------------------------------------
-// <copyright file="MIcrosoftGraphTodoTool.cs" company="DonkeyWork.Dev">
+// <copyright file="MicrosoftGraphTodoTool.cs" company="DonkeyWork.Dev">
 // Provided as is by (c) DonkeyWork.Dev. No warranty or support is given.
 // </copyright>
 // ------------------------------------------------------
@@ -41,7 +41,7 @@ public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGra
     /// <inheritdoc />
     [ToolFunction]
     [Description("Create a new To Do list using the Microsoft Graph Api.")]
-    [ToolProviderScopes(UserProviderScopeHandleType.Any,"Tasks.ReadWrite")]
+    [ToolProviderScopes(UserProviderScopeHandleType.Any, "Tasks.ReadWrite")]
     public async Task<JsonDocument> CreateTodoListAsync(
         [Description("The display name of the todo list. Keep it short")]
         string displayName,

@@ -144,7 +144,7 @@ const Integrations: React.FC = () => {
 
   const integrationTemplate = (integration: Integration) => {
     return (
-      <div className="col-12 md:col-6 lg:col-4 xl:col-3 p-2" key={integration.type}>
+      <div className="col-12 md:col-6 lg:col-4 p-2" key={integration.type}>
         <Card 
           className={`h-full integration-card ${highlightedProvider === integration.type ? 'highlight' : ''}`}
           title={integration.name}

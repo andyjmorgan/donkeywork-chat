@@ -1,5 +1,5 @@
 // ------------------------------------------------------
-// <copyright file="MicrosoftTokenRefreshService.cs" company="DonkeyWork.Dev">
+// <copyright file="DiscordTokenRefreshService.cs" company="DonkeyWork.Dev">
 // Provided as is by (c) DonkeyWork.Dev. No warranty or support is given.
 // </copyright>
 // ------------------------------------------------------

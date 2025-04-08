@@ -20,4 +20,14 @@ public interface IUserPostureService
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<List<UserProviderPosture>> GetUserPosturesAsync(
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the user posture for the given provider.
+    /// </summary>
+    /// <param name="providerType">The provider type.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<UserProviderPosture?> GetUserPostureAsync(
+        UserProviderType providerType,
+        CancellationToken cancellationToken = default);
 }

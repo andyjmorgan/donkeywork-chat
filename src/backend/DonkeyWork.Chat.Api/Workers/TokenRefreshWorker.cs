@@ -85,7 +85,7 @@ public class TokenRefreshWorker : BackgroundService
                             group.Key);
 
                         var newToken = await tokenClient.RefreshTokenAsync(value, cancellationToken);
-                        token.Data[UserProviderDataKeyType.RefreshToken] = newToken.RefreshToken ?? string.Empty;
+                        token.Data[UserProviderDataKeyType.RefreshToken] = newToken.RefreshToken;
                         token.Data[UserProviderDataKeyType.AccessToken] = newToken.AccessToken;
                         await apiPersistenceContext.UserTokens
                             .IgnoreQueryFilters()
@@ -110,6 +110,4 @@ public class TokenRefreshWorker : BackgroundService
             }
         }
     }
-}
-
 }

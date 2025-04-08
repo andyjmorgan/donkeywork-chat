@@ -10,6 +10,9 @@
     <ItemGroup>
       <PackageReference Include="Discord.Net" />
       <PackageReference Include="google-search-results-dotnet" />
+      <PackageReference Include="Google.Apis" />
+      <PackageReference Include="Google.Apis.Drive.v3" />
+      <PackageReference Include="Google.Apis.Gmail.v1" />
       <PackageReference Include="Microsoft.Extensions.Http" />
       <PackageReference Include="Microsoft.Extensions.Options" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />

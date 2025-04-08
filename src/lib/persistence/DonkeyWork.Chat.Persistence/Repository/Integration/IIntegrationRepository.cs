@@ -29,6 +29,14 @@ public interface IIntegrationRepository
     public Task<List<UserOAuthTokenItem>> GetUserOAuthTokensAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets the user tokens.
+    /// </summary>
+    /// <param name="providerType">The provider type.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A dictionary of the user tokens.</returns>
+    public Task<UserOAuthTokenItem?> GetUserOAuthTokenAsync(UserProviderType providerType, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Deletes the user tokens for the given provider type.
     /// </summary>
     /// <param name="type">The provider type.</param>

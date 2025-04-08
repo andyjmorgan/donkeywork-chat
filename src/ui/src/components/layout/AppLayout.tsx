@@ -59,11 +59,29 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   // Simple menu items for sidebar
   const sidebarItems: MenuItem[] = [
     {
-      label: 'Chat',
-      icon: 'pi pi-comments',
+      label: 'Home',
+      icon: 'pi pi-home',
       command: () => navigate('/'),
       template: (item, options) => {
-        const active = location.pathname === '/' || location.pathname === '/home';
+        const active = (location.pathname === '/' || location.pathname === '/home') && 
+                      !location.pathname.includes('/chat');
+        return (
+          <a 
+            className={`${options.className} menu-item ${active ? 'active-route' : ''}`} 
+            onClick={options.onClick}
+          >
+            <span className={`${options.iconClassName} ${active ? 'text-purple-500' : 'text-primary'}`}></span>
+            <span className={options.labelClassName}>{item.label}</span>
+          </a>
+        );
+      }
+    },
+    {
+      label: 'Chat',
+      icon: 'pi pi-comments',
+      command: () => navigate('/chat'),
+      template: (item, options) => {
+        const active = location.pathname.includes('/chat');
         return (
           <a 
             className={`${options.className} menu-item ${active ? 'active-route' : ''}`} 

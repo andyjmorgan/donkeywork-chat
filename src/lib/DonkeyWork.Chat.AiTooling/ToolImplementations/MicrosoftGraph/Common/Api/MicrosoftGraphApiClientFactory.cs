@@ -23,23 +23,26 @@ public class MicrosoftGraphApiClientFactory : IMicrosoftGraphApiClientFactory
     /// Initializes a new instance of the <see cref="MicrosoftGraphApiClientFactory"/> class.
     /// </summary>
     /// <param name="httpClientFactory">The http client factory.</param>
+    /// <param name="userPostureService">The user posture service.</param>
     public MicrosoftGraphApiClientFactory(IHttpClientFactory httpClientFactory, IUserPostureService userPostureService)
     {
-        this.httpClient = httpClientFactory.CreateClient("MicrosoftGraph");
+        this.httpClient = httpClientFactory.CreateClient(nameof(UserProviderType.Microsoft));
         this.userPostureService = userPostureService;
     }
 
     /// <inheritdoc />
     public async Task<GraphServiceClient> CreateGraphClientAsync(CancellationToken cancellationToken = default)
     {
-        if (this.graphServiceClient == null)
+        if (this.graphServiceClient != null)
         {
-            var userPosture = await this.userPostureService.GetUserPosturesAsync(cancellationToken);
-            var thisProvider = userPosture.FirstOrDefault(x => x.ProviderType == UserProviderType.Microsoft);
-            ArgumentNullException.ThrowIfNull(thisProvider);
-            this.graphServiceClient = new GraphServiceClient(this.httpClient, new UserOAuthTokenProvider(thisProvider.Keys[UserProviderDataKeyType.AccessToken]));
+            return this.graphServiceClient;
         }
 
+        var userPosture = await this.userPostureService.GetUserPostureAsync(UserProviderType.Microsoft, cancellationToken);
+        ArgumentNullException.ThrowIfNull(userPosture);
+        this.graphServiceClient = new GraphServiceClient(
+            this.httpClient,
+            new UserOAuthTokenProvider(userPosture.Keys[UserProviderDataKeyType.AccessToken]));
         return this.graphServiceClient;
     }
 }
