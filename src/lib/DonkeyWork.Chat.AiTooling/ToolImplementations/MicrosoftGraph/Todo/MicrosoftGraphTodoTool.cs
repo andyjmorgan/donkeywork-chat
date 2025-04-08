@@ -18,6 +18,7 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Todo;
 /// <summary>
 /// A Microsoft Graph Todo tool.
 /// </summary>
+[ToolProvider(UserProviderType.Microsoft)]
 public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory)
     : Base.Tool, IMicrosoftGraphTodoTool
 {
