@@ -21,7 +21,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task<JsonDocument?> SearchSpecificDriveAsync(string driveId, string query, CancellationToken cancellationToken = default);
+    Task<JsonDocument?> SearchMicrosoftGraphSpecificDriveAsync(string driveId, string query, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Search my drive for a file.
@@ -29,7 +29,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument?> SearchMyDriveAsync(
+    public Task<JsonDocument?> SearchMyMicrosoftGraphDriveAsync(
         string query,
         CancellationToken cancellationToken = default);
 
@@ -38,7 +38,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task<JsonDocument?> ListDrivesAsync(CancellationToken cancellationToken = default);
+    Task<JsonDocument?> ListMicrosoftGraphDrivesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets a file preview.
@@ -47,7 +47,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// <param name="fileId">The file id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument?> GetFilePreviewAsync(
+    public Task<JsonDocument?> GetMicrosoftGraphFilePreviewAsync(
         string driveId,
         string fileId,
         CancellationToken cancellationToken = default);
@@ -59,7 +59,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// <param name="itemId">The file id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument?> GetPublicFileSharingLinkAsync(
+    public Task<JsonDocument?> GetMicrosoftGraphPublicFileSharingLinkAsync(
         string driveId,
         string itemId,
         CancellationToken cancellationToken = default);
@@ -72,7 +72,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// <param name="folderName">The folder name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument?> CreateFolderInUserDriveAsync(
+    public Task<JsonDocument?> CreateFolderInUserMicrosoftGraphDriveAsync(
         string driveId,
         string parentId,
         string folderName,
@@ -87,7 +87,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// <param name="destinationParentId">The destination parent id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> CopyItemInDriveAsync(
+    Task<JsonDocument?> CopyItemInMicrosoftGraphDriveAsync(
         string driveId,
         string itemId,
         string newName,
@@ -103,7 +103,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// <param name="destinationParentId">The destination parent id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> MoveItemInDriveAsync(
+    Task<JsonDocument?> MoveItemInMicrosoftGraphDriveAsync(
         string driveId,
         string itemId,
         string newName,
@@ -117,7 +117,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// <param name="itemId">The file id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> DeleteItemInDriveAsync(
+    Task<JsonDocument?> DeleteItemInMicrosoftGraphDriveAsync(
         string driveId,
         string itemId,
         CancellationToken cancellationToken = default);
@@ -131,7 +131,7 @@ public interface IMicrosoftGraphDriveTool : ITool
     /// <param name="skip">The skip count.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> ListFolderContentsAsync(
+    Task<JsonDocument?> ListMicrosoftGraphFolderContentsAsync(
         string driveId,
         string folderId,
         int? maxCount = null,

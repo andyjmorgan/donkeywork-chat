@@ -22,7 +22,7 @@ public interface IMicrosoftGraphMailTool
     /// <param name="skip">The number of messages to skip (for pagination).</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A JSON document representing the matching messages.</returns>
-    Task<JsonDocument?> SearchEmailAsync(
+    Task<JsonDocument?> SearchMicrosoftGraphEmailAsync(
         string search,
         List<string>? select,
         int? maxCount = null,
@@ -33,7 +33,7 @@ public interface IMicrosoftGraphMailTool
     /// Gets the search query language supported by the Microsoft Graph API.
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument> GetSearchQueryLanguageAsync();
+    Task<JsonDocument> GetMicrosoftGraphSearchQueryLanguageAsync();
 
     /// <summary>
     /// Sends an email message on behalf of the authenticated user.
@@ -43,7 +43,7 @@ public interface IMicrosoftGraphMailTool
     /// <param name="toRecipients">A list of recipient email addresses.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A JSON document indicating success or failure.</returns>
-    Task<JsonDocument?> SendEmailAsync(
+    Task<JsonDocument?> SendMicrosoftGraphEmailAsync(
         string subject,
         string body,
         List<string> toRecipients,
@@ -57,7 +57,7 @@ public interface IMicrosoftGraphMailTool
     /// <param name="toRecipients">A list of recipient email addresses.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A JSON document representing the created draft message.</returns>
-    Task<JsonDocument?> CreateDraftEmailAsync(
+    Task<JsonDocument?> CreateMicrosoftGraphDraftEmailAsync(
         string subject,
         string body,
         List<string> toRecipients,
@@ -69,7 +69,7 @@ public interface IMicrosoftGraphMailTool
     /// <param name="draftMessageId">The draft message id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> SendDraftEmailAsync(
+    Task<JsonDocument?> SendMicrosoftGraphDraftEmailAsync(
         string draftMessageId,
         CancellationToken cancellationToken = default);
 
@@ -79,7 +79,7 @@ public interface IMicrosoftGraphMailTool
     /// <param name="messageId">The message id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> GetEmailByIdAsync(
+    Task<JsonDocument?> GetMicrosoftGraphEmailByIdAsync(
         string messageId,
         CancellationToken cancellationToken = default);
 
@@ -89,7 +89,7 @@ public interface IMicrosoftGraphMailTool
     /// <param name="messageId">The message id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> DeleteEmailAsync(
+    Task<JsonDocument?> DeleteMicrosoftGraphEmailAsync(
         string messageId,
         CancellationToken cancellationToken = default);
 
@@ -98,7 +98,7 @@ public interface IMicrosoftGraphMailTool
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> ListMailFoldersAsync(
+    Task<JsonDocument?> ListMicrosoftGraphMailFoldersAsync(
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -109,7 +109,7 @@ public interface IMicrosoftGraphMailTool
     /// <param name="comment">The message comment.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> ForwardEmailAsync(
+    Task<JsonDocument?> ForwardMicrosoftGraphEmailAsync(
         string messageId,
         List<string> toRecipients,
         string comment,
@@ -122,7 +122,7 @@ public interface IMicrosoftGraphMailTool
     /// <param name="comment">The message comment.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> ReplyToEmailAsync(
+    Task<JsonDocument?> ReplyToMicrosoftGraphEmailAsync(
         string messageId,
         string comment,
         CancellationToken cancellationToken = default);
@@ -134,7 +134,7 @@ public interface IMicrosoftGraphMailTool
     /// <param name="comment">The comment.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<JsonDocument?> ReplyToAllAsync(
+    Task<JsonDocument?> ReplyToAllMicrosoftGraphAsync(
         string messageId,
         string comment,
         CancellationToken cancellationToken = default);

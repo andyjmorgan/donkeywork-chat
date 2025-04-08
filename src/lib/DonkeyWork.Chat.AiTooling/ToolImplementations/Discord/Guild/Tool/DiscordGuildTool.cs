@@ -35,7 +35,7 @@ public class DiscordGuildTool(IDiscordApiClientFactory discordApiClientFactory)
         UserProviderScopeHandleType.Any,
         "identify",
         "guilds")]
-    public async Task<JsonDocument?> GetUserGuildsAsync(
+    public async Task<JsonDocument?> GetUserDiscordGuildsAsync(
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
     {
         var client = await discordApiClientFactory.CreateDiscordClientAsync(cancellationToken);
@@ -56,7 +56,7 @@ public class DiscordGuildTool(IDiscordApiClientFactory discordApiClientFactory)
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
         "identify")]
-    public async Task<JsonDocument?> GetCurrentUserAsync(
+    public async Task<JsonDocument?> GetCurrentDiscordUserAsync(
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
     {
         var client = await discordApiClientFactory.CreateDiscordClientAsync(cancellationToken);

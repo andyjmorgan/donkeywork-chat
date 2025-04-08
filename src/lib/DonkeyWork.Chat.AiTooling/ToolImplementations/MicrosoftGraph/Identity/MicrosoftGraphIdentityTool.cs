@@ -25,7 +25,7 @@ public class MicrosoftGraphIdentityTool(IMicrosoftGraphApiClientFactory microsof
     [ToolProviderScopes(UserProviderScopeHandleType.Any, "User.Read")]
     [ToolFunction]
     [Description("A tool to get the current users information via the Microsoft Graph api.")]
-    public async Task<JsonDocument> GetUserInformationAsync([ToolIgnoredParameter] CancellationToken cancellationToken = default)
+    public async Task<JsonDocument> GetMicrosoftGraphUserInformationAsync([ToolIgnoredParameter] CancellationToken cancellationToken = default)
     {
         var graphClient = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
         var searchResult = await graphClient.Me.GetAsync(cancellationToken: cancellationToken);

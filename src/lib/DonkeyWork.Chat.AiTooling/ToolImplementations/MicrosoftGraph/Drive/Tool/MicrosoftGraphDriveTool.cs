@@ -31,7 +31,7 @@ public class MicrosoftGraphDriveTool(
         "Files.Read.All",
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    public async Task<JsonDocument?> SearchSpecificDriveAsync(
+    public async Task<JsonDocument?> SearchMicrosoftGraphSpecificDriveAsync(
         [Description("The drive id that you wish to search. Consider listing the drives first.")]
         string driveId,
         [Description("Search terms that you wish to use the Microsoft Graph drives.")]
@@ -53,7 +53,7 @@ public class MicrosoftGraphDriveTool(
         "Files.Read.All",
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    public async Task<JsonDocument?> SearchMyDriveAsync(
+    public async Task<JsonDocument?> SearchMyMicrosoftGraphDriveAsync(
         [Description("Search terms that you wish to use the Microsoft Graph drives.")]
         string query,
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
@@ -75,7 +75,7 @@ public class MicrosoftGraphDriveTool(
         "Files.Read.All",
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    public async Task<JsonDocument?> ListDrivesAsync(
+    public async Task<JsonDocument?> ListMicrosoftGraphDrivesAsync(
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
     {
         var graphClient = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
@@ -92,7 +92,7 @@ public class MicrosoftGraphDriveTool(
         "Files.Read.All",
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
-    public async Task<JsonDocument?> GetFilePreviewAsync(
+    public async Task<JsonDocument?> GetMicrosoftGraphFilePreviewAsync(
         [Description("The drive id from which you wish to get the file preview.")]
         string driveId,
         [Description("The file id that you wish to get the preview for.")]
@@ -112,7 +112,7 @@ public class MicrosoftGraphDriveTool(
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
     [Description("A tool to Get a public file sharing link from a Microsoft Graph drive file or folder.")]
-    public async Task<JsonDocument?> GetPublicFileSharingLinkAsync(
+    public async Task<JsonDocument?> GetMicrosoftGraphPublicFileSharingLinkAsync(
         [Description("The drive id from which you wish to get the file preview.")]
         string driveId,
         [Description("The file id that you wish to get the preview for.")]
@@ -141,7 +141,7 @@ public class MicrosoftGraphDriveTool(
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
     [Description("A tool to Create a folder in a Microsoft Graph drive.")]
-    public async Task<JsonDocument?> CreateFolderInUserDriveAsync(
+    public async Task<JsonDocument?> CreateFolderInUserMicrosoftGraphDriveAsync(
         [Description("The drive id from which you wish to get the file preview.")]
         string driveId,
         [Description("The parent id you wish to add the folder to.")]
@@ -172,7 +172,7 @@ public class MicrosoftGraphDriveTool(
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
     [Description("A tool to copy a file in a user's Microsoft Graph drive.")]
-    public async Task<JsonDocument?> CopyItemInDriveAsync(
+    public async Task<JsonDocument?> CopyItemInMicrosoftGraphDriveAsync(
         [Description("The drive ID where the file exists.")]
         string driveId,
         [Description("The ID of the file you want to copy.")]
@@ -207,7 +207,7 @@ public class MicrosoftGraphDriveTool(
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
     [Description("A tool to move a file in a user's Microsoft Graph drive.")]
-    public async Task<JsonDocument?> MoveItemInDriveAsync(
+    public async Task<JsonDocument?> MoveItemInMicrosoftGraphDriveAsync(
         [Description("The drive ID where the file exists.")]
         string driveId,
         [Description("The ID of the file to move.")]
@@ -242,7 +242,7 @@ public class MicrosoftGraphDriveTool(
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
     [Description("A tool to delete a file in a user's Microsoft Graph drive.")]
-    public async Task<JsonDocument?> DeleteItemInDriveAsync(
+    public async Task<JsonDocument?> DeleteItemInMicrosoftGraphDriveAsync(
         [Description("The drive ID where the file exists.")]
         string driveId,
         [Description("The ID of the file to delete.")]
@@ -265,7 +265,7 @@ public class MicrosoftGraphDriveTool(
         "Files.ReadWrite",
         "Files.ReadWrite.All")]
     [Description("A tool to list the contents of a folder in a user's Microsoft Graph drive, with optional pagination.")]
-    public async Task<JsonDocument?> ListFolderContentsAsync(
+    public async Task<JsonDocument?> ListMicrosoftGraphFolderContentsAsync(
         [Description("The drive ID containing the folder.")]
         string driveId,
         [Description("The ID of the folder to list contents from.")]

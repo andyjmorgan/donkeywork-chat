@@ -20,7 +20,7 @@ public interface IMicrosoftGraphTodoTool
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument> GetTodoListsAsync(CancellationToken cancellationToken = default);
+    public Task<JsonDocument> GetMicrosoftGraphTodoListsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Creates a new Microsoft To Do list with the specified name.
@@ -28,7 +28,7 @@ public interface IMicrosoftGraphTodoTool
     /// <param name="displayName">The name of the list to create.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument> CreateTodoListAsync(string displayName, CancellationToken cancellationToken = default);
+    public Task<JsonDocument> CreateMicrosoftGraphTodoListAsync(string displayName, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves all tasks in the specified Microsoft To Do list.
@@ -36,7 +36,7 @@ public interface IMicrosoftGraphTodoTool
     /// <param name="listId">The ID of the To Do list.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument> GetTasksAsync(string listId, CancellationToken cancellationToken = default);
+    public Task<JsonDocument> GetMicrosoftGraphTasksAsync(string listId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes a task from the specified Microsoft To Do list.
@@ -45,7 +45,7 @@ public interface IMicrosoftGraphTodoTool
     /// <param name="taskId">The id of the task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument> DeleteTaskAsync(
+    public Task<JsonDocument> DeleteMicrosoftGraphTaskAsync(
         string listId,
         string taskId,
         CancellationToken cancellationToken = default);
@@ -62,7 +62,7 @@ public interface IMicrosoftGraphTodoTool
     /// <param name="dueDate">Optional due date for the task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument> CreateTaskAsync(string listId, string title, List<string>? categories, string? body = null, Importance? importance = null, TaskStatus? status = null, string? dueDate = null, CancellationToken cancellationToken = default);
+    public Task<JsonDocument> CreateMicrosoftGraphTaskAsync(string listId, string title, List<string>? categories, string? body = null, Importance? importance = null, TaskStatus? status = null, string? dueDate = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Creates a task in the specified Microsoft To Do list.
@@ -77,5 +77,5 @@ public interface IMicrosoftGraphTodoTool
     /// <param name="dueDate">Optional due date for the task.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument> UpdateTaskAsync(string listId, string taskId, string title, List<string>? categories, string? body = null, Importance? importance = null, TaskStatus? status = null, string? dueDate = null, CancellationToken cancellationToken = default);
+    public Task<JsonDocument> UpdateMicrosoftGraphTaskAsync(string listId, string taskId, string title, List<string>? categories, string? body = null, Importance? importance = null, TaskStatus? status = null, string? dueDate = null, CancellationToken cancellationToken = default);
 }

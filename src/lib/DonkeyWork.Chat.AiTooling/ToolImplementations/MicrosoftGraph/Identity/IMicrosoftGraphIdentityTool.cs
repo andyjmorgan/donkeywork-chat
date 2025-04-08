@@ -18,5 +18,5 @@ public interface IMicrosoftGraphIdentityTool
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<JsonDocument> GetUserInformationAsync(CancellationToken cancellationToken = default);
+    public Task<JsonDocument> GetMicrosoftGraphUserInformationAsync(CancellationToken cancellationToken = default);
 }

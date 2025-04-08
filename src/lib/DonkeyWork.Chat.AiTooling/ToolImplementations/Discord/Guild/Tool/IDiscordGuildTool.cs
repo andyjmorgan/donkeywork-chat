@@ -18,12 +18,12 @@ public interface IDiscordGuildTool
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A JSON document containing guild information.</returns>
-    Task<JsonDocument?> GetUserGuildsAsync(CancellationToken cancellationToken = default);
+    Task<JsonDocument?> GetUserDiscordGuildsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets current users discord information.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A JSON document containing user information.</returns>
-    Task<JsonDocument?> GetCurrentUserAsync(CancellationToken cancellationToken = default);
+    Task<JsonDocument?> GetCurrentDiscordUserAsync(CancellationToken cancellationToken = default);
 }

@@ -31,7 +31,7 @@ public class MicrosoftGraphMailTool(
         "Mail.Read",
         "Mail.ReadBasic",
         "Mail.ReadWrite")]
-    public async Task<JsonDocument?> SearchEmailAsync(
+    public async Task<JsonDocument?> SearchMicrosoftGraphEmailAsync(
         [Description("The search query string (e.g., \"report\"). Ensure to us US Formatted date strings (MM/DD/YYYY) for date searches.")]
         string search,
         [Description("The select query parameters (e.g., \"subject\",\"from\", \"to\") etc. Optional.")]
@@ -71,7 +71,7 @@ public class MicrosoftGraphMailTool(
     /// <inheritdoc />
     [ToolFunction]
     [Description("A helper tool to describe the Microsoft Graph email search method and usage.")]
-    public Task<JsonDocument> GetSearchQueryLanguageAsync()
+    public Task<JsonDocument> GetMicrosoftGraphSearchQueryLanguageAsync()
     {
         var prompt = """
             # Microsoft Graph - search Query for Mail Messages
@@ -127,7 +127,7 @@ public class MicrosoftGraphMailTool(
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
         "Mail.Send")]
-    public async Task<JsonDocument?> SendEmailAsync(
+    public async Task<JsonDocument?> SendMicrosoftGraphEmailAsync(
         [Description("The subject of the email.")]
         string subject,
         [Description("The plain text content of the email body.")]
@@ -171,7 +171,7 @@ public class MicrosoftGraphMailTool(
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
         "Mail.ReadWrite")]
-    public async Task<JsonDocument?> CreateDraftEmailAsync(
+    public async Task<JsonDocument?> CreateMicrosoftGraphDraftEmailAsync(
         [Description("The subject of the draft email.")]
         string subject,
         [Description("The plain text content of the email body.")]
@@ -210,7 +210,7 @@ public class MicrosoftGraphMailTool(
         UserProviderScopeHandleType.Any,
         "Mail.Send",
         "Mail.ReadWrite")]
-    public async Task<JsonDocument?> SendDraftEmailAsync(
+    public async Task<JsonDocument?> SendMicrosoftGraphDraftEmailAsync(
         [Description("The ID of the draft message to send.")]
         string draftMessageId,
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
@@ -229,7 +229,7 @@ public class MicrosoftGraphMailTool(
         "Mail.Read",
         "Mail.ReadBasic",
         "Mail.ReadWrite")]
-    public async Task<JsonDocument?> GetEmailByIdAsync(
+    public async Task<JsonDocument?> GetMicrosoftGraphEmailByIdAsync(
         [Description("The ID of the email message.")]
         string messageId,
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
@@ -245,7 +245,7 @@ public class MicrosoftGraphMailTool(
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
         "Mail.ReadWrite")]
-    public async Task<JsonDocument?> DeleteEmailAsync(
+    public async Task<JsonDocument?> DeleteMicrosoftGraphEmailAsync(
         [Description("The ID of the email message to delete.")]
         string messageId,
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
@@ -262,7 +262,7 @@ public class MicrosoftGraphMailTool(
         UserProviderScopeHandleType.Any,
         "Mail.Read",
         "Mail.ReadWrite")]
-    public async Task<JsonDocument?> ListMailFoldersAsync(
+    public async Task<JsonDocument?> ListMicrosoftGraphMailFoldersAsync(
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
     {
         var client = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
@@ -276,7 +276,7 @@ public class MicrosoftGraphMailTool(
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
         "Mail.ReadWrite")]
-    public async Task<JsonDocument?> ForwardEmailAsync(
+    public async Task<JsonDocument?> ForwardMicrosoftGraphEmailAsync(
         [Description("The ID of the email message to forward.")]
         string messageId,
         [Description("A list of recipient email addresses.")]
@@ -311,7 +311,7 @@ public class MicrosoftGraphMailTool(
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
         "Mail.ReadWrite")]
-    public async Task<JsonDocument?> ReplyToEmailAsync(
+    public async Task<JsonDocument?> ReplyToMicrosoftGraphEmailAsync(
         [Description("The ID of the message to reply to.")]
         string messageId,
         [Description("The reply body text.")] string comment,
@@ -333,7 +333,7 @@ public class MicrosoftGraphMailTool(
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
         "Mail.ReadWrite")]
-    public async Task<JsonDocument?> ReplyToAllAsync(
+    public async Task<JsonDocument?> ReplyToAllMicrosoftGraphAsync(
         [Description("The ID of the message to reply to.")]
         string messageId,
         [Description("The reply body text.")] string comment,

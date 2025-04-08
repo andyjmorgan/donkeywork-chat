@@ -27,7 +27,7 @@ public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGra
     [ToolFunction]
     [Description("Get all To Do lists for the signed-in user using the Microsoft Graph Api.")]
     [ToolProviderScopes(UserProviderScopeHandleType.Any,  "Tasks.Read", "Tasks.ReadWrite")]
-    public async Task<JsonDocument> GetTodoListsAsync(
+    public async Task<JsonDocument> GetMicrosoftGraphTodoListsAsync(
         [ToolIgnoredParameter]
         CancellationToken cancellationToken = default)
     {
@@ -42,7 +42,7 @@ public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGra
     [ToolFunction]
     [Description("Create a new To Do list using the Microsoft Graph Api.")]
     [ToolProviderScopes(UserProviderScopeHandleType.Any, "Tasks.ReadWrite")]
-    public async Task<JsonDocument> CreateTodoListAsync(
+    public async Task<JsonDocument> CreateMicrosoftGraphTodoListAsync(
         [Description("The display name of the todo list. Keep it short")]
         string displayName,
         [ToolIgnoredParameter]
@@ -62,7 +62,7 @@ public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGra
     [ToolFunction]
     [Description("Get all tasks from a specific To Do list using the Microsoft Graph Api.")]
     [ToolProviderScopes(UserProviderScopeHandleType.Any,  "Tasks.Read", "Tasks.ReadWrite")]
-    public async Task<JsonDocument> GetTasksAsync(
+    public async Task<JsonDocument> GetMicrosoftGraphTasksAsync(
         [Description("The ID of the To Do list.")]
         string listId,
         CancellationToken cancellationToken = default)
@@ -77,7 +77,7 @@ public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGra
     /// <inheritdoc />
     [ToolFunction]
     [Description("Deletes a task from a To Do list using the Microsoft Graph Api.")]
-    public async Task<JsonDocument> DeleteTaskAsync(
+    public async Task<JsonDocument> DeleteMicrosoftGraphTaskAsync(
         [Description("The ID of the To Do list.")]
         string listId,
         [Description("The ID of the To Do task.")]
@@ -96,7 +96,7 @@ public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGra
     [ToolFunction]
     [Description("Create a new task in a specified To Do list using the Microsoft Graph Api.")]
     [ToolProviderScopes(UserProviderScopeHandleType.Any,  "Tasks.Read", "Tasks.ReadWrite")]
-    public async Task<JsonDocument> CreateTaskAsync(
+    public async Task<JsonDocument> CreateMicrosoftGraphTaskAsync(
         [Description("The ID of the To Do list.")]
         string listId,
         [Description("The title of the task.")]
@@ -142,7 +142,7 @@ public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGra
     [ToolFunction]
     [Description("Updates an existing task in a specified To Do list using the Microsoft Graph Api.")]
     [ToolProviderScopes(UserProviderScopeHandleType.Any,  "Tasks.Read", "Tasks.ReadWrite")]
-    public async Task<JsonDocument> UpdateTaskAsync(
+    public async Task<JsonDocument> UpdateMicrosoftGraphTaskAsync(
         [Description("The ID of the To Do list.")]
         string listId,
         [Description("The ID of the To Do task.")]
