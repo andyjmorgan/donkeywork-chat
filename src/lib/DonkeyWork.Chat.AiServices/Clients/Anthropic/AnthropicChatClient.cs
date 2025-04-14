@@ -181,6 +181,13 @@ public class AnthropicChatClient : IAIChatClient
 
         if (toolCallFunctions.Any())
         {
+            // We'll pad the tool  calls as anthropic will continue to stream from the previous token.
+            yield return new ChatFragment
+            {
+                ChatId = chatId,
+                Content = $"{Environment.NewLine}{Environment.NewLine}",
+            };
+
             var assistantMessage = new Message()
             {
                 Role = RoleType.Assistant,
