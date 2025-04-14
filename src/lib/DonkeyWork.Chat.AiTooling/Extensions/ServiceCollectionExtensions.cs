@@ -12,6 +12,7 @@ using DonkeyWork.Chat.AiTooling.ToolImplementations.Discord.Guild.Tool;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Common.Api;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Drive;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Gmail;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Identity;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common.Api;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Drive.Tool;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Identity;
@@ -55,6 +56,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IGoogleApiClientFactory, GoogleApiClientFactory>()
             .AddScoped<IGoogleDriveTool, GoogleDriveTool>()
             .AddScoped<IGmailTool, GmailTool>()
+            .AddScoped<IGoogleIdentityTool, GoogleIdentityTool>()
             .AddScoped<ICurrentDateTimeTool, CurrentDateTimeTool>();
     }
 

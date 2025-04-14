@@ -6,6 +6,7 @@
 
 using Google.Apis.Drive.v3;
 using Google.Apis.Gmail.v1;
+using Google.Apis.Oauth2.v2;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Common.Api;
 
@@ -27,4 +28,11 @@ public interface IGoogleApiClientFactory
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a configured <see cref="DriveService"/> instance.</returns>
     Task<DriveService> CreateDriveServiceAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates an Oauth2 service instance for interacting with the Google Oauth2 API.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<Oauth2Service> CreateOauth2ServiceAsync(CancellationToken cancellationToken = default);
 }

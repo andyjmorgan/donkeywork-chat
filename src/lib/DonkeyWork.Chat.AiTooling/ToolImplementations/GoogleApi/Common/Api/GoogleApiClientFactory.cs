@@ -9,6 +9,7 @@ using DonkeyWork.Chat.Common.Providers;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Gmail.v1;
+using Google.Apis.Oauth2.v2;
 using Google.Apis.Services;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Common.Api;
@@ -42,6 +43,11 @@ public class GoogleApiClientFactory : IGoogleApiClientFactory
     private GoogleCredential? googleCredential;
 
     /// <summary>
+    /// An oauth2 service.
+    /// </summary>
+    private Oauth2Service? oauth2Service = null;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="GoogleApiClientFactory"/> class.
     /// </summary>
     /// <param name="httpClientFactory">The http client factory.</param>
@@ -59,7 +65,6 @@ public class GoogleApiClientFactory : IGoogleApiClientFactory
         {
             return this.gmailService;
         }
-
         await this.ValidateCredentialsAsync(cancellationToken);
         this.gmailService = new GmailService(
             new BaseClientService.Initializer
@@ -87,6 +92,24 @@ public class GoogleApiClientFactory : IGoogleApiClientFactory
                 ApplicationName = AgentName,
             });
         return this.driveService;
+    }
+
+    /// <inheritdoc />
+    public async Task<Oauth2Service> CreateOauth2ServiceAsync(CancellationToken cancellationToken = default)
+    {
+        if (this.oauth2Service is not null)
+        {
+            return this.oauth2Service;
+        }
+
+        await this.ValidateCredentialsAsync(cancellationToken);
+        this.oauth2Service = new Oauth2Service(
+            new BaseClientService.Initializer
+            {
+                HttpClientInitializer = this.googleCredential,
+                ApplicationName = AgentName,
+            });
+        return this.oauth2Service;
     }
 
     private async Task ValidateCredentialsAsync(CancellationToken cancellationToken)
