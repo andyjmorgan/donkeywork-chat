@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Anthropic.SDK.Messaging;
 using DonkeyWork.Chat.AiServices.Clients.Google.Configuration;
 using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Streaming;

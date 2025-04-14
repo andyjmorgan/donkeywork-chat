@@ -106,6 +106,10 @@ public class TokenRefreshWorker : BackgroundService
                 catch (Exception ex)
                 {
                     this.logger.LogError(ex, "Error while refreshing token for provider: {Provider}",  group.Key);
+                    await apiPersistenceContext.UserTokens.Where(
+                            x =>
+                                x.Id == token.Id)
+                        .ExecuteDeleteAsync(cancellationToken);
                 }
             }
         }
