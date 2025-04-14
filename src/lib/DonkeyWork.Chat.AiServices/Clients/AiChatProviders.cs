@@ -25,4 +25,9 @@ public enum AiChatProviders
     /// Ollama.
     /// </summary>
     Ollama,
+
+    /// <summary>
+    /// Google gemini.
+    /// </summary>
+    Gemini,
 }

@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="Anthropic.SDK"/>
+        <PackageReference Include="Google_GenerativeAI" />
         <PackageReference Include="Microsoft.Extensions.Http"/>
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions"/>
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations"/>

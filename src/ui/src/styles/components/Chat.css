@@ -433,6 +433,12 @@ p {
     color: var(--primary-color-text);
 }
 
+.message-container.user .markdown-content a {
+    color: var(--primary-color-text);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 .message-container.user .markdown-content blockquote {
     border-left-color: var(--primary-color-text);
     color: var(--primary-color-text);

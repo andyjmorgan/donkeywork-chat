@@ -36,7 +36,7 @@ public class OpenAIChatClient(IOptions<OpenAiConfiguration> configuration)
     public async IAsyncEnumerable<BaseStreamItem> StreamChatAsync(
         ChatRequest request,
         List<ToolDefinition> toolDefinitions,
-        Func<ToolCallback, Task<string>> toolAction,
+        Func<ToolCallback, Task<JsonDocument>> toolAction,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         await foreach (var chatFragment in this.StreamChatAsync(
@@ -135,7 +135,7 @@ public class OpenAIChatClient(IOptions<OpenAiConfiguration> configuration)
         List<ChatMessage> messages,
         ChatCompletionOptions options,
         ChatClient chatClient,
-        Func<ToolCallback, Task<string>> toolAction,
+        Func<ToolCallback, Task<JsonDocument>> toolAction,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         bool awaitToolCalls = false;
@@ -242,7 +242,7 @@ public class OpenAIChatClient(IOptions<OpenAiConfiguration> configuration)
 
                 yield return new ToolResult()
                 {
-                    Result = toolResult,
+                    Result = toolResult.RootElement.GetRawText(),
                     Duration = toolStopwatch.Elapsed,
                     ToolCallId = toolCallId,
                 };
@@ -250,7 +250,7 @@ public class OpenAIChatClient(IOptions<OpenAiConfiguration> configuration)
                 messages.Add(
                     new ToolChatMessage(
                         functionToolCall.Id,
-                        toolResult));
+                        toolResult.RootElement.GetRawText()));
             }
 
             await foreach (var fragment in

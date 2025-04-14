@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using DonkeyWork.Chat.AiServices.Clients;
 using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Streaming;
@@ -77,13 +78,20 @@ public class ChatService
                                    throw new UnknownToolDefinitionException(x.ToolName);
                                }
 
-                               var result = await tool.Tool.InvokeFunctionAsync(x.ToolName, x.ToolParameters, cancellationToken);
+                               var result = await tool.Tool.InvokeFunctionAsync(
+                                   x.ToolName,
+                                   x.ToolParameters,
+                                   cancellationToken);
                                if (result is JsonDocument jsonDocument)
                                {
-                                   return jsonDocument.RootElement.ToString();
+                                   return jsonDocument;
                                }
 
-                               return result?.ToString() ?? string.Empty;
+                               return JsonDocument.Parse(
+                                   JsonSerializer.Serialize(new
+                                   {
+                                       Result = result,
+                                   }));
                            },
                            cancellationToken))
         {

@@ -4,6 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
+using System.Text.Json;
 using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Streaming;
 using DonkeyWork.Chat.AiTooling.Base.Models;
@@ -26,6 +27,6 @@ public interface IAIChatClient
     public IAsyncEnumerable<BaseStreamItem> StreamChatAsync(
         ChatRequest request,
         List<ToolDefinition> toolDefinitions,
-        Func<ToolCallback, Task<string>> toolAction,
+        Func<ToolCallback, Task<JsonDocument>> toolAction,
         CancellationToken cancellationToken);
 }

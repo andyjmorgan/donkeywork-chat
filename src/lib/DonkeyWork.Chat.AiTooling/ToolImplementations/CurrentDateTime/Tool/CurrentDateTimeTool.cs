@@ -5,6 +5,7 @@
 // ------------------------------------------------------
 
 using System.ComponentModel;
+using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.CurrentDateTime.Tool;
@@ -17,9 +18,12 @@ public class CurrentDateTimeTool : Base.Tool, ICurrentDateTimeTool
     /// </summary>
     /// <returns>A string representing a <see cref="DateTimeOffset"/>.</returns>
     [ToolFunction]
-    [Description("A tool to get the current date and time in utc format.")]
-    public string GetCurrentDateTime()
+    [Description("A tool to get the current date and time in ISO 8601 format.")]
+    public JsonDocument GetCurrentDateTime()
     {
-        return DateTimeOffset.UtcNow.ToString();
+        return JsonDocument.Parse(JsonSerializer.Serialize(new
+        {
+            ISO8601 = DateTimeOffset.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.ffffZ"),
+        }));
     }
 }

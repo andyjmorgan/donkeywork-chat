@@ -4,6 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
+using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Base;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.CurrentDateTime.Tool;
@@ -17,5 +18,5 @@ public interface ICurrentDateTimeTool : ITool
     /// Gets the current datetime.
     /// </summary>
     /// <returns>A string.</returns>
-    public string GetCurrentDateTime();
+    public JsonDocument GetCurrentDateTime();
 }

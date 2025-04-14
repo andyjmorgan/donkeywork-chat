@@ -54,7 +54,7 @@ public class AnthropicChatClient : IAIChatClient
     public async IAsyncEnumerable<BaseStreamItem> StreamChatAsync(
         ChatRequest request,
         List<ToolDefinition> toolDefinitions,
-        Func<ToolCallback, Task<string>> toolAction,
+        Func<ToolCallback, Task<JsonDocument>> toolAction,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         Guid chatId = Guid.NewGuid();
@@ -116,7 +116,7 @@ public class AnthropicChatClient : IAIChatClient
 
     private async IAsyncEnumerable<BaseStreamItem> StreamChatAsync(
         ChatRequest request,
-        Func<ToolCallback, Task<string>> toolAction,
+        Func<ToolCallback, Task<JsonDocument>> toolAction,
         MessageParameters messageParameters,
         Guid chatId,
         [EnumeratorCancellation] CancellationToken cancellationToken)
@@ -236,7 +236,7 @@ public class AnthropicChatClient : IAIChatClient
 
                 yield return new ToolResult()
                 {
-                    Result = toolResult,
+                    Result = toolResult.RootElement.GetRawText(),
                     Duration = toolStopwatch.Elapsed,
                     ToolCallId = toolCallId,
                 };
@@ -248,7 +248,7 @@ public class AnthropicChatClient : IAIChatClient
                     [
                         new TextContent
                         {
-                            Text = toolResult,
+                            Text = toolResult.RootElement.GetRawText(),
                         },
                     ],
                 });

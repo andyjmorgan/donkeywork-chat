@@ -103,7 +103,7 @@ public class Tool : ITool
     }
 
     /// <inheritdoc />
-    public virtual async Task<object?> InvokeFunctionAsync(string functionName, JsonDocument arguments, CancellationToken cancellationToken = default)
+    public virtual async Task<JsonDocument?> InvokeFunctionAsync(string functionName, JsonDocument arguments, CancellationToken cancellationToken = default)
     {
         var method = this.GetType().GetMethods()
             .FirstOrDefault(x => x.GetCustomAttribute<ToolFunctionAttribute>() != null
@@ -163,18 +163,17 @@ public class Tool : ITool
         {
             var result = method.Invoke(this, parameterValues);
 
-            if (result is Task task)
+            if (result is not Task task)
             {
-                await task.WaitAsync(cancellationToken);
-                if (method.ReturnType.IsGenericType)
-                {
-                    return ((dynamic)task).Result;
-                }
-
-                return null;
+                return CreateJsonDocument(result);
             }
 
-            return result;
+            await task.WaitAsync(cancellationToken);
+            if (method.ReturnType.IsGenericType)
+            {
+                var taskResult = ((dynamic)task).Result;
+                return CreateJsonDocument(taskResult);
+            }
         }
         catch (Exception ex)
         {
@@ -186,12 +185,23 @@ public class Tool : ITool
                     exception = ex.Message,
                 }));
         }
+
+        return null;
+    }
+
+    private static JsonDocument? CreateJsonDocument(object? result)
+    {
+        if (result is JsonDocument document)
+        {
+            return document;
+        }
+
+        return JsonDocument.Parse(JsonSerializer.Serialize(result));
     }
 
     private static ToolFunctionParameterDefinition GetJsonSchema(Type type)
     {
         Type actualType = Nullable.GetUnderlyingType(type) ?? type;
-
         // Handle enums at the schema creation level
         if (actualType.IsEnum)
         {

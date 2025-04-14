@@ -380,8 +380,8 @@ const Chat: React.FC = () => {
       return '/images/providers/openai.png';
     } else if (normalizedName.includes('anthropic')) {
       return '/images/providers/anthropic.png';
-    } else if (normalizedName.includes('google')) {
-      return '/images/providers/google.png';
+    } else if (normalizedName.includes('gemini')) {
+      return '/images/providers/gemini.png';
     } else if (normalizedName.includes('mistral')) {
       return '/images/providers/mistral.png';
     }

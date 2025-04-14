@@ -7,6 +7,8 @@
 using DonkeyWork.Chat.AiServices.Clients;
 using DonkeyWork.Chat.AiServices.Clients.Anthropic;
 using DonkeyWork.Chat.AiServices.Clients.Anthropic.Configuration;
+using DonkeyWork.Chat.AiServices.Clients.Google;
+using DonkeyWork.Chat.AiServices.Clients.Google.Configuration;
 using DonkeyWork.Chat.AiServices.Clients.OpenAi;
 using DonkeyWork.Chat.AiServices.Clients.OpenAi.Configuration;
 using DonkeyWork.Chat.AiServices.Services;
@@ -36,9 +38,15 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
+        serviceCollection.AddOptions<GeminiConfiguration>()
+            .BindConfiguration(nameof(GeminiConfiguration))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
         return serviceCollection.AddScoped<IAIChatProviderFactory, AIChatProviderFactory>()
             .AddScoped<IChatService, ChatService>()
             .AddKeyedScoped<IAIChatClient, OpenAIChatClient>(AiChatProviders.OpenAi)
+            .AddKeyedScoped<IAIChatClient, GeminiChatClient>(AiChatProviders.Gemini)
             .AddKeyedScoped<IAIChatClient, AnthropicChatClient>(AiChatProviders.Anthropic);
     }
 }

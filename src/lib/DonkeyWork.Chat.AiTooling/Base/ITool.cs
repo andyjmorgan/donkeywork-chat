@@ -29,5 +29,5 @@ public interface ITool
     /// <param name="arguments">The arguments.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A response.</returns>
-    public Task<object?> InvokeFunctionAsync(string functionName, JsonDocument arguments, CancellationToken cancellationToken = default);
+    public Task<JsonDocument?> InvokeFunctionAsync(string functionName, JsonDocument arguments, CancellationToken cancellationToken = default);
 }

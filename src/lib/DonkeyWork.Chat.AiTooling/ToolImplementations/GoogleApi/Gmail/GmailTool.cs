@@ -32,7 +32,7 @@ public class GmailTool(
     [Description("A tool to send an email using Gmail.")]
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
-        "https://www.googleapis.com/auth/gmail.send")]
+        "https://www.googleapis.com/auth/gmail.modify")]
     public async Task<JsonDocument?> SendGmailAsync(
         [Description("The recipient email address(es), comma-separated for multiple recipients.")]
         string to,
@@ -100,7 +100,7 @@ public class GmailTool(
     [Description("A tool to list emails from Gmail inbox with filtering options.")]
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
-        "https://www.googleapis.com/auth/gmail.readonly")]
+        "https://www.googleapis.com/auth/gmail.modify")]
     public async Task<JsonDocument?> ListGmailMessagesAsync(
         [Description("Maximum number of emails to return.")]
         int maxResults,
@@ -203,7 +203,7 @@ public class GmailTool(
     [Description("A tool to get a specific email from Gmail.")]
     [ToolProviderScopes(
         UserProviderScopeHandleType.Any,
-        "https://www.googleapis.com/auth/gmail.readonly")]
+        "https://www.googleapis.com/auth/gmail.modify")]
     public async Task<JsonDocument?> GetGmailMessageAsync(
         [Description("The ID of the message to retrieve.")]
         string messageId,
