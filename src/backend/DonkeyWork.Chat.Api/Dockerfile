@@ -13,6 +13,8 @@ COPY ["src/lib/DonkeyWork.Chat.Common/DonkeyWork.Chat.Common.csproj", "src/lib/D
 COPY ["src/lib/persistence/DonkeyWork.Chat.Persistence/DonkeyWork.Chat.Persistence.csproj", "src/lib/persistence/DonkeyWork.Chat.Persistence/"]
 COPY ["src/lib/DonkeyWork.Chat.AiTooling/DonkeyWork.Chat.AiTooling.csproj", "src/lib/DonkeyWork.Chat.AiTooling/"]
 COPY ["src/lib/DonkeyWork.Chat.AiServices/DonkeyWork.Chat.AiServices.csproj", "src/lib/DonkeyWork.Chat.AiServices/"]
+COPY ["src/lib/DonkeyWork.Chat.Api.Core/DonkeyWork.Chat.Api.Core.csproj", "src/lib/DonkeyWork.Chat.Api.Core/"]
+COPY ["src/backend/DonkeyWork.Chat.McpServer/DonkeyWork.Chat.McpServer.csproj", "src/backend/DonkeyWork.Chat.McpServer/"]
 RUN dotnet restore "src/backend/DonkeyWork.Chat.Api/DonkeyWork.Chat.Api.csproj"
 COPY . .
 WORKDIR "/src/src/backend/DonkeyWork.Chat.Api"

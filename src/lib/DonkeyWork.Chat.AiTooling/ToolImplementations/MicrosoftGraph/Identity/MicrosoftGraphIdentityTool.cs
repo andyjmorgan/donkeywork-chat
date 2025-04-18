@@ -16,7 +16,7 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Identity;
 /// <summary>
 /// A class that implements the <see cref="IMicrosoftGraphIdentityTool"/> interface.
 /// </summary>
-[ToolProvider(UserProviderType.Microsoft)]
+[OAuthToolProvider(UserProviderType.Microsoft)]
 public class MicrosoftGraphIdentityTool(IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory)
     : Base.Tool, IMicrosoftGraphIdentityTool
 {

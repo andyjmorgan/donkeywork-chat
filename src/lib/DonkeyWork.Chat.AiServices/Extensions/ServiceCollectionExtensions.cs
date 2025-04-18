@@ -12,6 +12,7 @@ using DonkeyWork.Chat.AiServices.Clients.Google.Configuration;
 using DonkeyWork.Chat.AiServices.Clients.OpenAi;
 using DonkeyWork.Chat.AiServices.Clients.OpenAi.Configuration;
 using DonkeyWork.Chat.AiServices.Services;
+using DonkeyWork.Chat.Common.Providers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Chat.AiServices.Extensions;
@@ -45,8 +46,8 @@ public static class ServiceCollectionExtensions
 
         return serviceCollection.AddScoped<IAIChatProviderFactory, AIChatProviderFactory>()
             .AddScoped<IChatService, ChatService>()
-            .AddKeyedScoped<IAIChatClient, OpenAIChatClient>(AiChatProviders.OpenAi)
-            .AddKeyedScoped<IAIChatClient, GeminiChatClient>(AiChatProviders.Gemini)
-            .AddKeyedScoped<IAIChatClient, AnthropicChatClient>(AiChatProviders.Anthropic);
+            .AddKeyedScoped<IAIChatClient, OpenAIChatClient>(AiChatProvider.OpenAi)
+            .AddKeyedScoped<IAIChatClient, GeminiChatClient>(AiChatProvider.Gemini)
+            .AddKeyedScoped<IAIChatClient, AnthropicChatClient>(AiChatProvider.Anthropic);
     }
 }

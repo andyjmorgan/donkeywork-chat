@@ -23,14 +23,20 @@ public class Tool : ITool
 {
     /// <inheritdoc />
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1101:Prefix local calls with this", Justification = "Record")]
-    public List<ToolDefinition> GetToolDefinitions(List<UserProviderPosture> userProviderPosture)
+    public List<ToolDefinition> GetToolDefinitions(ToolProviderPosture userProviderPosture)
     {
         List<ToolDefinition> toolDefinitions = new ();
         Type toolType = this.GetType();
 
         // Check if tool requires a specific provider
-        var providerAttribute = toolType.GetCustomAttribute<ToolProviderAttribute>();
-        if (providerAttribute is not null && !HasRequiredProvider(providerAttribute, userProviderPosture))
+        var oauthProviderAttribute = toolType.GetCustomAttribute<OAuthToolProviderAttribute>();
+        if (oauthProviderAttribute is not null && !HasRequiredProvider(oauthProviderAttribute, userProviderPosture.UserTokens))
+        {
+            return [];
+        }
+
+        var genericProviderAttribute = toolType.GetCustomAttribute<GenericToolProviderAttribute>();
+        if (genericProviderAttribute is not null && userProviderPosture.GenericIntegrations.All(x => x.ProviderType != genericProviderAttribute.ProviderType))
         {
             return [];
         }
@@ -39,7 +45,7 @@ public class Tool : ITool
         foreach (var method in methods)
         {
             // Check method-level scope requirements
-            if (providerAttribute is not null && !HasRequiredScopes(method, providerAttribute, userProviderPosture))
+            if (oauthProviderAttribute is not null && !HasRequiredScopes(method, oauthProviderAttribute, userProviderPosture.UserTokens))
             {
                 continue;
             }
@@ -134,6 +140,96 @@ public class Tool : ITool
                 }
 
                 if (arguments.RootElement.TryGetProperty(param.Name, out var element))
+                {
+                    parameterValues[i] = DeserializeParameter(element, param.ParameterType);
+                }
+                else if (!param.IsOptional)
+                {
+                    throw new ToolArgumentMissingException(param.Name ?? "Unknown Name");
+                }
+                else
+                {
+                    parameterValues[i] = param.DefaultValue;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Return this error to the llm and attempt to allow it to self correct.
+            return JsonDocument.Parse(JsonSerializer.Serialize(new
+            {
+                FunctionName = functionName,
+                Success = false,
+                arguments,
+                Exception = ex.Message,
+            }));
+        }
+
+        try
+        {
+            var result = method.Invoke(this, parameterValues);
+
+            if (result is not Task task)
+            {
+                return CreateJsonDocument(result);
+            }
+
+            await task.WaitAsync(cancellationToken);
+            if (method.ReturnType.IsGenericType)
+            {
+                var taskResult = ((dynamic)task).Result;
+                return CreateJsonDocument(taskResult);
+            }
+        }
+        catch (Exception ex)
+        {
+            return JsonDocument.Parse(JsonSerializer.Serialize(
+                new
+                {
+                    methodName = functionName,
+                    sucess = false,
+                    exception = ex.Message,
+                }));
+        }
+
+        return null;
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<JsonDocument?> InvokeFunctionAsync(
+        string functionName,
+        IReadOnlyDictionary<string, JsonElement>? arguments,
+        CancellationToken cancellationToken = default)
+    {
+        var method = this.GetType().GetMethods()
+            .FirstOrDefault(x => x.GetCustomAttribute<ToolFunctionAttribute>() != null
+                                 && x.Name == functionName);
+
+        if (method == null)
+        {
+            throw new InvalidOperationException($"Function {functionName} not found.");
+        }
+
+        var parameters = method.GetParameters();
+        var parameterValues = new object?[parameters.Length];
+
+        try
+        {
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var param = parameters[i];
+                if (param.Name is null)
+                {
+                    throw new ToolParameterMissingException(param.Name ?? "Unknown Name");
+                }
+
+                if (param.ParameterType == typeof(CancellationToken))
+                {
+                    parameterValues[i] = cancellationToken;
+                    continue;
+                }
+
+                if (arguments.TryGetValue(param.Name, out var element))
                 {
                     parameterValues[i] = DeserializeParameter(element, param.ParameterType);
                 }
@@ -293,14 +389,14 @@ public class Tool : ITool
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 
-    private bool HasRequiredProvider(ToolProviderAttribute providerAttribute, List<UserProviderPosture>? userProviderPostures)
+    private bool HasRequiredProvider(OAuthToolProviderAttribute providerAttribute, List<UserProviderPosture>? userProviderPostures)
     {
         var requiredProviderType = providerAttribute.ProviderType;
         var requiredPosture = userProviderPostures?.FirstOrDefault(p => p.ProviderType == requiredProviderType);
         return requiredPosture is not null;
     }
 
-    private bool HasRequiredScopes(MethodInfo method, ToolProviderAttribute providerAttribute, List<UserProviderPosture>? userProviderPostures)
+    private bool HasRequiredScopes(MethodInfo method, OAuthToolProviderAttribute providerAttribute, List<UserProviderPosture>? userProviderPostures)
     {
         var scopeAttribute = method.GetCustomAttribute<ToolProviderScopesAttribute>();
         if (scopeAttribute is null)

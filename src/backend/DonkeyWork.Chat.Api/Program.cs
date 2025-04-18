@@ -6,16 +6,19 @@
 
 using System.Text.Json.Serialization;
 using DonkeyWork.Chat.AiServices.Extensions;
-using DonkeyWork.Chat.AiTooling.Extensions;
 using DonkeyWork.Chat.Api.Configuration;
-using DonkeyWork.Chat.Api.Middleware;
+using DonkeyWork.Chat.Api.Core.AuthenticationSchemes;
+using DonkeyWork.Chat.Api.Core.Configuration;
+using DonkeyWork.Chat.Api.Core.Extensions;
+using DonkeyWork.Chat.Api.Core.Middleware;
+using DonkeyWork.Chat.Api.Core.Services.Keycloak;
 using DonkeyWork.Chat.Api.Services;
 using DonkeyWork.Chat.Api.Services.Authentication;
 using DonkeyWork.Chat.Api.Services.Conversation;
-using DonkeyWork.Chat.Api.Services.Keycloak;
 using DonkeyWork.Chat.Api.Workers;
 using DonkeyWork.Chat.Common.Contracts;
 using DonkeyWork.Chat.Common.Extensions;
+using DonkeyWork.Chat.McpServer.Extensions;
 using DonkeyWork.Chat.Persistence;
 using DonkeyWork.Chat.Persistence.Extensions;
 using DonkeyWork.Chat.Providers.Extensions;
@@ -24,6 +27,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Serilog;
+using ServiceCollectionExtensions = DonkeyWork.Chat.AiTooling.Extensions.ServiceCollectionExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,8 +90,8 @@ builder.Services.AddDataProtection()
 // Configure authentication
 builder.Services.AddAuthentication(options =>
     {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+        options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
     })
     .AddCookie(options =>
     {
@@ -118,17 +122,37 @@ builder.Services.AddAuthentication(options =>
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             return Task.CompletedTask;
         };
-    });
+    }).AddApiKeyAuthentication();
 
 // Configure authorization
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(nameof(AuthorizationTypes.CookieOrApiKey), policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.AddAuthenticationSchemes(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            ApiKeyAuthenticationOptions.DefaultScheme);
+    });
+
+    var defaultPolicy = options.GetPolicy(nameof(AuthorizationTypes.CookieOrApiKey));
+    if (defaultPolicy != null)
+    {
+        options.DefaultPolicy = defaultPolicy;
+        options.FallbackPolicy = defaultPolicy;
+    }
+});
+
 builder.Services.AddHostedService<TokenRefreshWorker>();
 builder.Services.AddUserContext();
 builder.Services.AddAiServices();
-builder.Services.AddToolServices();
+builder.Services.AddApiCoreServices();
+ServiceCollectionExtensions.AddToolServices(builder.Services);
 builder.Services.AddProviderConfiguration(builder.Configuration);
 builder.Services.AddScoped<IUserPostureService, UserPostureService>();
 builder.Services.AddCredentialsPersistence(builder.Configuration);
+
+builder.Services.AddMcpServices();
 
 // Add CORS
 builder.Services.AddCors(options =>
@@ -159,19 +183,21 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// Use middleware
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseSession();
 app.UseAuthentication();
-app.UseMiddleware<UserMiddleware>();
 app.UseAuthorization();
+app.UseMiddleware<ApiUserMiddleware>();
+
+// todo: abstract this.
+app.MapMcp();
 app.MapHealthChecks("/healthz")
     .AllowAnonymous();
 
-// No middleware for token refresh - using simpler approach
 app.MapControllers();
-app.MapScalarApiReference();
+app.MapScalarApiReference()
+    .AllowAnonymous();
 
 using var scope = app.Services.CreateScope();
 using var context = scope.ServiceProvider.GetRequiredService<ApiPersistenceContext>();

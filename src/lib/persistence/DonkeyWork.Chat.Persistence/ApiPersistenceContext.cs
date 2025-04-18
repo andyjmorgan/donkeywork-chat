@@ -5,6 +5,7 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Chat.Common.UserContext;
+using DonkeyWork.Chat.Persistence.Entity.ApiKey;
 using DonkeyWork.Chat.Persistence.Entity.Base;
 using DonkeyWork.Chat.Persistence.Entity.Conversation;
 using DonkeyWork.Chat.Persistence.Entity.Prompt;
@@ -44,6 +45,16 @@ public class ApiPersistenceContext(DbContextOptions<ApiPersistenceContext> optio
     /// </summary>
     public DbSet<UserTokenEntity> UserTokens { get; set; }
 
+    /// <summary>
+    /// Gets or sets the generic provider tokens.
+    /// </summary>
+    public DbSet<GenericProviderEntity> GenericProviders { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Api keys.
+    /// </summary>
+    public DbSet<ApiKeyEntity> ApiKeys { get; set; }
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -79,6 +90,18 @@ public class ApiPersistenceContext(DbContextOptions<ApiPersistenceContext> optio
 
         modelBuilder.Entity<BaseUserEntity>()
             .UseTpcMappingStrategy();
+
+        modelBuilder.Entity<ApiKeyEntity>()
+            .HasIndex(x => x.ApiKey)
+            .IsUnique(true);
+
+        modelBuilder.Entity<PromptEntity>()
+            .HasIndex(p => new { p.Title, p.UserId })
+            .IsUnique(true);
+
+        modelBuilder.Entity<GenericProviderEntity>()
+            .HasIndex(p => new { p.ProviderType, p.UserId })
+            .IsUnique(true);
 
         // Add the base user filter.
         modelBuilder.Entity<BaseUserEntity>()

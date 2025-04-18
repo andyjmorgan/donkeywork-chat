@@ -7,8 +7,9 @@
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text.Json;
+using DonkeyWork.Chat.Api.Core.Services.Keycloak;
+using DonkeyWork.Chat.Api.Core.Services.Keycloak.Models;
 using DonkeyWork.Chat.Api.Models;
-using DonkeyWork.Chat.Api.Services.Keycloak;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;

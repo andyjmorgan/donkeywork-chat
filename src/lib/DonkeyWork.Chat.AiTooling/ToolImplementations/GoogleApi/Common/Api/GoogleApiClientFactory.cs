@@ -15,12 +15,12 @@ using Google.Apis.Services;
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Common.Api;
 
 /// <summary>
-/// A Google api client factory
+/// A Google api client factory.
 /// </summary>
 public class GoogleApiClientFactory : IGoogleApiClientFactory
 {
     /// <summary>
-    /// The google provdider agent name.
+    /// The google provider agent name.
     /// </summary>
     private static readonly string AgentName = "DonkeyWorkTooling";
 

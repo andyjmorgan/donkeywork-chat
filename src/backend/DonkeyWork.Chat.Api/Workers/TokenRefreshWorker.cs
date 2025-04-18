@@ -64,7 +64,7 @@ public class TokenRefreshWorker : BackgroundService
     {
         using var scope = this.serviceProvider.CreateScope();
         var apiPersistenceContext = scope.ServiceProvider.GetRequiredService<ApiPersistenceContext>();
-        var expiryThreshold = DateTimeOffset.UtcNow.Add(-this.options.RefreshThreshold);
+        var expiryThreshold = DateTimeOffset.UtcNow.Add(this.options.RefreshThreshold);
         var userTokens = await apiPersistenceContext.UserTokens
             .IgnoreQueryFilters()
             .AsNoTracking()
@@ -85,7 +85,11 @@ public class TokenRefreshWorker : BackgroundService
                             group.Key);
 
                         var newToken = await tokenClient.RefreshTokenAsync(value, cancellationToken);
-                        token.Data[UserProviderDataKeyType.RefreshToken] = newToken.RefreshToken;
+                        if (!string.IsNullOrWhiteSpace(newToken.RefreshToken))
+                        {
+                            token.Data[UserProviderDataKeyType.RefreshToken] = newToken.RefreshToken;
+                        }
+
                         token.Data[UserProviderDataKeyType.AccessToken] = newToken.AccessToken;
                         await apiPersistenceContext.UserTokens
                             .IgnoreQueryFilters()
@@ -93,7 +97,7 @@ public class TokenRefreshWorker : BackgroundService
                             .ExecuteUpdateAsync(
                                 s => s
                                     .SetProperty(t => t.Data, token.Data)
-                                    .SetProperty(t => t.ExpiresAt, token.ExpiresAt)
+                                    .SetProperty(t => t.ExpiresAt, newToken.ExpiresOn)
                                     .SetProperty(t => t.UpdatedAt, DateTimeOffset.UtcNow)
                                     .SetProperty(t => t.Scopes, newToken.Scopes.ToList()),
                                 cancellationToken);

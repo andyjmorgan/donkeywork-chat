@@ -10,7 +10,6 @@ using DonkeyWork.Chat.Api.Models.Prompt;
 using DonkeyWork.Chat.Persistence.Common;
 using DonkeyWork.Chat.Persistence.Repository.Prompt;
 using DonkeyWork.Chat.Persistence.Repository.Prompt.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DonkeyWork.Chat.Api.Controllers;
@@ -19,7 +18,6 @@ namespace DonkeyWork.Chat.Api.Controllers;
 /// Handles prompts.
 /// </summary>
 [ApiController]
-[Authorize]
 [Route("api/[controller]")]
 public class PromptsController(
     IPromptRepository promptRepository,

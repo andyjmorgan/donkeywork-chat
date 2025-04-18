@@ -14,7 +14,7 @@ using Google.Apis.Drive.v3.Data;
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Drive;
 
 /// <inheritdoc cref="IGoogleDriveTool" />
-[ToolProvider(UserProviderType.Google)]
+[OAuthToolProvider(UserProviderType.Google)]
 public class GoogleDriveTool(
     IGoogleApiClientFactory googleApiClientFactory)
     : Base.Tool, IGoogleDriveTool

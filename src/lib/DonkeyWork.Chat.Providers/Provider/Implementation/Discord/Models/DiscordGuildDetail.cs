@@ -47,5 +47,5 @@ public class DiscordGuildDetail : DiscordGuild
     /// Gets or sets the list of channels.
     /// </summary>
     [JsonPropertyName("channels")]
-    public List<DiscordChannel> Channels { get; set; } = new();
+    public List<DiscordChannel> Channels { get; set; } = new ();
 }

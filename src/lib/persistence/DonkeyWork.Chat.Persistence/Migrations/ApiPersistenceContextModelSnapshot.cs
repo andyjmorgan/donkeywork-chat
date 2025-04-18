@@ -47,12 +47,36 @@ namespace DonkeyWork.Chat.Persistence.Migrations
                     b.UseTpcMappingStrategy();
                 });
 
-            modelBuilder.Entity("DonkeyWork.Chat.Persistence.Entity.Conversation.ConversationEntity", b =>
+            modelBuilder.Entity("DonkeyWork.Chat.Persistence.Entity.ApiKey.ApiKeyEntity", b =>
                 {
                     b.HasBaseType("DonkeyWork.Chat.Persistence.Entity.Base.BaseUserEntity");
 
-                    b.Property<int>("MessageCount")
-                        .HasColumnType("integer");
+                    b.Property<string>("ApiKey")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.HasIndex("ApiKey")
+                        .IsUnique();
+
+                    b.ToTable("ApiKeys", "ApiPersistence");
+                });
+
+            modelBuilder.Entity("DonkeyWork.Chat.Persistence.Entity.Conversation.ConversationEntity", b =>
+                {
+                    b.HasBaseType("DonkeyWork.Chat.Persistence.Entity.Base.BaseUserEntity");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -137,7 +161,30 @@ namespace DonkeyWork.Chat.Persistence.Migrations
                     b.Property<int>("UsageCount")
                         .HasColumnType("integer");
 
+                    b.HasIndex("Title", "UserId")
+                        .IsUnique();
+
                     b.ToTable("Prompts", "ApiPersistence");
+                });
+
+            modelBuilder.Entity("DonkeyWork.Chat.Persistence.Entity.Provider.GenericProviderEntity", b =>
+                {
+                    b.HasBaseType("DonkeyWork.Chat.Persistence.Entity.Base.BaseUserEntity");
+
+                    b.Property<string>("Configuration")
+                        .HasMaxLength(10240)
+                        .HasColumnType("character varying(10240)");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ProviderType")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("ProviderType", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("GenericProviders", "ApiPersistence");
                 });
 
             modelBuilder.Entity("DonkeyWork.Chat.Persistence.Entity.Provider.UserTokenEntity", b =>

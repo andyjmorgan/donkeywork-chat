@@ -4,9 +4,9 @@
 // </copyright>
 // ------------------------------------------------------
 
+using DonkeyWork.Chat.Api.Core.Attributes;
 using DonkeyWork.Chat.Api.Models;
 using DonkeyWork.Chat.Api.Services.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DonkeyWork.Chat.Api.Controllers;
@@ -34,7 +34,7 @@ public class UserController : ControllerBase
     /// Gets the current user info.
     /// </summary>
     /// <returns>User information if authenticated.</returns>
-    [Authorize]
+    [CookieOrApiKeyAuth]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetUserInformationResponse))]
     public IActionResult GetUserInformationAsync()

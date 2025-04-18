@@ -9,6 +9,7 @@ import Chat from './pages/chat/Chat';
 import Conversations from './pages/chat/Conversations';
 import Prompts from './pages/Prompts';
 import Integrations from './pages/Integrations';
+import ApiKeys from './pages/ApiKeys';
 import IntegrationCallback from './pages/integrations/Callback';
 import SimpleCallback from './pages/integrations/SimpleCallback';
 import AuthCallback from './pages/auth/AuthCallback';
@@ -23,6 +24,7 @@ import 'primeflex/primeflex.css';                                  // utility CS
 import './App.css';
 import './styles/components/MenuScale.css';                      // Custom menu scaling
 import './styles/components/Profile.css';                        // Profile page styling
+import './styles/components/Card.css';                           // Card component styling
 
 const App: React.FC = () => {
   return (
@@ -104,6 +106,14 @@ const App: React.FC = () => {
             <ProtectedRoute>
               <AppLayout>
                 <Profile />
+              </AppLayout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/apikeys" element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ApiKeys />
               </AppLayout>
             </ProtectedRoute>
           } />

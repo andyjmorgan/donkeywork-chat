@@ -144,6 +144,23 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         );
       }
     },
+    {
+      label: 'API Keys',
+      icon: 'pi pi-key',
+      command: () => navigate('/apikeys'),
+      template: (item, options) => {
+        const active = location.pathname.includes('/apikeys');
+        return (
+          <a 
+            className={`${options.className} menu-item ${active ? 'active-route' : ''}`} 
+            onClick={options.onClick}
+          >
+            <span className={`${options.iconClassName} ${active ? 'text-purple-500' : 'text-primary'}`}></span>
+            <span className={options.labelClassName}>{item.label}</span>
+          </a>
+        );
+      }
+    },
   ];
 
   // User menu items with logout

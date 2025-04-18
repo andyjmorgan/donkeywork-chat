@@ -18,9 +18,9 @@ public interface ITool
     /// <summary>
     /// Gets the tool definitions.
     /// </summary>
-    /// <param name="userProviderPosture">The user posture.</param>
+    /// <param name="toolProviderPosture">The user tool posture.</param>
     /// <returns>A list of <see cref="ToolDefinition"/>.</returns>
-    public List<ToolDefinition> GetToolDefinitions(List<UserProviderPosture> userProviderPosture);
+    public List<ToolDefinition> GetToolDefinitions(ToolProviderPosture toolProviderPosture);
 
     /// <summary>
     /// A function to invoke a function on the tool.
@@ -30,4 +30,16 @@ public interface ITool
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A response.</returns>
     public Task<JsonDocument?> InvokeFunctionAsync(string functionName, JsonDocument arguments, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// A function to invoke a function on the tool.
+    /// </summary>
+    /// <param name="functionName">The function name.</param>
+    /// <param name="arguments">The arguments.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A response.</returns>
+    public Task<JsonDocument?> InvokeFunctionAsync(
+        string functionName,
+        IReadOnlyDictionary<string, JsonElement>? arguments,
+        CancellationToken cancellationToken = default);
 }

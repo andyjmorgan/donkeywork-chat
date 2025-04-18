@@ -4,7 +4,8 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Api.Services.Keycloak;
+using DonkeyWork.Chat.Api.Core.Services.Keycloak;
+using DonkeyWork.Chat.Api.Core.Services.Keycloak.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using IAuthenticationService = DonkeyWork.Chat.Api.Services.Authentication.IAuthenticationService;
@@ -50,6 +51,7 @@ public class AuthController : ControllerBase
     /// <param name="redirectUrl">Optional URL to redirect after Keycloak logout.</param>
     /// <returns>A success result or redirect to Keycloak logout.</returns>
     [HttpPost("logout")]
+    [Authorize]
     public async Task<IActionResult> Logout([FromQuery] string? redirectUrl = null)
     {
         return await this.authService.LogoutAsync(this.HttpContext, redirectUrl);
@@ -61,6 +63,7 @@ public class AuthController : ControllerBase
     /// <param name="redirectUrl">URL to redirect after Keycloak logout.</param>
     /// <returns>The Keycloak logout URL.</returns>
     [HttpGet("logout-url")]
+    [Authorize]
     public IActionResult GetLogoutUrl([FromQuery] string redirectUrl)
     {
         if (string.IsNullOrEmpty(redirectUrl))

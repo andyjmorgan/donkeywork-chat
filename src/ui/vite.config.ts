@@ -22,7 +22,7 @@ export default defineConfig({
     port: 8001,
     host: true,
     proxy: {
-      '/api': {
+      '/api/': {
         target: 'http://localhost:8881',
         changeOrigin: true,
         secure: false,

@@ -31,7 +31,7 @@ public class ProviderController(
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserProviderResponseModel))]
     public async Task<IActionResult> GetUserProviderAsync()
     {
-        var integrations = await integrationRepository.GetUserIntegrationsAsync();
+        var integrations = await integrationRepository.GetUserOAuthIntegrationsAsync();
         var response = new UserProviderResponseModel();
         foreach (var integration in integrations)
         {
@@ -145,7 +145,7 @@ public class ProviderController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteUserProviderAsync([FromRoute] UserProviderType providerType)
     {
-        await integrationRepository.DeleteIntegrationAsync(providerType);
+        await integrationRepository.DeleteOauthIntegrationAsync(providerType);
         return this.NoContent();
     }
 }

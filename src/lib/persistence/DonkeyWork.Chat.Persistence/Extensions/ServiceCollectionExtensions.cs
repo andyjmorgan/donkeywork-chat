@@ -5,6 +5,7 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Chat.Persistence.Interceptors;
+using DonkeyWork.Chat.Persistence.Repository.ApiKey;
 using DonkeyWork.Chat.Persistence.Repository.Conversation;
 using DonkeyWork.Chat.Persistence.Repository.Integration;
 using DonkeyWork.Chat.Persistence.Repository.Prompt;
@@ -33,6 +34,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IConversationRepository, ConversationRepository>()
             .AddScoped<IPromptRepository, PromptRepository>()
             .AddScoped<IIntegrationRepository, IntegrationRepository>()
+            .AddScoped<IApiKeyRepository, ApiKeyRepository>()
             .AddScoped<CreatedOrUpdatedInterceptor>()
             .AddDbContext<ApiPersistenceContext>(
                 (serviceProvider, options) =>

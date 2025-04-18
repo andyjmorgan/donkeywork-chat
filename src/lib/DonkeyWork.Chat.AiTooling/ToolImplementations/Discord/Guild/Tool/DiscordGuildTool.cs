@@ -17,7 +17,7 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Discord.Guild.Tool;
 /// <summary>
 /// Tool implementation for Discord guild operations.
 /// </summary>
-[ToolProvider(UserProviderType.Discord)]
+[OAuthToolProvider(UserProviderType.Discord)]
 public class DiscordGuildTool(IDiscordApiClientFactory discordApiClientFactory)
     : Base.Tool, IDiscordGuildTool
 {

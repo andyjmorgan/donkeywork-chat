@@ -21,11 +21,6 @@ public class ConversationEntity : BaseUserEntity
     public string Title { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the message count.
-    /// </summary>
-    public int MessageCount { get; set; }
-
-    /// <summary>
     /// Gets or sets the message entities.
     /// </summary>
     public virtual ICollection<ConversationMessageEntity> MessageEntities { get; set; } = [];

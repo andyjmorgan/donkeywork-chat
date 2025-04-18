@@ -5,3 +5,4 @@ export { conversationService } from './conversationService';
 export { promptService } from './promptService';
 export { modelsService } from './modelsService';
 export { providerService } from './providerService';
+export { apiKeyService } from './apiKeyService';

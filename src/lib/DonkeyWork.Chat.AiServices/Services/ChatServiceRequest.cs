@@ -6,6 +6,7 @@
 
 using DonkeyWork.Chat.AiServices.Clients;
 using DonkeyWork.Chat.AiServices.Clients.Models;
+using DonkeyWork.Chat.Common.Providers;
 
 namespace DonkeyWork.Chat.AiServices.Services;
 
@@ -17,7 +18,7 @@ public record ChatServiceRequest
     /// <summary>
     /// Gets the provider.
     /// </summary>
-    public AiChatProviders Provider { get; init; }
+    public AiChatProvider Provider { get; init; }
 
     /// <summary>
     /// Gets the conversation id.

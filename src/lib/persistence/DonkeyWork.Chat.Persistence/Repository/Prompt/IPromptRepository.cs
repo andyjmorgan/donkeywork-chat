@@ -24,6 +24,14 @@ public interface IPromptRepository
     public Task<GetPromptsResponseItem> GetPromptsAsync(PagingParameters pagingParameters, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets a prompt by title.
+    /// </summary>
+    /// <param name="title">The title.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task<PromptContentItem?> GetPromptContentItemAsync(string title, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Gets a prompt.
     /// </summary>
     /// <param name="id">The prompt id.</param>

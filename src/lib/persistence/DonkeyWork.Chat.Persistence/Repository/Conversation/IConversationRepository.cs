@@ -67,4 +67,22 @@ public interface IConversationRepository
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task AddMessageToConversationAsync(Guid conversationId, Guid executionId, MessageOwner messageOwner, string content, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Adds a tool call to the conversation.
+    /// </summary>
+    /// <param name="conversationId">The conversation id.</param>
+    /// <param name="executionId">The execution id.</param>
+    /// <param name="request">The request.</param>
+    /// <param name="response">The response.</param>
+    /// <param name="toolname">The tool name.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task AddToolCallToConversationAsync(
+        Guid conversationId,
+        Guid executionId,
+        string request,
+        string response,
+        string toolname,
+        CancellationToken cancellationToken = default);
 }

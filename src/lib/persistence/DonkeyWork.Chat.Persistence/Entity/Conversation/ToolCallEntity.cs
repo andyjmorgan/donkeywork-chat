@@ -44,5 +44,5 @@ public class ToolCallEntity : BaseUserEntity
     /// <summary>
     /// Gets the conversation.
     /// </summary>
-    required public virtual ConversationEntity Conversation { get; init; }
+    public virtual ConversationEntity Conversation { get; init; }
 }

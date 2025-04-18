@@ -36,4 +36,8 @@
       <ProjectReference Include="..\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="ToolImplementations\Swarmpit\Api\" />
+    </ItemGroup>
+
 </Project>

@@ -18,7 +18,7 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Mail.Tool
 /// <summary>
 /// A microsoft graph mail tool implementation.
 /// </summary>
-[ToolProvider(UserProviderType.Microsoft)]
+[OAuthToolProvider(UserProviderType.Microsoft)]
 public class MicrosoftGraphMailTool(
     IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory)
     : Base.Tool, IMicrosoftGraphMailTool

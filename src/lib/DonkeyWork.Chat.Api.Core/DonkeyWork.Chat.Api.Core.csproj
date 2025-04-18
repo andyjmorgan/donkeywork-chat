@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Serilog.AspNetCore" />
+      <PackageReference Include="StyleCop.Analyzers">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="..\..\..\stylecop.json">
+            <Link>stylecop.json</Link>
+        </AdditionalFiles>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Services\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj" />
+      <ProjectReference Include="..\DonkeyWork.Chat.Providers\DonkeyWork.Chat.Providers.csproj" />
+      <ProjectReference Include="..\persistence\DonkeyWork.Chat.Persistence\DonkeyWork.Chat.Persistence.csproj" />
+    </ItemGroup>
+
+</Project>

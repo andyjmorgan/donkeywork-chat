@@ -4,8 +4,8 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.AiServices.Clients;
 using DonkeyWork.Chat.AiServices.Clients.Models;
+using DonkeyWork.Chat.Common.Providers;
 
 namespace DonkeyWork.Chat.Api.Models.Chat;
 
@@ -17,7 +17,7 @@ public record ChatRequestModel
     /// <summary>
     /// Gets the provider.
     /// </summary>
-    public AiChatProviders Provider { get; init; } = AiChatProviders.Anthropic;
+    public AiChatProvider Provider { get; init; } = AiChatProvider.Anthropic;
 
     /// <summary>
     /// Gets the model.

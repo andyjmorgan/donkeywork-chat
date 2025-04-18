@@ -4,6 +4,8 @@
 // </copyright>
 // ------------------------------------------------------
 
+using DonkeyWork.Chat.Common.Providers;
+
 namespace DonkeyWork.Chat.AiServices.Clients;
 
 /// <summary>
@@ -16,5 +18,5 @@ public interface IAIChatProviderFactory
     /// </summary>
     /// <param name="provider">The provider.</param>
     /// <returns>A <see cref="IAIChatClient"/>.</returns>
-    public IAIChatClient CreateChatClient(AiChatProviders provider);
+    public IAIChatClient CreateChatClient(AiChatProvider provider);
 }

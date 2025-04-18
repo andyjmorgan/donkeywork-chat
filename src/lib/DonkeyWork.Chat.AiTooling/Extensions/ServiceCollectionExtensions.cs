@@ -21,6 +21,8 @@ using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Todo;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Api;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Configuration;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Tool;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api;
+using DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Tool;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Chat.AiTooling.Extensions;
@@ -57,7 +59,10 @@ public static class ServiceCollectionExtensions
             .AddScoped<IGoogleDriveTool, GoogleDriveTool>()
             .AddScoped<IGmailTool, GmailTool>()
             .AddScoped<IGoogleIdentityTool, GoogleIdentityTool>()
-            .AddScoped<ICurrentDateTimeTool, CurrentDateTimeTool>();
+            .AddScoped<ICurrentDateTimeTool, CurrentDateTimeTool>()
+            .AddHttpClient()
+            .AddScoped<ISwarmpitClientFactory, SwarmpitClientFactory>()
+            .AddScoped<ISwarmpitTool, SwarmpitTool>();
     }
 
     private static void FindAndAddIToolImplementations(IServiceCollection serviceCollection)

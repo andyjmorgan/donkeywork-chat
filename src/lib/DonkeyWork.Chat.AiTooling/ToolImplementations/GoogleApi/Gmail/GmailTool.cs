@@ -16,7 +16,7 @@ using Google.Apis.Gmail.v1.Data;
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Gmail;
 
 /// <inheritdoc cref="DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Gmail.IGmailTool" />
-[ToolProvider(UserProviderType.Google)]
+[OAuthToolProvider(UserProviderType.Google)]
 public class GmailTool(
     IGoogleApiClientFactory googleApiClientFactory)
     : Base.Tool, IGmailTool

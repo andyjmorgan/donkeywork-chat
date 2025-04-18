@@ -1,10 +1,9 @@
 /* Custom styles for Lara Purple Light theme */
 
 /* Fix for borders and outlines */
-.p-component {
-  border-color: transparent !important;
-}
+/* Removed transparent border styling */
 
+/* Modified to allow borders where needed */
 .p-card,
 .p-toolbar,
 .p-menu,
@@ -15,7 +14,7 @@
 .p-tabview-nav,
 .p-tabview-nav-link,
 .p-panelmenu {
-  border: none !important;
+  /* Removed border: none rule */
 }
 
 .p-datatable .p-datatable-thead > tr > th {

@@ -40,7 +40,7 @@ public class DiscordApiClientFactory : IDiscordApiClientFactory
             try
             {
                 var userPosture = await this.userPostureService.GetUserPosturesAsync(cancellationToken);
-                var thisProvider = userPosture.FirstOrDefault(x => x.ProviderType == UserProviderType.Discord);
+                var thisProvider = userPosture.UserTokens.FirstOrDefault(x => x.ProviderType == UserProviderType.Discord);
                 ArgumentNullException.ThrowIfNull(thisProvider);
 
                 var client = new DiscordRestClient(new DiscordRestConfig

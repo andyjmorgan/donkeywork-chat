@@ -13,7 +13,7 @@ using DonkeyWork.Chat.Common.Providers;
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Identity;
 
 /// <inheritdoc cref="IGoogleIdentityTool"/>
-[ToolProvider(UserProviderType.Google)]
+[OAuthToolProvider(UserProviderType.Google)]
 public class GoogleIdentityTool(IGoogleApiClientFactory googleApiClientFactory)
     : Base.Tool, IGoogleIdentityTool
 {

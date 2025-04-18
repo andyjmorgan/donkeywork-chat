@@ -165,31 +165,30 @@ const Home: React.FC = () => {
                   Experience Claude's nuanced understanding, thoughtful responses, and extensive context windows.
                 </p>
               </div>
+            <div className="provider-item">
+              <img
+                  src="/images/providers/gemini.png"
+                  alt="Gemini Logo"
+                  className="provider-logo"
+              />
+              <h3>Google Gemini</h3>
+              <p>
+                Leverage The latest Google Gemini models for helpful, harmless, and honest AI assistance.
+                Experience Claude's nuanced understanding, thoughtful responses, and extensive context windows.
+              </p>
             </div>
-
-            <div className="chat-illustration">
-              <div className="chat-bubble user-bubble">Find recent emails from Sarah with attachments</div>
-              <div className="chat-bubble assistant-bubble">
-                I found 3 recent emails from Sarah with attachments:
-                <ul>
-                  <li>Project Update (yesterday)</li>
-                  <li>Q2 Report Draft (2 days ago)</li>
-                  <li>Meeting Notes (last week)</li>
-                </ul>
-                Would you like me to retrieve any of these?
               </div>
-            </div>
-          </div>
-        </Card>
+      </div>
+    </Card>
 
-        <div className="examples-container">
-          <h2 className="section-title">Example Use Cases</h2>
-          <div className="example-queries-grid">
-            <div className="example-chip">"Find emails from John about the quarterly report"</div>
-            <div className="example-chip">"List my Discord servers and channels"</div>
-            <div className="example-chip">"Summarize the last 5 files I accessed in OneDrive"</div>
-            <div className="example-chip">"Create a new task in my to-do list"</div>
-            <div className="example-chip">"Search through my emails from last week"</div>
+  <div className="examples-container">
+    <h2 className="section-title">Example Use Cases</h2>
+    <div className="example-queries-grid">
+      <div className="example-chip">"Find emails from John about the quarterly report"</div>
+      <div className="example-chip">"List my Discord servers and channels"</div>
+      <div className="example-chip">"Summarize the last 5 files I accessed in OneDrive"</div>
+      <div className="example-chip">"Create a new task in my to-do list"</div>
+      <div className="example-chip">"Search through my emails from last week"</div>
             <div className="example-chip">"Find documents containing budget information"</div>
             <div className="example-chip">"Show me message history from Discord"</div>
             <div className="example-chip">"Compare files from my Google Drive"</div>

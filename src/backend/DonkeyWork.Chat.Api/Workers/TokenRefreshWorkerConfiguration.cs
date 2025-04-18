@@ -20,7 +20,7 @@ public record TokenRefreshWorkerConfiguration
     /// Gets the threshold for token expiration.
     /// Tokens that expire within this timespan will be refreshed.
     /// </summary>
-    public TimeSpan RefreshThreshold { get; init; } = TimeSpan.FromHours(1);
+    public TimeSpan RefreshThreshold { get; init; } = TimeSpan.FromHours(2);
 
     /// <summary>
     /// Gets the maximum number of tokens to refresh in a single batch.

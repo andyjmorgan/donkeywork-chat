@@ -12,6 +12,7 @@ using DonkeyWork.Chat.AiServices.Services;
 using DonkeyWork.Chat.AiServices.Streaming;
 using DonkeyWork.Chat.AiServices.Streaming.Chat;
 using DonkeyWork.Chat.AiServices.Streaming.Request;
+using DonkeyWork.Chat.AiServices.Streaming.Tool;
 using DonkeyWork.Chat.Persistence.Entity.Conversation;
 using DonkeyWork.Chat.Persistence.Repository.Conversation;
 
@@ -30,6 +31,8 @@ public class ConversationService(IChatService chatService, IConversationReposito
         ChatServiceRequest chatServiceRequest,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
+        Dictionary<Guid, ToolCall> toolCalls = [];
+
         // A switch for detecting a new conversation.
         if (!chatServiceRequest.ConversationId.HasValue)
         {
@@ -51,6 +54,28 @@ public class ConversationService(IChatService chatService, IConversationReposito
             if (message is ChatFragment chatFragment)
             {
                 stringBuilder.Append(chatFragment.Content);
+            }
+
+            if (message is ToolCall toolCall)
+            {
+                toolCalls.Add(toolCall.ToolCallId, toolCall);
+            }
+
+            if (message is ToolResult toolResult)
+            {
+                var toolRequestCall = toolCalls.GetValueOrDefault(toolResult.ToolCallId);
+                {
+                    if (toolRequestCall is not null)
+                    {
+                        await conversationRepository.AddToolCallToConversationAsync(
+                            chatServiceRequest.ConversationId.Value,
+                            chatServiceRequest.ExecutionId,
+                            toolRequestCall.QueryParameters.RootElement.GetRawText(),
+                            toolResult.Result,
+                            toolRequestCall.Name,
+                            cancellationToken);
+                    }
+                }
             }
 
             if (message is RequestEnd requestEnd)

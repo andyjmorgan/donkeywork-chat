@@ -1,5 +1,8 @@
 {
   "settings": {
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace"
+    },
     "documentationRules": {
       "companyName": "DonkeyWork.Dev",
       "copyrightText": "Provided as is by (c) {companyName}. No warranty or support is given.",

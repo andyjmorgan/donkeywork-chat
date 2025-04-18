@@ -1,0 +1,43 @@
+/* Styles for GenericProviderDialog */
+
+/* Restore PrimeReact form control borders */
+.generic-provider-dialog .p-inputtext,
+.generic-provider-dialog .p-password,
+.generic-provider-dialog .p-password .p-inputtext,
+.generic-provider-dialog .p-inputnumber .p-inputtext,
+.generic-provider-dialog .p-inputswitch {
+  border: 1px solid var(--surface-border) !important;
+  border-color: var(--surface-border) !important;
+}
+
+/* Add focus styling */
+.generic-provider-dialog .p-inputtext:focus,
+.generic-provider-dialog .p-password.p-focus .p-inputtext,
+.generic-provider-dialog .p-inputnumber.p-focus .p-inputtext,
+.generic-provider-dialog .p-password:focus .p-inputtext,
+.generic-provider-dialog .p-inputnumber:focus .p-inputtext {
+  border: 1px solid var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 1px var(--primary-100) !important;
+  outline: none !important;
+}
+
+/* Add hover styling */
+.generic-provider-dialog .p-inputtext:hover,
+.generic-provider-dialog .p-password:hover .p-inputtext,
+.generic-provider-dialog .p-inputnumber:hover .p-inputtext,
+.generic-provider-dialog .p-password:hover,
+.generic-provider-dialog .p-inputnumber:hover {
+  border-color: var(--primary-400) !important;
+}
+
+/* Style for form fields */
+.generic-provider-dialog .field {
+  margin-bottom: 1.5rem;
+}
+
+.generic-provider-dialog .field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}

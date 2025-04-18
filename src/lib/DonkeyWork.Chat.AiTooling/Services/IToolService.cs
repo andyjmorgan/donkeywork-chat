@@ -24,7 +24,7 @@ public interface IToolService
     /// <summary>
     /// Gets a list of user scoped tools.
     /// </summary>
-    /// <param name="userPosture">The users posture.</param>
+    /// <param name="toolPosture">The users tool posture.</param>
     /// <returns>A list of <see cref="ToolDefinition"/>.</returns>
-    public List<ToolDefinition> GetUserScopedTools(List<UserProviderPosture> userPosture);
+    public List<ToolDefinition> GetUserScopedTools(ToolProviderPosture toolPosture);
 }

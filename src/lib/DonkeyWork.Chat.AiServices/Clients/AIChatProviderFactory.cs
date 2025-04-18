@@ -4,6 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
+using DonkeyWork.Chat.Common.Providers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Chat.AiServices.Clients;
@@ -13,7 +14,7 @@ public class AIChatProviderFactory(IServiceProvider serviceProvider)
     : IAIChatProviderFactory
 {
     /// <inheritdoc />
-    public IAIChatClient CreateChatClient(AiChatProviders provider)
+    public IAIChatClient CreateChatClient(AiChatProvider provider)
     {
         return serviceProvider.GetKeyedService<IAIChatClient>(provider)
                ?? throw new NotImplementedException($"Provider {provider} not implemented");

@@ -8,7 +8,6 @@ using AutoMapper;
 using DonkeyWork.Chat.Api.Models.Conversation;
 using DonkeyWork.Chat.Persistence.Common;
 using DonkeyWork.Chat.Persistence.Repository.Conversation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DonkeyWork.Chat.Api.Controllers;
@@ -17,7 +16,6 @@ namespace DonkeyWork.Chat.Api.Controllers;
 /// Handles conversations.
 /// </summary>
 [ApiController]
-[Authorize]
 [Route("api/[controller]")]
 public class ConversationsController(
     IConversationRepository conversationRepository,

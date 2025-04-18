@@ -1,0 +1,22 @@
+/* Disable Card animations and transformations */
+.p-card {
+  transition: none !important;
+  transform: none !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--surface-200);
+}
+
+.p-card-body,
+.p-card-content {
+  transition: none !important;
+  transform: none !important;
+  box-shadow: none !important; /* No shadow on inner elements */
+}
+
+/* Don't move on hover */
+.p-card:hover {
+  transform: none !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05) !important;
+}

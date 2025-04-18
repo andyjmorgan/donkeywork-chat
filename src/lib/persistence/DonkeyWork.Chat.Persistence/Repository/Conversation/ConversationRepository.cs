@@ -134,4 +134,26 @@ public class ConversationRepository(ApiPersistenceContext persistenceContext)
 
         await persistenceContext.SaveChangesAsync(cancellationToken);
     }
+
+    /// <inheritdoc />
+    public async Task AddToolCallToConversationAsync(
+        Guid conversationId,
+        Guid executionId,
+        string request,
+        string response,
+        string toolname,
+        CancellationToken cancellationToken = default)
+    {
+        persistenceContext.ToolCalls.Add(
+            new ()
+            {
+                ConversationId = conversationId,
+                MessagePairId = executionId,
+                Request = request,
+                Response = response,
+                ToolName = toolname,
+            });
+
+        await persistenceContext.SaveChangesAsync(cancellationToken);
+    }
 }

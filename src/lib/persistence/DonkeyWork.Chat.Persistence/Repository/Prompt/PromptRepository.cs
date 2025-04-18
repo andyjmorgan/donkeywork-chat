@@ -18,7 +18,9 @@ public class PromptRepository(ApiPersistenceContext persistenceContext)
     /// <inheritdoc />
     public async Task<GetPromptsResponseItem> GetPromptsAsync(PagingParameters pagingParameters, CancellationToken cancellationToken = default)
     {
-        var promptQuery = persistenceContext.Prompts.AsQueryable();
+        var promptQuery = persistenceContext.Prompts
+            .AsNoTracking()
+            .AsQueryable();
         if (pagingParameters.Offset > 0)
         {
             promptQuery = promptQuery.Skip(pagingParameters.Offset);
@@ -44,6 +46,24 @@ public class PromptRepository(ApiPersistenceContext persistenceContext)
         {
             TotalCount = count,
             Prompts = prompts,
+        };
+    }
+
+    /// <inheritdoc />
+    public async Task<PromptContentItem?> GetPromptContentItemAsync(string title, CancellationToken cancellationToken = default)
+    {
+        var prompt = await persistenceContext.Prompts
+            .AsNoTracking()
+            .SingleOrDefaultAsync(c => c.Title == title, cancellationToken);
+
+        if (prompt == null)
+        {
+            return null;
+        }
+
+        return new PromptContentItem()
+        {
+            Content = prompt.Content,
         };
     }
 

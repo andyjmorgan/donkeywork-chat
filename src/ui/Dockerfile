@@ -1,5 +1,5 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18
+# Build stage
+FROM node:18 AS build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -16,8 +16,17 @@ COPY . .
 # Build the React application
 RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 8000
+# Production stage
+FROM nginx:alpine
 
-# Define the command to run the app (serve the production build)
-CMD ["npm", "run", "serve"]
+# Copy the build output to replace the default nginx contents
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Copy nginx configuration
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Expose the port the app runs on
+EXPOSE 80
+
+# Start Nginx server
+CMD ["nginx", "-g", "daemon off;"]

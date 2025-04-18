@@ -27,19 +27,15 @@ public class ToolService(IServiceProvider serviceProvider)
             serviceProvider.GetRequiredService<ICurrentDateTimeTool>(),
         };
     }
-
-    /// <summary>
-    /// Gets a list of tools that are scoped to the user.
-    /// </summary>
-    /// <param name="userPosture">The user posture.</param>
-    /// <returns>The tools the user has access to.</returns>
-    public List<ToolDefinition> GetUserScopedTools(List<UserProviderPosture> userPosture)
+    
+    /// <inheritdoc />
+    public List<ToolDefinition> GetUserScopedTools(ToolProviderPosture toolPosture)
     {
         var tools = serviceProvider.GetServices<ITool>().ToList();
         List<ToolDefinition> userScopedTools = [];
         foreach (var tool in tools)
         {
-            userScopedTools.AddRange(tool.GetToolDefinitions(userPosture));
+            userScopedTools.AddRange(tool.GetToolDefinitions(toolPosture));
         }
 
         return userScopedTools;

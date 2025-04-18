@@ -4,8 +4,8 @@
 // </copyright>
 // ------------------------------------------------------
 
+using DonkeyWork.Chat.Api.Core.Services.Keycloak.Models;
 using DonkeyWork.Chat.Api.Models;
-using DonkeyWork.Chat.Api.Services.Keycloak;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DonkeyWork.Chat.Api.Services.Authentication;

@@ -17,7 +17,7 @@ using Microsoft.Graph.Models;
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Drive.Tool;
 
 /// <inheritdoc cref="DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Drive.Tool.IMicrosoftGraphDriveTool" />
-[ToolProvider(UserProviderType.Microsoft)]
+[OAuthToolProvider(UserProviderType.Microsoft)]
 public class MicrosoftGraphDriveTool(
     IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory)
     : Base.Tool, IMicrosoftGraphDriveTool
