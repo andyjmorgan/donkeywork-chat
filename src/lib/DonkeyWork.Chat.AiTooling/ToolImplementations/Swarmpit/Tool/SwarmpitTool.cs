@@ -65,6 +65,38 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Tool
 
         /// <inheritdoc/>
         [ToolFunction]
+        [Description("Redeploy a stack with all of its services.")]
+        public async Task<JsonNode> SwarmPit_RedeployStackAsync(
+            [Description("The name of the stack to redeploy.")]
+            string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Stack name cannot be empty", nameof(name));
+            }
+
+            var client = await this.clientFactory.CreateClient();
+            return await client.RedeployStackAsync(name);
+        }
+
+        /// <inheritdoc/>
+        [ToolFunction]
+        [Description("Deactivate (stop) a stack and all of its services.")]
+        public async Task<JsonNode> SwarmPit_DeactivateStackAsync(
+            [Description("The name of the stack to deactivate.")]
+            string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Stack name cannot be empty", nameof(name));
+            }
+
+            var client = await this.clientFactory.CreateClient();
+            return await client.DeactivateStackAsync(name);
+        }
+
+        /// <inheritdoc/>
+        [ToolFunction]
         [Description("Get a list of all services.")]
         public async Task<JsonNode> SwarmPit_GetServicesAsync()
         {
@@ -86,6 +118,40 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Tool
 
             var client = await this.clientFactory.CreateClient();
             return await client.GetServiceAsync(id);
+        }
+
+        /// <inheritdoc/>
+        [ToolFunction]
+        [Description("Redeploy a service with the same or a new image tag.")]
+        public async Task<JsonNode> SwarmPit_RedeployServiceAsync(
+            [Description("The ID of the service to redeploy.")]
+            string id,
+            [Description("Optional tag to use for redeployment. If not specified, uses the current image tag.")]
+            string? tag = null)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("Service ID cannot be empty", nameof(id));
+            }
+
+            var client = await this.clientFactory.CreateClient();
+            return await client.RedeployServiceAsync(id, tag);
+        }
+
+        /// <inheritdoc/>
+        [ToolFunction]
+        [Description("Stop a running service.")]
+        public async Task<JsonNode> SwarmPit_StopServiceAsync(
+            [Description("The ID of the service to stop.")]
+            string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("Service ID cannot be empty", nameof(id));
+            }
+
+            var client = await this.clientFactory.CreateClient();
+            return await client.StopServiceAsync(id);
         }
 
         /// <inheritdoc/>

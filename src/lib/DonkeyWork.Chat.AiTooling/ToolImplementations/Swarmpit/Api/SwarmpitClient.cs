@@ -55,6 +55,28 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
         }
 
         /// <inheritdoc/>
+        public async Task<JsonNode> RedeployStackAsync(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Stack name cannot be empty", nameof(name));
+            }
+
+            return await this.PostJsonAsync($"/api/stacks/{name}/redeploy", null);
+        }
+
+        /// <inheritdoc/>
+        public async Task<JsonNode> DeactivateStackAsync(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Stack name cannot be empty", nameof(name));
+            }
+
+            return await this.PostJsonAsync($"/api/stacks/{name}/deactivate", null);
+        }
+
+        /// <inheritdoc/>
         public async Task<JsonNode> GetServicesAsync()
         {
             return await this.GetJsonAsync("/api/services");
@@ -69,6 +91,34 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
             }
 
             return await this.GetJsonAsync($"/api/services/{id}");
+        }
+
+        /// <inheritdoc/>
+        public async Task<JsonNode> RedeployServiceAsync(string id, string? tag = null)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("Service ID cannot be empty", nameof(id));
+            }
+
+            var endpoint = $"/api/services/{id}/redeploy";
+            if (!string.IsNullOrWhiteSpace(tag))
+            {
+                endpoint += $"?tag={Uri.EscapeDataString(tag)}";
+            }
+
+            return await this.PostJsonAsync(endpoint, null);
+        }
+
+        /// <inheritdoc/>
+        public async Task<JsonNode> StopServiceAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("Service ID cannot be empty", nameof(id));
+            }
+
+            return await this.PostJsonAsync($"/api/services/{id}/stop", null);
         }
 
         /// <inheritdoc/>
@@ -152,6 +202,48 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
             try
             {
                 return JsonNode.Parse(content) ?? throw new InvalidOperationException($"Could not parse JSON response from {endpoint}");
+            }
+            catch (JsonException ex)
+            {
+                throw new InvalidOperationException($"Invalid JSON response from {endpoint}: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Helper method to perform POST requests and parse the response as JSON.
+        /// </summary>
+        /// <param name="endpoint">The API endpoint.</param>
+        /// <param name="data">The data to include in the request body, or null if no data.</param>
+        /// <returns>The JSON document.</returns>
+        private async Task<JsonNode> PostJsonAsync(string endpoint, object? data)
+        {
+            HttpResponseMessage response;
+            
+            if (data != null)
+            {
+                var jsonContent = JsonSerializer.Serialize(data);
+                var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+                response = await this.httpClient.PostAsync(endpoint, content);
+            }
+            else
+            {
+                response = await this.httpClient.PostAsync(endpoint, null);
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            
+            // Check if the response is empty or whitespace
+            if (string.IsNullOrWhiteSpace(responseContent))
+            {
+                // Return an empty JSON object for empty responses
+                return JsonNode.Parse("{}") ?? throw new InvalidOperationException("Could not create empty JSON object");
+            }
+            
+            try
+            {
+                return JsonNode.Parse(responseContent) ?? throw new InvalidOperationException($"Could not parse JSON response from {endpoint}");
             }
             catch (JsonException ex)
             {

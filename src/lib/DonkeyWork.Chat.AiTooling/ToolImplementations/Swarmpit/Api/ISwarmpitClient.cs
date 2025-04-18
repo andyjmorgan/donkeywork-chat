@@ -33,6 +33,20 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
         Task<JsonNode> GetStackAsync(string name);
 
         /// <summary>
+        /// Redeploys a stack.
+        /// </summary>
+        /// <param name="name">The name of the stack.</param>
+        /// <returns>The response as a JSON document.</returns>
+        Task<JsonNode> RedeployStackAsync(string name);
+
+        /// <summary>
+        /// Deactivates a stack.
+        /// </summary>
+        /// <param name="name">The name of the stack.</param>
+        /// <returns>The response as a JSON document.</returns>
+        Task<JsonNode> DeactivateStackAsync(string name);
+
+        /// <summary>
         /// Gets a list of all services.
         /// </summary>
         /// <returns>A list of services as a JSON document.</returns>
@@ -44,6 +58,21 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
         /// <param name="id">The ID of the service.</param>
         /// <returns>The service details as a JSON document.</returns>
         Task<JsonNode> GetServiceAsync(string id);
+
+        /// <summary>
+        /// Redeploys a service.
+        /// </summary>
+        /// <param name="id">The ID of the service.</param>
+        /// <param name="tag">Optional tag to specify for the redeployment.</param>
+        /// <returns>The response as a JSON document.</returns>
+        Task<JsonNode> RedeployServiceAsync(string id, string? tag = null);
+
+        /// <summary>
+        /// Stops a service.
+        /// </summary>
+        /// <param name="id">The ID of the service.</param>
+        /// <returns>The response as a JSON document.</returns>
+        Task<JsonNode> StopServiceAsync(string id);
 
         /// <summary>
         /// Gets a list of all nodes.
