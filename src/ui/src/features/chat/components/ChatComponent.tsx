@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
@@ -16,6 +16,13 @@ import { sortToolCalls } from '../../../utils/toolCallUtils';
 import { formatDuration } from '../../../utils/formatUtils';
 import '../../../styles/components/Chat.css';
 import { ChatComponentProps } from '../../../models/ui/chat/ChatComponentTypes';
+
+// Define the renderMermaidDiagram global function type
+declare global {
+    interface Window {
+        renderMermaidDiagram?: (containerId: string, content: string) => void;
+    }
+}
 
 const ChatComponent: React.FC<ChatComponentProps> = ({ 
     provider,
@@ -667,6 +674,69 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
                                                     <table className="markdown-table" {...props} />
                                                 </div>
                                             ),
+                                            // Support for mermaid diagrams
+                                            code: ({ node, className, children, ...props }) => {
+                                                const match = /language-(\w+)/.exec(className || '');
+                                                const language = match?.[1]?.toLowerCase();
+                                                
+                                                if (language === 'mermaid') {
+                                                    // Use global renderer approach that's completely isolated from React
+                                                    const mermaidContent = String(children);
+                                                    
+                                                    // Generate a stable ID that won't change on re-renders
+                                                    const containerId = `mermaid-container-${message.id || "unknown"}-${
+                                                        mermaidContent.split('').reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) & 0xFFFFFFFF, 0).toString(16)
+                                                    }`;
+                                                    
+                                                    // Only render the diagram once by checking if the container exists but is empty
+                                                    React.useEffect(() => {
+                                                        const container = document.getElementById(containerId);
+                                                        
+                                                        // Only render if container exists and doesn't already have content (first render)
+                                                        if (container && !container.innerHTML.includes('svg')) {
+                                                            container.innerHTML = '<div class="mermaid-loading"><p>Preparing diagram...</p></div>';
+                                                            
+                                                            // Delay rendering to ensure the DOM is stable and to prevent repeated rendering
+                                                            setTimeout(() => {
+                                                                if (window.renderMermaidDiagram) {
+                                                                    window.renderMermaidDiagram(containerId, mermaidContent);
+                                                                }
+                                                            }, 2000);
+                                                        }
+                                                    }, []);
+                                                    
+                                                    // Just return a static div container that the global function will populate
+                                                    return (
+                                                        <div 
+                                                            id={containerId} 
+                                                            className="standalone-mermaid-container" 
+                                                            style={{ 
+                                                                height: '350px', 
+                                                                minHeight: '350px',
+                                                                margin: '1rem 0',
+                                                                overflow: 'hidden',
+                                                                backgroundColor: 'var(--surface-card)',
+                                                                borderRadius: '8px',
+                                                                padding: '1rem',
+                                                                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center'
+                                                            }}
+                                                        >
+                                                            <div className="mermaid-loading">
+                                                                <p>Initializing diagram...</p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                                
+                                                return (
+                                                    <code className={className} {...props}>
+                                                        {children}
+                                                    </code>
+                                                );
+                                            },
                                             // Ensure paragraphs preserve whitespace but prevent double spacing
                                             p: ({ node, ...props }) => (
                                                 <p style={{ 
