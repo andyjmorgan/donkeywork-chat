@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.UserContext;
+using DonkeyWork.Chat.Common.Services.UserContext;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Chat.Common.Extensions;

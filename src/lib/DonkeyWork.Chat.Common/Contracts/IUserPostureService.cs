@@ -4,8 +4,8 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers;
-using DonkeyWork.Chat.Common.Providers.GenericProvider;
+using DonkeyWork.Chat.Common.Models.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.GenericProvider;
 
 namespace DonkeyWork.Chat.Common.Contracts;
 

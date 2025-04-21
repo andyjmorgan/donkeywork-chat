@@ -43,34 +43,7 @@
   justify-content: space-between;
 }
 
-/* Collapsed sidebar styling */
-.w-5rem .p-panelmenu-header-text {
-  display: none;
-}
-
-.w-5rem .p-panelmenu-icon {
-  display: none;
-}
-
-.w-5rem .p-panelmenu-content {
-  display: none;
-}
-
-.w-5rem .p-panelmenu-header-link {
-  justify-content: center;
-  padding: 0.6rem 0 !important;
-  margin: 0.5rem 0 !important;
-}
-
-.w-5rem .sidebar-panel {
-  padding: 1rem 0.25rem;
-}
-
-.w-5rem .p-panelmenu-header-link .p-menuitem-icon {
-  margin-right: 0 !important;
-  font-size: 1.25rem;
-  margin-left: 0 !important;
-}
+/* The .w-5rem classes are not used in current layout - removing them */
 
 /* Simple Menu Sidebar Styling */
 .simple-sidebar {
@@ -118,6 +91,7 @@
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  position: relative !important; /* For absolute positioning of indicators */
 }
 
 .menu-item:hover {
@@ -153,16 +127,79 @@
 .w-4rem .menu-item {
   justify-content: center !important;
   padding: 0.75rem 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+  width: auto !important;
 }
 
-.w-4rem .menu-item .p-menuitem-icon {
-  margin-right: 0 !important;
+.w-4rem .menu-item .p-menuitem-icon,
+.w-4rem .menu-item-container > .menu-item .pi {
+  margin: 0 !important;
   font-size: 1.25rem !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .w-4rem .toggle-menu-item {
   justify-content: center !important;
   padding: 0.6rem 0 !important;
+}
+
+/* Special styling for parent menu items in collapsed state */
+.w-4rem .submenu {
+  display: none !important;
+}
+
+.w-4rem .submenu-toggle {
+  display: none !important;
+}
+
+/* Parent menu styling in collapsed state */
+.w-4rem .menu-item-container {
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: auto !important;
+  padding: 0 !important;
+}
+
+.w-4rem .menu-item-container > .menu-item {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: relative !important;
+  width: 100% !important;
+  padding: 0.75rem 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+}
+
+.w-4rem .menu-item-container > .menu-item > div {
+  width: auto !important;
+  justify-content: center !important;
+}
+
+/* Consolidated with .w-4rem .menu-item .p-menuitem-icon above */
+
+/* Add subtle indicator to parent menu items */
+.w-4rem .menu-item-container > .menu-item .p-menuitem-icon::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  opacity: 0.6;
+}
+
+/* Show submenu on hover in collapsed state */
+.w-4rem .menu-item-container:hover .menu-item {
+  background-color: rgba(186, 104, 200, 0.08) !important;
 }
 
 /* No additional collapsed state adjustments needed */
@@ -305,6 +342,64 @@
 
 .purple-accent .text-primary {
   color: var(--primary-color) !important;
+}
+
+/* Expandable menu styling */
+.menu-item-container {
+  width: 100%;
+  position: relative;
+  margin-bottom: 0.25rem;
+}
+
+.menu-item-container .submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding-left: 2rem;
+}
+
+.menu-item-container.expanded .submenu {
+  max-height: 200px; /* Enough to show all submenu items */
+}
+
+.menu-item-container .submenu-toggle {
+  transition: transform 0.3s ease;
+}
+
+.rotate-180 {
+  transform: rotate(-180deg);
+}
+
+.submenu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0.25rem 0;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.submenu-item:hover {
+  background-color: rgba(186, 104, 200, 0.08);
+}
+
+.submenu-item.active-route {
+  background-color: rgba(186, 104, 200, 0.08);
+  color: var(--primary-color);
+  border-left: 3px solid var(--primary-color);
+  padding-left: calc(0.75rem - 3px);
+}
+
+.submenu-item.disabled-item {
+  cursor: not-allowed;
+}
+
+/* Auto-expand submenu when the route is active */
+.active-route + .submenu {
+  max-height: 200px;
 }
 
 /* Avatar styling */

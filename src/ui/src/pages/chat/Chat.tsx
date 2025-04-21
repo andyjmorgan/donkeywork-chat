@@ -145,12 +145,20 @@ const Chat: React.FC = () => {
       setIsLoading(true);
       const response = await promptService.getPrompts(0, 100);
       
-      const apiPrompts: Prompt[] = (response.prompts || response.items || []).map((p) => ({
-        id: p.id,
-        name: p.title,
-        value: p.content,
-        description: p.description
-      }));
+      const apiPrompts: Prompt[] = (response.prompts || response.items || []).map((p) => {
+        // Ensure content is always in the right format
+        const contentArray = Array.isArray(p.content) ? p.content : [p.content];
+        
+        return {
+          id: p.id,
+          name: p.name, // Use name instead of title
+          // Store first content item as string for use in chat UI
+          value: contentArray[0] || '',
+          // Store the full content array for editing
+          fullContent: contentArray,
+          description: p.description
+        };
+      });
       
       setPrompts(apiPrompts);
       
@@ -348,9 +356,10 @@ const Chat: React.FC = () => {
     if (selectedPrompt) {
       const promptToEdit = {
         id: selectedPrompt.id,
-        title: selectedPrompt.name,
+        name: selectedPrompt.name,
         description: selectedPrompt.description || '',
-        content: selectedPrompt.value
+        // Use the full content array if available, otherwise fallback to wrapping the value in an array
+        content: selectedPrompt.fullContent || [selectedPrompt.value]
       };
       
       setEditingPrompt(promptToEdit);
@@ -408,12 +417,27 @@ const Chat: React.FC = () => {
   // Removed model templates as they're no longer needed
   
   const promptItemTemplate = (option: Prompt) => {
+    // Function to truncate text with ellipsis
+    const truncateText = (text: string, maxLength: number): string => {
+      if (!text || text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
+    };
+    
     return (
       <div style={{ padding: '4px 0' }}>
         <div style={{ fontWeight: 'bold', fontSize: '0.875rem' }}>{option.name}</div>
         {option.description && (
-          <div style={{ fontSize: '0.75rem', marginTop: '2px', color: 'var(--text-color-secondary)' }}>
-            {option.description}
+          <div style={{ 
+            fontSize: '0.75rem', 
+            marginTop: '2px', 
+            color: 'var(--text-color-secondary)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
+          title={option.description} // Show full description on hover
+          >
+            {truncateText(option.description, 30)}
           </div>
         )}
       </div>
@@ -515,14 +539,55 @@ const Chat: React.FC = () => {
             <div className="dropdown-group prompt-group">
               <Dropdown
                 value={selectedPrompt?.id || null}
-                options={prompts}
-                onChange={handlePromptChange}
+                options={
+                  prompts.length > 0 
+                    ? [
+                        ...prompts, 
+                        { id: 'add-prompt', name: 'Add Prompt', value: 'add-prompt' }
+                      ]
+                    : [{ id: 'add-prompt', name: 'Add Prompt', value: 'add-prompt' }]
+                }
+                onChange={(e) => {
+                  if (e.value === 'add-prompt') {
+                    // Reset selected prompt
+                    setSelectedPrompt(null);
+                    // Open a fresh prompt dialog
+                    setEditingPrompt({
+                      name: '',
+                      description: '',
+                      content: ['']
+                    });
+                    setPromptDialogVisible(true);
+                  } else {
+                    handlePromptChange(e);
+                  }
+                }}
                 optionLabel="name"
                 optionValue="id"
                 className="p-inputtext-sm prompt-dropdown"
                 style={{ minWidth: '12rem' }}
-                panelStyle={{ fontSize: '0.875rem' }}
-                itemTemplate={promptItemTemplate}
+                panelStyle={{ 
+                  fontSize: '0.875rem',
+                  maxHeight: '400px', /* Increased height from default */
+                  overflow: 'auto'
+                }}
+                itemTemplate={(option) => {
+                  if (option.id === 'add-prompt') {
+                    return (
+                      <div className="flex align-items-center" style={{ 
+                        padding: '2px 4px',
+                        cursor: 'pointer',
+                        borderRadius: '4px',
+                        transition: 'background-color 0.2s',
+                        margin: '0'
+                      }}>
+                        <i className="pi pi-plus mr-2" style={{ fontSize: '0.875rem', color: 'var(--primary-color)' }}></i>
+                        <span style={{ fontWeight: 'medium', fontSize: '0.875rem' }}>Add Prompt</span>
+                      </div>
+                    );
+                  }
+                  return promptItemTemplate(option);
+                }}
                 loading={isLoading}
                 placeholder="Select Prompt"
                 emptyMessage="No prompts available"
@@ -574,6 +639,7 @@ const Chat: React.FC = () => {
             model={selectedModel?.value || undefined}
             systemPrompt={selectedPrompt?.value}
             promptId={selectedPrompt?.id}
+            fullPromptContent={selectedPrompt?.fullContent}
             initialMessages={conversationMessages}
           />
         ) : (

@@ -21,6 +21,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
+  // Utility function to expand the sidebar - can be used from anywhere
+  const expandSidebar = () => {
+    if (!sidebarVisible) {
+      setSidebarVisible(true);
+    }
+  };
+  
   // Effect to handle theme switching
   useEffect(() => {
     // Load the theme preference from localStorage
@@ -111,6 +118,93 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       }
     },
     {
+      separator: true,
+      template: () => <div className="separator-line my-2 mx-3"></div>
+    },
+    {
+      label: 'Actions',
+      icon: 'pi pi-bolt',
+      template: (item, options) => {
+        const active = location.pathname.includes('/actions');
+        const isSidebarCollapsed = !sidebarVisible;
+        
+        // State to track if this submenu is expanded
+        const [isSubmenuExpanded, setIsSubmenuExpanded] = React.useState(active);
+
+        // Handler for clicking on the menu item
+        const handleClick = (e: React.MouseEvent) => {
+          e.preventDefault();
+          
+          if (isSidebarCollapsed) {
+            // If sidebar is collapsed, expand it first
+            setSidebarVisible(true);
+            
+            // Then expand the submenu after the sidebar animation completes
+            setTimeout(() => {
+              setIsSubmenuExpanded(true);
+            }, 300);
+            return;
+          }
+          
+          // When sidebar is already expanded, just toggle the submenu
+          setIsSubmenuExpanded(!isSubmenuExpanded);
+        };
+        
+        return (
+          <div className={`menu-item-container ${isSubmenuExpanded ? 'expanded' : ''}`}>
+            <a 
+              className={`${options.className} menu-item ${active ? 'active-route' : ''}`}
+              onClick={handleClick}
+            >
+              <div className="flex align-items-center justify-content-between w-full">
+                <div className="flex align-items-center">
+                  <span className={`${options.iconClassName} ${active ? 'text-purple-500' : 'text-primary'}`}></span>
+                  <span className={options.labelClassName}>{item.label}</span>
+                </div>
+                {sidebarVisible && (
+                  <i className={`pi pi-chevron-down ml-auto submenu-toggle ${isSubmenuExpanded ? 'rotate-180' : ''}`}></i>
+                )}
+              </div>
+            </a>
+            <div className="submenu">
+              <a 
+                className="submenu-item disabled-item"
+                onClick={(e) => e.preventDefault()}
+                style={{ opacity: 0.65, cursor: 'not-allowed' }}
+              >
+                <span className="mr-2 pi pi-list"></span>
+                <span>Items</span>
+              </a>
+              <a 
+                className="submenu-item disabled-item"
+                onClick={(e) => e.preventDefault()}
+                style={{ opacity: 0.65, cursor: 'not-allowed' }}
+              >
+                <span className="mr-2 pi pi-inbox"></span>
+                <span>Logs</span>
+              </a>
+              <a 
+                className="submenu-item disabled-item"
+                onClick={(e) => e.preventDefault()}
+                style={{ opacity: 0.65, cursor: 'not-allowed' }}
+              >
+                <span className="mr-2 pi pi-calendar"></span>
+                <span>Schedule</span>
+              </a>
+              <a 
+                className="submenu-item disabled-item"
+                onClick={(e) => e.preventDefault()}
+                style={{ opacity: 0.65, cursor: 'not-allowed' }}
+              >
+                <span className="mr-2 pi pi-server"></span>
+                <span>Webhooks</span>
+              </a>
+            </div>
+          </div>
+        );
+      }
+    },
+    {
       label: 'Integrations',
       icon: 'pi pi-link',
       command: () => navigate('/integrations'),
@@ -130,19 +224,72 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     {
       label: 'Prompts',
       icon: 'pi pi-book',
-      command: () => navigate('/prompts'),
       template: (item, options) => {
         const active = location.pathname.includes('/prompts');
+        const isSidebarCollapsed = !sidebarVisible;
+        
+        // State to track if this submenu is expanded
+        const [isSubmenuExpanded, setIsSubmenuExpanded] = React.useState(active);
+
+        // Handler for clicking on the menu item
+        const handleClick = (e: React.MouseEvent) => {
+          e.preventDefault();
+          
+          if (isSidebarCollapsed) {
+            // If sidebar is collapsed, expand it first
+            setSidebarVisible(true);
+            
+            // Then expand the submenu after the sidebar animation completes
+            setTimeout(() => {
+              setIsSubmenuExpanded(true);
+            }, 300);
+            return;
+          }
+          
+          // When sidebar is already expanded, just toggle the submenu
+          setIsSubmenuExpanded(!isSubmenuExpanded);
+        };
+        
         return (
-          <a 
-            className={`${options.className} menu-item ${active ? 'active-route' : ''}`} 
-            onClick={options.onClick}
-          >
-            <span className={`${options.iconClassName} ${active ? 'text-purple-500' : 'text-primary'}`}></span>
-            <span className={options.labelClassName}>{item.label}</span>
-          </a>
+          <div className={`menu-item-container ${isSubmenuExpanded ? 'expanded' : ''}`}>
+            <a 
+              className={`${options.className} menu-item ${active ? 'active-route' : ''}`}
+              onClick={handleClick}
+            >
+              <div className="flex align-items-center justify-content-between w-full">
+                <div className="flex align-items-center">
+                  <span className={`${options.iconClassName} ${active ? 'text-purple-500' : 'text-primary'}`}></span>
+                  <span className={options.labelClassName}>{item.label}</span>
+                </div>
+                {sidebarVisible && (
+                  <i className={`pi pi-chevron-down ml-auto submenu-toggle ${isSubmenuExpanded ? 'rotate-180' : ''}`}></i>
+                )}
+              </div>
+            </a>
+            <div className="submenu">
+              <a 
+                className="submenu-item disabled-item"
+                onClick={(e) => e.preventDefault()}
+                style={{ opacity: 0.65, cursor: 'not-allowed' }}
+              >
+                <span className="mr-2 pi pi-bolt"></span>
+                <span>Action Prompts</span>
+              </a>
+              <a 
+                className={`submenu-item ${location.pathname === '/prompts' ? 'active-route' : ''}`}
+                onClick={() => navigate('/prompts')}
+              >
+                <span className="mr-2 pi pi-file-edit"></span>
+                <span>System Prompts</span>
+              </a>
+            </div>
+          </div>
         );
       }
+    },
+    {
+      separator: true,
+      template: () => <div className="separator-line my-2 mx-3"></div>
     },
     {
       label: 'API Keys',
