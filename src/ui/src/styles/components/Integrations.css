@@ -1,95 +1,88 @@
 /* Styling for Integrations page */
 .integration-card {
-  border-radius: 12px;
+  border-radius: 8px;
+  height: 100%;
+}
+
+/* Custom card header styling */
+.card-header-custom {
+  border-bottom: 1px solid var(--surface-200);
+  background-color: var(--surface-50);
+}
+
+.card-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+}
+
+.card-title-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  white-space: nowrap;
   overflow: hidden;
-  border: 1px solid var(--surface-200);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05) !important; /* Using !important to override PrimeReact defaults */
-  transform: none !important; /* Prevent any transform effects */
-  transition: none !important; /* Disable all transitions */
+  text-overflow: ellipsis;
 }
 
-/* Adding a universal selector to override any hover behaviors from PrimeReact */
-.integration-card * {
-  transition: none !important;
-  transform: none !important;
-}
-
-.integration-card .p-card-title {
-  font-size: 1.4rem;
-  margin-bottom: 0.3rem;
-}
-
-.integration-card .p-card-subtitle {
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  color: var(--text-color-secondary);
-}
-
-/* Accordion styling */
-.integration-accordion {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.integration-accordion .p-accordion-header {
-  margin-bottom: 0 !important;
-}
-
-.integration-accordion .p-accordion-header-link {
-  padding: 0.75rem !important;
-  background-color: var(--surface-50) !important;
-  border: 1px solid var(--surface-200) !important;
-  border-radius: 8px !important;
-  color: var(--text-color) !important;
-  font-weight: 500 !important;
-  transition: all 0.2s;
-}
-
-.integration-accordion .p-accordion-header-link:hover {
-  background-color: var(--surface-100) !important;
-}
-
-.integration-accordion .p-accordion-header-link:focus {
-  box-shadow: 0 0 0 2px var(--primary-color-lighter) !important;
-}
-
-.integration-accordion .p-accordion-toggle-icon {
-  color: var(--primary-color) !important;
-}
-
-.integration-accordion .p-accordion-content {
-  padding: 1rem !important;
-  background-color: var(--surface-0) !important;
-  border: 1px solid var(--surface-200) !important;
-  border-top: none !important;
-  border-bottom-right-radius: 8px !important;
-  border-bottom-left-radius: 8px !important;
-}
-
-/* Chip styling for permission scopes */
-.integration-card .p-chip {
-  background-color: var(--surface-100);
-  color: var(--text-color);
+.card-description {
   font-size: 0.85rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: 16px;
-  transition: background-color 0.2s;
+  color: var(--text-color-secondary);
+  margin: 0 0 0.75rem 0;
+  min-height: 2.8rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.integration-card .p-chip:hover {
-  background-color: var(--surface-200);
+.authentication-type {
+  font-size: 0.85rem;
+  background-color: var(--surface-50);
+  padding: 0.5rem;
+  border-radius: 4px;
 }
 
-/* Divider styling */
-.integration-card .p-divider {
-  margin: 1rem 0;
+/* Application styling */
+.application-section {
+  margin-top: 0.5rem;
 }
 
-.integration-card .p-divider .p-divider-content {
-  background-color: var(--surface-card);
+.apps-accordion .p-accordion-header-link {
+  padding: 0.5rem 0.75rem;
+  background-color: var(--surface-50);
 }
 
-/* Quick animation for the newly connected integration */
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--surface-100);
+  border-radius: 12px;
+  padding: 4px 10px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+}
+
+.app-badge .app-icon {
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.app-badge img.app-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  border-radius: 3px;
+}
+
+/* Highlight animation */
 @keyframes highlight-card {
   0% { box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb), 0.4); }
   50% { box-shadow: 0 0 0 8px rgba(var(--primary-color-rgb), 0.3); }
@@ -99,10 +92,3 @@
 .integration-card.highlight {
   animation: highlight-card 2s ease-out;
 }
-
-/* Badge styling */
-.integration-card .p-badge {
-  font-weight: normal;
-}
-
-

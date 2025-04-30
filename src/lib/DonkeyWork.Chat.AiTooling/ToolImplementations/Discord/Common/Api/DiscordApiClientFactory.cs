@@ -7,7 +7,7 @@
 using Discord;
 using Discord.Rest;
 using DonkeyWork.Chat.Common.Contracts;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Discord.Common.Api;
@@ -40,7 +40,7 @@ public class DiscordApiClientFactory : IDiscordApiClientFactory
             try
             {
                 var userPosture = await this.userPostureService.GetUserPosturesAsync(cancellationToken);
-                var thisProvider = userPosture.UserTokens.FirstOrDefault(x => x.ProviderType == UserProviderType.Discord);
+                var thisProvider = userPosture.UserTokens.FirstOrDefault(x => x.ProviderType == ToolProviderType.Discord);
                 ArgumentNullException.ThrowIfNull(thisProvider);
 
                 var client = new DiscordRestClient(new DiscordRestConfig

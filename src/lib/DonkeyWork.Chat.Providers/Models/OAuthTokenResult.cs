@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 
 namespace DonkeyWork.Chat.Providers.Models;
 
@@ -16,7 +16,7 @@ public record OAuthTokenResult
     /// <summary>
     /// Gets the provider type.
     /// </summary>
-    public UserProviderType ProviderType { get; init; }
+    public ToolProviderType ProviderType { get; init; }
 
     /// <summary>
     /// Gets the access token.

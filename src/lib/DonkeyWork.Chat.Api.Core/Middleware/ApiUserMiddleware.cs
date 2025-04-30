@@ -5,7 +5,7 @@
 // ------------------------------------------------------
 
 using System.Security.Claims;
-using DonkeyWork.Chat.Common.UserContext;
+using DonkeyWork.Chat.Common.Services.UserContext;
 using Microsoft.AspNetCore.Http;
 
 namespace DonkeyWork.Chat.Api.Core.Middleware;

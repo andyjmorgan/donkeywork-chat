@@ -296,6 +296,50 @@
   top: 1rem !important;
 }
 
+/* Main navigation sidebar styling */
+.main-navigation-sidebar {
+  z-index: 1000 !important; /* Higher than the chat options sidebar */
+}
+
+/* Mobile styling for chat options button */
+.mobile-fab {
+  transition: transform 0.2s, box-shadow 0.2s !important;
+  background-color: var(--primary-color) !important;
+  color: var(--primary-color-text) !important;
+  border: none !important;
+  font-size: 1.2rem !important;
+}
+
+.mobile-fab:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+.mobile-fab .p-button-icon {
+  font-size: 1.4rem !important;
+}
+
+.mobile-chat-options-sidebar .p-sidebar-header {
+  padding: 1rem !important;
+  border-bottom: 1px solid var(--surface-border) !important;
+}
+
+.mobile-chat-options-sidebar .p-sidebar-content {
+  padding: 0 !important;
+}
+
+.option-group h3 {
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem !important;
+  color: var(--text-color);
+}
+
+@media screen and (max-width: 768px) {
+  .chat-settings-menubar {
+    display: none !important;
+  }
+}
+
 /* Menu items styling */
 .p-menuitem-link {
   border-radius: 4px !important;

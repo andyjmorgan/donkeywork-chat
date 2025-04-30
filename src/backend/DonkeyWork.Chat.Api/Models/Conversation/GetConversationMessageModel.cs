@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Persistence.Entity.Conversation;
+using DonkeyWork.Chat.Common.Models;
 
 namespace DonkeyWork.Chat.Api.Models.Conversation;
 

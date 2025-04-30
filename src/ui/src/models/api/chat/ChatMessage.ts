@@ -25,4 +25,10 @@ export interface MessageMetadata {
     
     /** Detailed information about each tool call */
     toolCallDetails?: any[];
+    
+    /** Name of the model used for generating this message */
+    modelName?: string;
+    
+    /** Provider message IDs from the AI service */
+    messageProviderIds?: string[];
 }

@@ -3,10 +3,16 @@
     "orderingRules": {
       "usingDirectivesPlacement": "outsideNamespace"
     },
+    "spacingRules": {
+      "allowSpaceBeforeOpeningSquareBracket": true
+    },
     "documentationRules": {
       "companyName": "DonkeyWork.Dev",
       "copyrightText": "Provided as is by (c) {companyName}. No warranty or support is given.",
       "headerDecoration": "------------------------------------------------------"
     }
+  },
+  "rules": {
+    "SA1010": false
   }
 }

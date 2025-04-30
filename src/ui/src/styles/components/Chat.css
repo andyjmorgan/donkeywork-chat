@@ -361,8 +361,6 @@ p {
 
 /* Markdown styling */
 .markdown-content {
-    font-size: 1.125rem;
-    line-height: 1.5;
     overflow-wrap: break-word;
     word-break: break-word;
     min-width: 0; /* Ensure content can shrink if needed */
@@ -691,6 +689,11 @@ p {
     padding: 10px 16px !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     overflow-x: auto !important;
+}
+
+/* PrimeReact utility class for hiding elements */
+.p-hidden {
+    display: none !important;
 }
 
 /* Override PrimeReact dropdown styles completely */

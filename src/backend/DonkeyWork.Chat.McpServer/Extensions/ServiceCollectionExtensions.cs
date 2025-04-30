@@ -78,7 +78,7 @@ public static class ServiceCollectionExtensions
 
         return handler;
     }
-    
+
     private static IMcpPromptsHandler GetPromptHandler<T>(RequestContext<T> context)
     {
         var handler = context.Services?.GetRequiredService<IMcpPromptsHandler>();

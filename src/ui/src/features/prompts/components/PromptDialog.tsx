@@ -4,6 +4,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Toast } from 'primereact/toast';
+import { Accordion, AccordionTab } from 'primereact/accordion';
 import { UpsertPromptModel } from '../../../models/api/Prompt/UpsertPromptModel';
 import { promptService } from '../../../services/api/promptService';
 import { PromptDialogProps } from '../../../models/ui/prompts/PromptDialogTypes';
@@ -13,57 +14,103 @@ import './PromptDialog.css';
  * A reusable component for creating or editing prompts
  */
 const PromptDialog: React.FC<PromptDialogProps> = ({ visible, onHide, onSave, editPrompt }) => {
-  const [title, setTitle] = useState('');
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState<string[]>(['']);
   const [saving, setSaving] = useState(false);
-  const [titleError, setTitleError] = useState('');
+  const [nameError, setNameError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [contentError, setContentError] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+  // Track which content items are expanded
+  const [activeContentIndexes, setActiveContentIndexes] = useState<number[]>([0]);
   const toast = useRef<Toast>(null);
 
   // Reset form when the dialog is opened or editPrompt changes
   useEffect(() => {
     if (visible) {
+      let initialContent: string[] = [''];
+      
       if (editPrompt) {
-        setTitle(editPrompt.title);
+        setName(editPrompt.name);
         setDescription(editPrompt.description);
-        setContent(editPrompt.content);
+        initialContent = editPrompt.content && editPrompt.content.length > 0 ? editPrompt.content : [''];
+        setContent(initialContent);
       } else {
         // Clear form for new prompt
-        setTitle('');
+        setName('');
         setDescription('');
-        setContent('');
+        setContent(initialContent);
       }
       
       // Clear errors
-      setTitleError('');
+      setNameError('');
       setDescriptionError('');
       setContentError('');
       
+      // Set initial active indexes to expand all content items
+      setActiveContentIndexes(initialContent.map((_, i) => i));
+      
       // Set initial form validity
-      const hasTitle = editPrompt && editPrompt.title ? editPrompt.title.trim().length > 0 : false;
+      const hasName = editPrompt && editPrompt.name ? editPrompt.name.trim().length > 0 : false;
       const hasDescription = editPrompt && editPrompt.description ? editPrompt.description.trim().length > 0 : false;
-      const hasContent = editPrompt && editPrompt.content ? editPrompt.content.trim().length > 0 : false;
-      setIsFormValid(hasTitle && hasDescription && hasContent);
+      const hasContent = editPrompt && editPrompt.content ? editPrompt.content.some(item => item.trim().length > 0) : false;
+      setIsFormValid(hasName && hasDescription && hasContent);
     }
   }, [visible, editPrompt]);
+
+  // Add a new item to the content list
+  const addContentItem = () => {
+    const newContent = [...content, ''];
+    setContent(newContent);
+    // Ensure the new item is expanded by updating the active indexes
+    setActiveContentIndexes([...activeContentIndexes, newContent.length - 1]);
+  };
+
+  // Remove an item from the content list
+  const removeContentItem = (index: number) => {
+    if (content.length <= 1) {
+      // Don't remove the last item
+      return;
+    }
+    
+    // Update content
+    const newContent = [...content];
+    newContent.splice(index, 1);
+    setContent(newContent);
+    
+    // Update active indexes to maintain expanded state
+    const newActiveIndexes = activeContentIndexes
+      .filter(i => i !== index)  // Remove the deleted index
+      .map(i => i > index ? i - 1 : i);  // Adjust indexes after the deleted one
+    
+    setActiveContentIndexes(newActiveIndexes);
+    setTimeout(() => validateForm(), 0);
+  };
+
+  // Update a content item at a specific index
+  const updateContentItem = (index: number, value: string) => {
+    const newContent = [...content];
+    newContent[index] = value;
+    setContent(newContent);
+    setTimeout(() => validateForm(), 0);
+  };
+
 
   // Validate form
   const validateForm = (): boolean => {
     let isValid = true;
     
-    // Title validation - required and max 64 characters
-    const trimmedTitle = title.trim();
-    if (!trimmedTitle) {
-      setTitleError('Title is required');
+    // Name validation - required and max 64 characters
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      setNameError('Name is required');
       isValid = false;
-    } else if (trimmedTitle.length > 64) {
-      setTitleError(`Title must be 64 characters or less (currently ${trimmedTitle.length})`);
+    } else if (trimmedName.length > 64) {
+      setNameError(`Name must be 64 characters or less (currently ${trimmedName.length})`);
       isValid = false;
     } else {
-      setTitleError('');
+      setNameError('');
     }
     
     // Description validation - required
@@ -74,9 +121,10 @@ const PromptDialog: React.FC<PromptDialogProps> = ({ visible, onHide, onSave, ed
       setDescriptionError('');
     }
     
-    // Content validation - required
-    if (!content.trim()) {
-      setContentError('Content is required');
+    // Content validation - at least one non-empty item
+    const hasNonEmptyContent = content.some(item => item.trim().length > 0);
+    if (!hasNonEmptyContent) {
+      setContentError('At least one content item is required');
       isValid = false;
     } else {
       setContentError('');
@@ -102,15 +150,16 @@ const PromptDialog: React.FC<PromptDialogProps> = ({ visible, onHide, onSave, ed
     }
     
     // Ensure all required fields have values
-    const trimmedTitle = title.trim();
+    const trimmedName = name.trim();
     const trimmedDescription = description.trim();
-    const trimmedContent = content.trim();
+    // Filter out empty content items
+    const filteredContent = content.filter(item => item.trim().length > 0);
     
-    if (!trimmedTitle || !trimmedDescription || !trimmedContent) {
+    if (!trimmedName || !trimmedDescription || filteredContent.length === 0) {
       toast.current?.show({ 
         severity: 'error', 
         summary: 'Validation Error', 
-        detail: 'Title, description, and content are all required' 
+        detail: 'Name, description, and at least one content item are required' 
       });
       return;
     }
@@ -119,9 +168,9 @@ const PromptDialog: React.FC<PromptDialogProps> = ({ visible, onHide, onSave, ed
     
     try {
       const promptData: UpsertPromptModel = {
-        title: trimmedTitle,
+        name: trimmedName,
         description: trimmedDescription,
-        content: trimmedContent
+        content: filteredContent
       };
       
       if (editPrompt?.id) {
@@ -200,20 +249,20 @@ const PromptDialog: React.FC<PromptDialogProps> = ({ visible, onHide, onSave, ed
       >
         <div className="p-fluid">
           <div className="field">
-            <label htmlFor="title" className="field-label">Title</label>
+            <label htmlFor="name" className="field-label">Name</label>
             <InputText
-              id="title"
-              value={title}
+              id="name"
+              value={name}
               onChange={(e) => {
-                setTitle(e.target.value);
+                setName(e.target.value);
                 setTimeout(() => validateForm(), 0);
               }}
-              className={titleError ? 'p-invalid' : ''}
-              placeholder="Enter a descriptive title"
+              className={nameError ? 'p-invalid' : ''}
+              placeholder="Enter a descriptive name"
               maxLength={64}
               disabled={saving}
             />
-            {titleError && <small className="p-error">{titleError}</small>}
+            {nameError && <small className="p-error">{nameError}</small>}
           </div>
 
           <div className="field">
@@ -232,23 +281,61 @@ const PromptDialog: React.FC<PromptDialogProps> = ({ visible, onHide, onSave, ed
             {descriptionError && <small className="p-error">{descriptionError}</small>}
           </div>
 
-          <div className="field">
-            <label htmlFor="content" className="field-label">Prompt Content</label>
-            <InputTextarea
-              id="content"
-              value={content}
-              onChange={(e) => {
-                setContent(e.target.value);
-                setTimeout(() => validateForm(), 0);
-              }}
-              autoResize
-              rows={10}
-              className={contentError ? 'p-invalid prompt-textarea' : 'prompt-textarea'}
-              placeholder="Enter the prompt content..."
-              disabled={saving}
-              style={{ minHeight: '200px' }}
-            />
-            {contentError && <small className="p-error">{contentError}</small>}
+          <div className="field content-field">
+            <div className="flex justify-content-between align-items-center mb-2">
+              <label className="field-label">Content</label>
+              <Button
+                type="button"
+                icon="pi pi-plus"
+                onClick={addContentItem}
+                disabled={saving}
+                className="p-button-sm p-button-rounded"
+                tooltip="Add content item"
+              />
+            </div>
+            {contentError && <small className="p-error block mb-2">{contentError}</small>}
+            
+            <div className="content-container">
+              <Accordion 
+                multiple 
+                activeIndex={activeContentIndexes}
+                onTabChange={(e) => setActiveContentIndexes(e.index as number[])}>
+              {content.map((item, index) => (
+                <AccordionTab 
+                  key={index}
+                  header={
+                    <div className="flex justify-content-between align-items-center w-full">
+                      <span>{`Content ${index + 1}`}</span>
+                      {content.length > 1 && (
+                        <Button
+                          type="button"
+                          icon="pi pi-trash"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeContentItem(index);
+                          }}
+                          className="p-button-sm p-button-danger p-button-text"
+                          disabled={saving}
+                        />
+                      )}
+                    </div>
+                  }
+                >
+                  <InputTextarea
+                    value={item}
+                    onChange={(e) => updateContentItem(index, e.target.value)}
+                    autoResize
+                    rows={6}
+                    style={{ overflow: 'auto', height: 'auto', minHeight: '150px' }}
+                    className="w-full prompt-textarea"
+                    placeholder="Enter the content..."
+                    disabled={saving}
+                    onWheel={(e) => e.stopPropagation()} // Prevent wheel events from propagating to parent
+                  />
+                </AccordionTab>
+              ))}
+            </Accordion>
+            </div>
           </div>
         </div>
       </Dialog>

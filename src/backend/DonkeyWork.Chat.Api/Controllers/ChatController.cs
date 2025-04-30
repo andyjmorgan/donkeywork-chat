@@ -10,7 +10,7 @@ using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Services;
 using DonkeyWork.Chat.Api.Models.Chat;
 using DonkeyWork.Chat.Api.Services.Conversation;
-using DonkeyWork.Chat.Persistence.Repository.Prompt;
+using DonkeyWork.Persistence.Agent.Repository.Prompt;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DonkeyWork.Chat.Api.Controllers;
@@ -19,6 +19,7 @@ namespace DonkeyWork.Chat.Api.Controllers;
 /// A chat controller.
 /// </summary>
 /// <param name="conversationService">The chat service.</param>
+/// <param name="promptRepository">The prompt repository.</param>
 [ApiController]
 [Route("api/[controller]")]
 public class ChatController(IConversationService conversationService, IPromptRepository promptRepository)
@@ -40,13 +41,14 @@ public class ChatController(IConversationService conversationService, IPromptRep
         if (request.PromptId.HasValue)
         {
             var promptContent = await promptRepository.GetPromptContentAsync(request.PromptId.Value, cancellationToken);
-            if (promptContent is not null)
+            var promptMessages = promptContent?.Content.Select(x => new GenericChatMessage()
             {
-                request.Messages.Insert(0, new GenericChatMessage()
-                {
-                    Content = promptContent.Content,
-                    Role = GenericMessageRole.System,
-                });
+                Content = string.Join(Environment.NewLine, x),
+            }).ToList();
+
+            if (promptMessages?.Count > 0)
+            {
+                request.Messages.InsertRange(0, promptMessages);
             }
         }
 

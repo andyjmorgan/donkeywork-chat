@@ -8,9 +8,9 @@ export interface GetPromptsItemModel {
   id: string;
 
   /**
-   * The prompt title
+   * The prompt name
    */
-  title: string;
+  name: string;
 
   /**
    * The prompt description
@@ -20,7 +20,7 @@ export interface GetPromptsItemModel {
   /**
    * The prompt content
    */
-  content: string;
+  content: string[];
 
   /**
    * Number of times the prompt has been used

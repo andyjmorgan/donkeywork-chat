@@ -1,3 +1,10 @@
+// ------------------------------------------------------
+// <copyright file="ActionModelConfiguration.cs" company="DonkeyWork.Dev">
+// Provided as is by (c) DonkeyWork.Dev. No warranty or support is given.
+// </copyright>
+// ------------------------------------------------------
+
+using System.Text.Json.Serialization;
 using DonkeyWork.Chat.Common.Models.Providers;
 
 namespace DonkeyWork.Chat.Common.Models.Actions;
@@ -10,6 +17,7 @@ public class ActionModelConfiguration
     /// <summary>
     /// Gets or sets the provider type.
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public AiChatProvider ProviderType { get; set; }
 
     /// <summary>
@@ -18,9 +26,9 @@ public class ActionModelConfiguration
     public string ModelName { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets a value indicating whether the model is a streaming model.
+    /// Gets or sets a value indicating whether the model should stream.
     /// </summary>
-    public bool IsStreaming { get; set; }
+    public bool Streaming { get; set; } = true;
 
     /// <summary>
     /// Gets or sets additional configuration for the action model.

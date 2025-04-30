@@ -14,6 +14,7 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
       <PackageReference Include="StyleCop.Analyzers">
         <PrivateAssets>all</PrivateAssets>
@@ -32,7 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\lib\DonkeyWork.Chat.Commonn\DonkeyWork.Chat.Commonn.csproj" />
+      <ProjectReference Include="..\..\lib\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj" />
       <ProjectReference Include="..\DonkeyWork.Persistence.Common\DonkeyWork.Persistence.Common.csproj" />
     </ItemGroup>
 

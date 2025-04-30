@@ -5,7 +5,7 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Chat.Common.Contracts;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Gmail.v1;
@@ -54,7 +54,7 @@ public class GoogleApiClientFactory : IGoogleApiClientFactory
     /// <param name="userPostureService">The user posture service.</param>
     public GoogleApiClientFactory(IHttpClientFactory httpClientFactory, IUserPostureService userPostureService)
     {
-        this.httpClient = httpClientFactory.CreateClient(nameof(UserProviderType.Google));
+        this.httpClient = httpClientFactory.CreateClient(nameof(ToolProviderType.Google));
         this.userPostureService = userPostureService;
     }
 
@@ -65,6 +65,7 @@ public class GoogleApiClientFactory : IGoogleApiClientFactory
         {
             return this.gmailService;
         }
+
         await this.ValidateCredentialsAsync(cancellationToken);
         this.gmailService = new GmailService(
             new BaseClientService.Initializer
@@ -116,7 +117,7 @@ public class GoogleApiClientFactory : IGoogleApiClientFactory
     {
         if (this.googleCredential is null)
         {
-            var userPostures = await this.userPostureService.GetUserPostureAsync(UserProviderType.Google, cancellationToken);
+            var userPostures = await this.userPostureService.GetUserPostureAsync(ToolProviderType.Google, cancellationToken);
             ArgumentNullException.ThrowIfNull(userPostures);
             this.googleCredential = GoogleCredential.FromAccessToken(userPostures.Keys[UserProviderDataKeyType.AccessToken]);
         }

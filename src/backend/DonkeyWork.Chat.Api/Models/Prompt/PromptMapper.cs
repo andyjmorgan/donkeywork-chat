@@ -5,7 +5,8 @@
 // ------------------------------------------------------
 
 using AutoMapper;
-using DonkeyWork.Chat.Persistence.Repository.Prompt.Models;
+using DonkeyWork.Persistence.Agent.Repository.Prompt.Models.ActionPrompt;
+using DonkeyWork.Persistence.Agent.Repository.Prompt.Models.SystemPrompt;
 
 namespace DonkeyWork.Chat.Api.Models.Prompt;
 
@@ -22,5 +23,9 @@ public class PromptMapper : Profile
         this.CreateMap<GetPromptsResponseItem, GetPromptsModel>();
         this.CreateMap<PromptItem, GetPromptsItemModel>();
         this.CreateMap<UpsertPromptModel, UpsertPromptItem>();
+
+        this.CreateMap<GetActionPromptsResponseItem, GetActionPromptsModel>();
+        this.CreateMap<ActionPromptItem, GetActionPromptsItemModel>();
+        this.CreateMap<UpsertActionPromptModel, UpsertActionPromptItem>();
     }
 }

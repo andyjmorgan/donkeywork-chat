@@ -10,11 +10,11 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Clients.OpenAi.Configuration;
-using DonkeyWork.Chat.AiServices.Streaming;
-using DonkeyWork.Chat.AiServices.Streaming.Chat;
-using DonkeyWork.Chat.AiServices.Streaming.Tool;
 using DonkeyWork.Chat.AiTooling.Base.Models;
 using DonkeyWork.Chat.AiTooling.Exceptions;
+using DonkeyWork.Chat.Common.Models.Streaming;
+using DonkeyWork.Chat.Common.Models.Streaming.Chat;
+using DonkeyWork.Chat.Common.Models.Streaming.Tool;
 using Microsoft.Extensions.Options;
 using OpenAI;
 using OpenAI.Chat;
@@ -52,6 +52,26 @@ public class OpenAIChatClient(IOptions<OpenAiConfiguration> configuration)
         }
     }
 
+    /// <inheritdoc />
+    public async IAsyncEnumerable<BaseStreamItem> ChatAsync(
+        ChatRequest request,
+        List<ToolDefinition> toolDefinitions,
+        Func<ToolCallback, Task<JsonDocument>> toolAction,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        await foreach (var chatFragment in this.ChatAsync(
+                           ConvertMessages(request),
+                           CreateChatCompletionOptions(request, toolDefinitions),
+                           this.openAiClient.GetChatClient(request.ModelName),
+                           toolAction: async x => await toolAction(x),
+                           cancellationToken))
+        {
+#pragma warning disable SA1101
+            yield return chatFragment with { ExecutionId = request.Id };
+#pragma warning restore SA1101
+        }
+    }
+
     private static ChatCompletionOptions CreateChatCompletionOptions(ChatRequest request, List<ToolDefinition> toolDefinitions)
     {
         var options = new ChatCompletionOptions()
@@ -72,6 +92,23 @@ public class OpenAIChatClient(IOptions<OpenAiConfiguration> configuration)
             options.Tools.Add(tool);
         }
 
+        if (request.Metadata.TryGetValue(nameof(KnownMetaDataFields.Temperature), out var temperature))
+        {
+            options.Temperature = float.Parse(temperature);
+        }
+
+        if (request.Metadata.TryGetValue(nameof(KnownMetaDataFields.MaxTokens), out var maxTokens))
+        {
+            options.MaxOutputTokenCount = Convert.ToInt32(maxTokens);
+        }
+
+        // TopK not supported
+        if (request.Metadata.TryGetValue(nameof(KnownMetaDataFields.TopP), out var topP))
+        {
+            options.TopP = float.Parse(topP);
+        }
+
+        // thinking not implemented yet
         return options;
     }
 
@@ -129,6 +166,125 @@ public class OpenAIChatClient(IOptions<OpenAiConfiguration> configuration)
             new BinaryData(toolBytes));
 
         return functionToolCall;
+    }
+
+    private static async IAsyncEnumerable<BaseStreamItem> HandleToolCallsAsync(
+        List<ChatMessage> messages,
+        Func<ToolCallback, Task<JsonDocument>> toolAction,
+        List<ChatToolCall> functionToolCalls,
+        Guid chatId,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        foreach (var functionToolCall in functionToolCalls)
+        {
+            var toolCallId = Guid.NewGuid();
+
+            messages.Add(new AssistantChatMessage([functionToolCall]));
+            var argument = JsonDocument.Parse(
+                string.Join(
+                    string.Empty,
+                    functionToolCall.FunctionArguments));
+
+            yield return new ToolCall()
+            {
+                Name = functionToolCall.FunctionName,
+                QueryParameters = argument,
+                Index = functionToolCalls.IndexOf(functionToolCall),
+                ToolCallId = toolCallId,
+                ChatId = chatId,
+            };
+
+            Stopwatch toolStopwatch = Stopwatch.StartNew();
+            var toolResult = await toolAction(
+                new ToolCallback()
+                {
+                    ToolName = functionToolCall.FunctionName,
+                    ToolParameters = argument,
+                });
+            toolStopwatch.Stop();
+
+            yield return new ToolResult()
+            {
+                Result = toolResult.RootElement.GetRawText(),
+                Duration = toolStopwatch.Elapsed,
+                ToolCallId = toolCallId,
+            };
+
+            messages.Add(
+                new ToolChatMessage(
+                    functionToolCall.Id,
+                    toolResult.RootElement.GetRawText()));
+        }
+    }
+
+    private async IAsyncEnumerable<BaseStreamItem> ChatAsync(
+        List<ChatMessage> messages,
+        ChatCompletionOptions options,
+        ChatClient chatClient,
+        Func<ToolCallback, Task<JsonDocument>> toolAction,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        Guid chatId = Guid.NewGuid();
+
+        // We can have situations where it'll start talking then make a tool call.
+        var result = await chatClient.CompleteChatAsync(messages, options, cancellationToken);
+        if (result is null)
+        {
+            yield break;
+        }
+
+        var chatResult = result.Value;
+        yield return new ChatStartFragment()
+        {
+            ChatId = chatId,
+            ModelName = chatResult.Model,
+            MessageProviderId = chatResult.Id,
+        };
+        yield return CreateUsage(chatResult.Usage, chatId);
+        foreach (var item in chatResult.Content)
+        {
+            Dictionary<string, object?> metadata = [];
+            metadata.Add(nameof(item.Kind), item.Kind);
+            metadata.Add(nameof(item.Refusal), item.Refusal);
+            metadata.Add(nameof(item.Text), item.Text);
+            metadata.Add(nameof(item.ImageUri), item.ImageUri);
+            metadata.Add(nameof(item.ImageBytesMediaType), item.ImageBytesMediaType);
+            yield return new ChatFragment()
+            {
+                Content = item.Text,
+                ChatId = chatId,
+                Metadata = metadata,
+            };
+        }
+
+        yield return new ChatEndFragment()
+        {
+            ChatId = chatId,
+        };
+
+        if (chatResult.ToolCalls.Any())
+        {
+            await foreach (var p in HandleToolCallsAsync(
+                               messages,
+                               toolAction,
+                               chatResult.ToolCalls.ToList(),
+                               chatId,
+                               cancellationToken))
+            {
+                yield return p;
+            }
+
+            await foreach (var fragment in
+                           this.ChatAsync(
+                               messages,
+                               options,
+                               chatClient,
+                               toolAction,
+                               cancellationToken))
+            {
+                yield return fragment;
+            }
+        }
     }
 
     private async IAsyncEnumerable<BaseStreamItem> StreamChatAsync(
@@ -197,7 +353,8 @@ public class OpenAIChatClient(IOptions<OpenAiConfiguration> configuration)
         {
             var toolCalls = updates.Where(x => x.ToolCallUpdates.Any())
                 .SelectMany(x => x.ToolCallUpdates)
-                .GroupBy(x => x.Index);
+                .GroupBy(x => x.Index)
+                .ToList();
 
             // If the LLM has answered partially before making tool calls, we need to gather them up.
             var chatFragments = updates
@@ -211,46 +368,15 @@ public class OpenAIChatClient(IOptions<OpenAiConfiguration> configuration)
                 messages.Add(new AssistantChatMessage(chatFragments));
             }
 
-            foreach (var toolCall in toolCalls)
+            var functionToolCalls = toolCalls.Select(CreateToolCall).ToList();
+            await foreach (var p in HandleToolCallsAsync(
+                               messages,
+                               toolAction,
+                               functionToolCalls,
+                               chatId,
+                               cancellationToken))
             {
-                var toolCallId = Guid.NewGuid();
-                var functionToolCall = CreateToolCall(toolCall);
-
-                messages.Add(new AssistantChatMessage([functionToolCall]));
-                var argument = JsonDocument.Parse(
-                    string.Join(
-                        string.Empty,
-                        functionToolCall.FunctionArguments));
-
-                yield return new ToolCall()
-                {
-                    Name = functionToolCall.FunctionName,
-                    QueryParameters = argument,
-                    Index = toolCall.Key,
-                    ToolCallId = toolCallId,
-                    ChatId = chatId,
-                };
-
-                Stopwatch toolStopwatch = Stopwatch.StartNew();
-                var toolResult = await toolAction(
-                    new ToolCallback()
-                    {
-                        ToolName = functionToolCall.FunctionName,
-                        ToolParameters = argument,
-                    });
-                toolStopwatch.Stop();
-
-                yield return new ToolResult()
-                {
-                    Result = toolResult.RootElement.GetRawText(),
-                    Duration = toolStopwatch.Elapsed,
-                    ToolCallId = toolCallId,
-                };
-
-                messages.Add(
-                    new ToolChatMessage(
-                        functionToolCall.Id,
-                        toolResult.RootElement.GetRawText()));
+                yield return p;
             }
 
             await foreach (var fragment in

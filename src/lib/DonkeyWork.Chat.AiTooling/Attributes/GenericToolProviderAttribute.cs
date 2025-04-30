@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers.GenericProvider;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 
 namespace DonkeyWork.Chat.AiTooling.Attributes;
 
@@ -20,7 +20,7 @@ public sealed class GenericToolProviderAttribute
     /// Initializes a new instance of the <see cref="GenericToolProviderAttribute"/> class.
     /// </summary>
     /// <param name="providerType">The provider type.</param>
-    public GenericToolProviderAttribute(GenericProviderType providerType)
+    public GenericToolProviderAttribute(ToolProviderType providerType)
     {
         this.ProviderType = providerType;
     }
@@ -28,5 +28,5 @@ public sealed class GenericToolProviderAttribute
     /// <summary>
     /// Gets an attribute for the provider of the tool.
     /// </summary>
-    public GenericProviderType ProviderType { get; }
+    public ToolProviderType ProviderType { get; }
 }

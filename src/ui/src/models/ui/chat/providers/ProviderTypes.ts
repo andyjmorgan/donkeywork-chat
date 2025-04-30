@@ -48,9 +48,14 @@ export interface Prompt {
   name: string;
   
   /**
-   * The actual prompt content
+   * The actual prompt content (first item for the chat UI)
    */
   value: string;
+  
+  /**
+   * The full array of prompt content items
+   */
+  fullContent?: string[];
   
   /**
    * Optional description of the prompt

@@ -5,7 +5,7 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Chat.Common.Contracts;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using Microsoft.Graph;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common.Api;
@@ -26,7 +26,7 @@ public class MicrosoftGraphApiClientFactory : IMicrosoftGraphApiClientFactory
     /// <param name="userPostureService">The user posture service.</param>
     public MicrosoftGraphApiClientFactory(IHttpClientFactory httpClientFactory, IUserPostureService userPostureService)
     {
-        this.httpClient = httpClientFactory.CreateClient(nameof(UserProviderType.Microsoft));
+        this.httpClient = httpClientFactory.CreateClient(nameof(ToolProviderType.Microsoft));
         this.userPostureService = userPostureService;
     }
 
@@ -38,7 +38,7 @@ public class MicrosoftGraphApiClientFactory : IMicrosoftGraphApiClientFactory
             return this.graphServiceClient;
         }
 
-        var userPosture = await this.userPostureService.GetUserPostureAsync(UserProviderType.Microsoft, cancellationToken);
+        var userPosture = await this.userPostureService.GetUserPostureAsync(ToolProviderType.Microsoft, cancellationToken);
         ArgumentNullException.ThrowIfNull(userPosture);
         this.graphServiceClient = new GraphServiceClient(
             this.httpClient,

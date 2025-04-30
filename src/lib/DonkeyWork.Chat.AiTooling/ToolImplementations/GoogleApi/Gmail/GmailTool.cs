@@ -9,17 +9,19 @@ using System.Text;
 using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Common.Api;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
+using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Gmail;
 
 /// <inheritdoc cref="DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Gmail.IGmailTool" />
-[OAuthToolProvider(UserProviderType.Google)]
+[OAuthToolProvider(ToolProviderType.Google)]
+[ToolProviderApplicationType(ToolProviderApplicationType.GoogleMail)]
 public class GmailTool(
-    IGoogleApiClientFactory googleApiClientFactory)
-    : Base.Tool, IGmailTool
+    IGoogleApiClientFactory googleApiClientFactory, ILogger<GmailTool> logger)
+    : Base.Tool(logger), IGmailTool
 {
     private readonly JsonSerializerOptions jsonSerializerOptions = new ()
     {
@@ -87,7 +89,7 @@ public class GmailTool(
 
         var result = new
         {
-            Status = "Email sent successfully",
+            Success = true,
             MessageId = response.Id,
             response.ThreadId,
         };

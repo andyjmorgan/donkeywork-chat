@@ -4,8 +4,8 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Models.Providers;
-using DonkeyWork.Chat.Common.Models.Providers.GenericProvider;
+using DonkeyWork.Chat.Common.Models.Providers.Posture;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 
 namespace DonkeyWork.Chat.Common.Contracts;
 
@@ -29,7 +29,7 @@ public interface IUserPostureService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<UserProviderPosture?> GetUserPostureAsync(
-        UserProviderType providerType,
+        ToolProviderType providerType,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -39,6 +39,6 @@ public interface IUserPostureService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task<GenericProviderPosture?> GetUserGenericPostureAsync(
-        GenericProviderType providerType,
+        ToolProviderType providerType,
         CancellationToken cancellationToken = default);
 }

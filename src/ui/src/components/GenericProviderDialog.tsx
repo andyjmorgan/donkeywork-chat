@@ -8,13 +8,14 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { Divider } from 'primereact/divider';
 import { Toast } from 'primereact/toast';
 import { GenericProviderType, GenericProviderConfigurationModel, GenericProviderPropertyType, GenericProviderPropertyModel } from '../models/api/provider';
-import { providerService } from '../services/api';
+import { ToolProviderType } from '../models/api/provider/ToolProviderType';
+import { integrationsService } from '../services/api';
 import './GenericProviderDialog.css';
 
 interface GenericProviderDialogProps {
   visible: boolean;
   onHide: () => void;
-  providerType: GenericProviderType | null;
+  providerType: GenericProviderType | ToolProviderType | null;
   providerImage?: string; // Add provider image URL
   providerName?: string;  // Add provider name
   onSave: () => void;
@@ -57,7 +58,7 @@ const GenericProviderDialog: React.FC<GenericProviderDialogProps> = ({
     
     try {
       setLoading(true);
-      const config = await providerService.getGenericProviderConfiguration(providerType);
+      const config = await integrationsService.getGenericProviderConfiguration(providerType as ToolProviderType);
       
       // Log the received configuration for debugging
       console.log('Received provider configuration:', config);
@@ -126,7 +127,7 @@ const GenericProviderDialog: React.FC<GenericProviderDialogProps> = ({
       
       console.log("Saving configuration:", JSON.stringify(saveConfig, null, 2));
       
-      await providerService.upsertGenericProviderConfiguration(saveConfig);
+      await integrationsService.upsertGenericProviderConfiguration(saveConfig);
       toast.current?.show({ 
         severity: 'success', 
         summary: 'Success', 

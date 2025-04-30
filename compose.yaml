@@ -2,11 +2,19 @@
   donkeywork-chat-api:
     image: 192.168.0.140:8443/donkeywork-chat-api:latest
     platform: linux/amd64
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     build:
       context: .
       dockerfile: src/backend/DonkeyWork.Chat.Api/Dockerfile
+    entrypoint: ["dotnet", "DonkeyWork.Chat.Api.dll"]
     networks:
         - donkeywork
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      - postgres
   postgres:
     image: postgres:latest
     environment:
@@ -27,6 +35,15 @@
       dockerfile: Dockerfile
     ports:
       - "8012:80"
+    networks:
+      - donkeywork
+  markitdown-mcp:
+    image: 192.168.0.140:8443/markitdown-mcp:latest
+    build:
+      context: .
+      dockerfile: src/mcp/MarkitDown/Dockerfile
+    ports:
+      - "3001:3001"
     networks:
       - donkeywork
 networks:

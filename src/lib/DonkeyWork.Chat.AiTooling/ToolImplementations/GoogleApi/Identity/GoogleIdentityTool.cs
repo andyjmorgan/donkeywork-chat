@@ -8,14 +8,16 @@ using System.ComponentModel;
 using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Common.Api;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Identity;
 
 /// <inheritdoc cref="IGoogleIdentityTool"/>
-[OAuthToolProvider(UserProviderType.Google)]
-public class GoogleIdentityTool(IGoogleApiClientFactory googleApiClientFactory)
-    : Base.Tool, IGoogleIdentityTool
+[OAuthToolProvider(ToolProviderType.Google)]
+[ToolProviderApplicationType(ToolProviderApplicationType.GoogleIdentity)]
+public class GoogleIdentityTool(IGoogleApiClientFactory googleApiClientFactory, ILogger<GoogleIdentityTool> logger)
+    : Base.Tool(logger), IGoogleIdentityTool
 {
     private readonly JsonSerializerOptions jsonSerializerOptions = new ()
     {

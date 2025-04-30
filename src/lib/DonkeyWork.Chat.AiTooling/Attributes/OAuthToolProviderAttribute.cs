@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 
 namespace DonkeyWork.Chat.AiTooling.Attributes;
 
@@ -20,7 +20,7 @@ public sealed class OAuthToolProviderAttribute
     /// Initializes a new instance of the <see cref="OAuthToolProviderAttribute"/> class.
     /// </summary>
     /// <param name="providerType">The provider type.</param>
-    public OAuthToolProviderAttribute(UserProviderType providerType)
+    public OAuthToolProviderAttribute(ToolProviderType providerType)
     {
         this.ProviderType = providerType;
     }
@@ -28,5 +28,5 @@ public sealed class OAuthToolProviderAttribute
     /// <summary>
     /// Gets an attribute for the provider of the tool.
     /// </summary>
-    public UserProviderType ProviderType { get; }
+    public ToolProviderType ProviderType { get; }
 }

@@ -14,7 +14,7 @@ public static class ContentTypeConstants
     /// <summary>
     /// A static string representing the discriminator property name.
     /// </summary>
-    public const string DiscriminatorPropertyName = "type";
+    public const string DiscriminatorPropertyName = "Type";
 
     /// <summary>
     /// A static string representing the resource type.

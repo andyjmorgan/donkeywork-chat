@@ -68,7 +68,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     {
       label: 'Home',
       icon: 'pi pi-home',
-      command: () => navigate('/'),
+      command: () => {
+        navigate('/');
+        setMobileMenuVisible(false);
+      },
       template: (item, options) => {
         const active = (location.pathname === '/' || location.pathname === '/home') && 
                       !location.pathname.includes('/chat');
@@ -86,7 +89,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     {
       label: 'Chat',
       icon: 'pi pi-comments',
-      command: () => navigate('/chat'),
+      command: () => {
+        navigate('/chat');
+        setMobileMenuVisible(false);
+      },
       template: (item, options) => {
         const active = location.pathname.includes('/chat');
         return (
@@ -103,7 +109,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     {
       label: 'Conversations',
       icon: 'pi pi-history',
-      command: () => navigate('/conversations'),
+      command: () => {
+        navigate('/conversations');
+        setMobileMenuVisible(false);
+      },
       template: (item, options) => {
         const active = location.pathname.includes('/conversations');
         return (
@@ -168,17 +177,21 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             </a>
             <div className="submenu">
               <a 
-                className="submenu-item disabled-item"
-                onClick={(e) => e.preventDefault()}
-                style={{ opacity: 0.65, cursor: 'not-allowed' }}
+                className={`submenu-item ${location.pathname === '/actions' ? 'active-route' : ''}`}
+                onClick={() => {
+                  navigate('/actions');
+                  setMobileMenuVisible(false);
+                }}
               >
                 <span className="mr-2 pi pi-list"></span>
                 <span>Items</span>
               </a>
               <a 
-                className="submenu-item disabled-item"
-                onClick={(e) => e.preventDefault()}
-                style={{ opacity: 0.65, cursor: 'not-allowed' }}
+                className={`submenu-item ${location.pathname === '/actionlogs' ? 'active-route' : ''}`}
+                onClick={() => {
+                  navigate('/actionlogs');
+                  setMobileMenuVisible(false);
+                }}
               >
                 <span className="mr-2 pi pi-inbox"></span>
                 <span>Logs</span>
@@ -207,7 +220,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     {
       label: 'Integrations',
       icon: 'pi pi-link',
-      command: () => navigate('/integrations'),
+      command: () => {
+        navigate('/integrations');
+        setMobileMenuVisible(false);
+      },
       template: (item, options) => {
         const active = location.pathname.includes('/integrations');
         return (
@@ -268,16 +284,21 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             </a>
             <div className="submenu">
               <a 
-                className="submenu-item disabled-item"
-                onClick={(e) => e.preventDefault()}
-                style={{ opacity: 0.65, cursor: 'not-allowed' }}
+                className={`submenu-item ${location.pathname === '/actionprompts' ? 'active-route' : ''}`}
+                onClick={() => {
+                  navigate('/actionprompts');
+                  setMobileMenuVisible(false);
+                }}
               >
                 <span className="mr-2 pi pi-bolt"></span>
                 <span>Action Prompts</span>
               </a>
               <a 
                 className={`submenu-item ${location.pathname === '/prompts' ? 'active-route' : ''}`}
-                onClick={() => navigate('/prompts')}
+                onClick={() => {
+                  navigate('/prompts');
+                  setMobileMenuVisible(false);
+                }}
               >
                 <span className="mr-2 pi pi-file-edit"></span>
                 <span>System Prompts</span>
@@ -294,7 +315,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     {
       label: 'API Keys',
       icon: 'pi pi-key',
-      command: () => navigate('/apikeys'),
+      command: () => {
+        navigate('/apikeys');
+        setMobileMenuVisible(false);
+      },
       template: (item, options) => {
         const active = location.pathname.includes('/apikeys');
         return (
@@ -336,7 +360,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     {
       label: 'My Profile',
       icon: 'pi pi-user',
-      command: () => navigate('/profile'),
+      command: () => {
+        navigate('/profile');
+        setMobileMenuVisible(false);
+      },
       template: (item, options) => {
         const active = location.pathname === '/profile';
         return (
@@ -351,7 +378,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     {
       label: 'Logout',
       icon: 'pi pi-sign-out',
-      command: () => logout(),
+      command: () => {
+        logout();
+        setMobileMenuVisible(false);
+      },
       template: (item, options) => {
         return (
           <a className={`${options.className} menu-item`} onClick={options.onClick}>
@@ -448,7 +478,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           end: { className: 'toolbar-end' }
         }}
       />
-
       <div className="flex flex-1 overflow-hidden h-full">
         {/* Desktop sidebar - fixed width that doesn't auto-resize */}
         <div 
@@ -492,11 +521,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           </div>
         </div>
 
-        {/* Mobile sidebar */}
+        {/* Mobile menu sidebar - appears on the left */}
         <Sidebar 
           visible={mobileMenuVisible} 
           onHide={() => setMobileMenuVisible(false)}
-          className="w-18rem mobile-sidebar"
+          className="w-80 main-navigation-sidebar"
+          position="left"
           showCloseIcon={true}
           pt={{
             root: { style: { overflow: 'hidden' } },
@@ -506,21 +536,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             content: { className: 'surface-section p-0' }
           }}
           icons={
-            <div 
-              className="flex align-items-center cursor-pointer" 
-              style={{ paddingRight: '3rem' }}
-              onClick={() => {
-                navigate('/');
-                setMobileMenuVisible(false);
-              }}
-            >
+            <div className="flex align-items-center">
               <img src="https://chatbot.donkeywork.dev/src/assets/donkeywork-icon-40.png" alt="DonkeyWork Logo" className="mr-2" style={{ height: '28px', width: 'auto' }} />
               <span className="text-lg font-medium">DonkeyWork</span>
             </div>
           }
         >
           <div className="p-3">
-            <Menu model={sidebarItems} className="w-full border-none" />
+            <Menu model={sidebarItems} className="w-full border-none mobile-menu" />
           </div>
         </Sidebar>
 

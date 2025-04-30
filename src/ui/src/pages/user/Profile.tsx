@@ -34,9 +34,9 @@ const Profile: React.FC = () => {
 
 
   return (
-    <div className="profile-page p-4 grid">
-      <div className="col-12">
-        <Card className="mb-3">
+    <div className="profile-page p-0 md:p-4">
+      <div className="mb-3">
+        <Card>
           <div className="text-center mb-2">
             <h2 className="text-3xl font-bold mb-2 text-primary">User Profile</h2>
             <p className="text-lg">
@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
         </Card>
       </div>
       
-      <div className="col-12">
+      <div>
         {loading ? (
           <Card className="shadow-2">
             <div className="p-3">
@@ -85,14 +85,16 @@ const Profile: React.FC = () => {
               </h3>
               
               <div className="grid">
-                <div className="col-12 md:col-6">
+                <div className="col-12 md:col-6 mb-2">
                   <div className="profile-field">
                     <div className="profile-field-label">User ID</div>
-                    <div className="profile-field-value">{userProfile?.id || 'Not available'}</div>
+                    <div className="profile-field-value">
+                      <span className="text-break">{userProfile?.id || 'Not available'}</span>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="col-12 md:col-6">
+                <div className="col-12 md:col-6 mb-2">
                   <div className="profile-field">
                     <div className="profile-field-label">Username</div>
                     <div className="profile-field-value">{userProfile?.userName || 'Not available'}</div>
@@ -102,24 +104,24 @@ const Profile: React.FC = () => {
               
               <div className="profile-field">
                 <div className="profile-field-label">Email Address</div>
-                <div className="profile-field-value">{userProfile?.emailAddress || 'Not available'}</div>
+                <div className="profile-field-value text-break">{userProfile?.emailAddress || 'Not available'}</div>
               </div>
             </div>
             
-            <div className="p-4">
+            <div className="p-3">
               <h3 className="text-xl font-medium mb-3 pb-2 border-bottom-1 border-300">
                 Personal Information
               </h3>
               
               <div className="grid">
-                <div className="col-12 md:col-6">
+                <div className="col-12 md:col-6 mb-2">
                   <div className="profile-field">
                     <div className="profile-field-label">First Name</div>
                     <div className="profile-field-value">{userProfile?.firstName || 'Not available'}</div>
                   </div>
                 </div>
                 
-                <div className="col-12 md:col-6">
+                <div className="col-12 md:col-6 mb-2">
                   <div className="profile-field">
                     <div className="profile-field-label">Last Name</div>
                     <div className="profile-field-value">{userProfile?.familyName || 'Not available'}</div>

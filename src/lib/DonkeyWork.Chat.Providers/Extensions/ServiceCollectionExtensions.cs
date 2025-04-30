@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using DonkeyWork.Chat.Providers.Provider;
 using DonkeyWork.Chat.Providers.Provider.Configuration;
 using DonkeyWork.Chat.Providers.Provider.Implementation.Discord;
@@ -52,21 +52,21 @@ public static class ServiceCollectionExtensions
             .ValidateOnStart();
 
         // Register Microsoft services
-        serviceCollection.AddKeyedScoped<IOAuthProvider, MicrosoftOAuthProvider>(nameof(UserProviderType.Microsoft));
-        serviceCollection.AddKeyedScoped<IOAuthTokenRefreshHandler, MicrosoftTokenRefreshHandler>(nameof(UserProviderType.Microsoft));
-        serviceCollection.AddKeyedScoped<ITokenRefreshService, MicrosoftTokenRefreshService>(nameof(UserProviderType.Microsoft));
+        serviceCollection.AddKeyedScoped<IOAuthProvider, MicrosoftOAuthProvider>(nameof(ToolProviderType.Microsoft));
+        serviceCollection.AddKeyedScoped<IOAuthTokenRefreshHandler, MicrosoftTokenRefreshHandler>(nameof(ToolProviderType.Microsoft));
+        serviceCollection.AddKeyedScoped<ITokenRefreshService, MicrosoftTokenRefreshService>(nameof(ToolProviderType.Microsoft));
         serviceCollection.AddScoped<IMicrosoftOAuthTokenClient, MicrosoftOAuthTokenClient>();
 
         // Register Google services
-        serviceCollection.AddKeyedScoped<IOAuthProvider, GoogleOAuthProvider>(nameof(UserProviderType.Google));
-        serviceCollection.AddKeyedScoped<IOAuthTokenRefreshHandler, GoogleTokenRefreshHandler>(nameof(UserProviderType.Google));
-        serviceCollection.AddKeyedScoped<ITokenRefreshService, GoogleTokenRefreshService>(nameof(UserProviderType.Google));
+        serviceCollection.AddKeyedScoped<IOAuthProvider, GoogleOAuthProvider>(nameof(ToolProviderType.Google));
+        serviceCollection.AddKeyedScoped<IOAuthTokenRefreshHandler, GoogleTokenRefreshHandler>(nameof(ToolProviderType.Google));
+        serviceCollection.AddKeyedScoped<ITokenRefreshService, GoogleTokenRefreshService>(nameof(ToolProviderType.Google));
         serviceCollection.AddScoped<IGoogleOAuthTokenClient, GoogleOAuthTokenClient>();
 
         // Register Discord services
-        serviceCollection.AddKeyedScoped<IOAuthProvider, DiscordOAuthProvider>(nameof(UserProviderType.Discord));
-        serviceCollection.AddKeyedScoped<IOAuthTokenRefreshHandler, DiscordTokenRefreshHandler>(nameof(UserProviderType.Discord));
-        serviceCollection.AddKeyedScoped<ITokenRefreshService, DiscordTokenRefreshService>(nameof(UserProviderType.Discord));
+        serviceCollection.AddKeyedScoped<IOAuthProvider, DiscordOAuthProvider>(nameof(ToolProviderType.Discord));
+        serviceCollection.AddKeyedScoped<IOAuthTokenRefreshHandler, DiscordTokenRefreshHandler>(nameof(ToolProviderType.Discord));
+        serviceCollection.AddKeyedScoped<ITokenRefreshService, DiscordTokenRefreshService>(nameof(ToolProviderType.Discord));
         serviceCollection.AddScoped<IDiscordOAuthTokenClient, DiscordOAuthTokenClient>();
 
         return serviceCollection;

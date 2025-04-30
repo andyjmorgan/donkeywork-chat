@@ -10,16 +10,18 @@ using System.Text.Json.Serialization;
 using Discord;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.Discord.Common.Api;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Discord.Guild.Tool;
 
 /// <summary>
 /// Tool implementation for Discord guild operations.
 /// </summary>
-[OAuthToolProvider(UserProviderType.Discord)]
-public class DiscordGuildTool(IDiscordApiClientFactory discordApiClientFactory)
-    : Base.Tool, IDiscordGuildTool
+[OAuthToolProvider(ToolProviderType.Discord)]
+[ToolProviderApplicationType(ToolProviderApplicationType.Discord)]
+public class DiscordGuildTool(IDiscordApiClientFactory discordApiClientFactory, ILogger<DiscordGuildTool> logger)
+    : Base.Tool(logger), IDiscordGuildTool
 {
     private static readonly JsonSerializerOptions JsonSerializerOptions = new ()
     {

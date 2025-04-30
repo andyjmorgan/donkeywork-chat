@@ -5,6 +5,7 @@
 // ------------------------------------------------------
 
 using System.Text.Json;
+using Microsoft.Graph.Models;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Mail.Tool;
 
@@ -41,12 +42,14 @@ public interface IMicrosoftGraphMailTool
     /// <param name="subject">The subject of the email.</param>
     /// <param name="body">The plain text content of the email body.</param>
     /// <param name="toRecipients">A list of recipient email addresses.</param>
+    /// <param name="bodyType">The body type.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A JSON document indicating success or failure.</returns>
     Task<JsonDocument?> SendMicrosoftGraphEmailAsync(
         string subject,
         string body,
         List<string> toRecipients,
+        BodyType? bodyType = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>

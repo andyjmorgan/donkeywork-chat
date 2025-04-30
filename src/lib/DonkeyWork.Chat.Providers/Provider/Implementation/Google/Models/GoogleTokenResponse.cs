@@ -5,7 +5,7 @@
 // ------------------------------------------------------
 
 using System.Text.Json.Serialization;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using DonkeyWork.Chat.Providers.Models;
 
 namespace DonkeyWork.Chat.Providers.Provider.Implementation.Google.Models;
@@ -74,7 +74,7 @@ public class GoogleTokenResponse
             AccessToken = this.AccessToken,
             RefreshToken = this.RefreshToken ?? string.Empty,
             ExpiresOn = this.ExpiresOn,
-            ProviderType = UserProviderType.Google,
+            ProviderType = ToolProviderType.Google,
             Scopes = this.Scopes,
         };
     }

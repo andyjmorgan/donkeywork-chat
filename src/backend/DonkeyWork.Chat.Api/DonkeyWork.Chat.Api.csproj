@@ -17,9 +17,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
-        <PackageReference Include="Microsoft.Extensions.Http" />
         <PackageReference Include="Scalar.AspNetCore" />
-        <PackageReference Include="Serilog.AspNetCore" />
         <PackageReference Include="StyleCop.Analyzers">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,8 +28,12 @@
       <ProjectReference Include="..\..\lib\DonkeyWork.Chat.AiServices\DonkeyWork.Chat.AiServices.csproj" />
       <ProjectReference Include="..\..\lib\DonkeyWork.Chat.Api.Core\DonkeyWork.Chat.Api.Core.csproj" />
       <ProjectReference Include="..\..\lib\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj" />
+      <ProjectReference Include="..\..\lib\DonkeyWork.Chat.Logging\DonkeyWork.Chat.Logging.csproj" />
       <ProjectReference Include="..\..\lib\DonkeyWork.Chat.Providers\DonkeyWork.Chat.Providers.csproj" />
-      <ProjectReference Include="..\..\lib\persistence\DonkeyWork.Chat.Persistence\DonkeyWork.Chat.Persistence.csproj" />
+      <ProjectReference Include="..\..\lib\DonkeyWork.Workflows.Core\DonkeyWork.Workflows.Core.csproj" />
+      <ProjectReference Include="..\..\persistence\DonkeyWork.Persistence.Chat\DonkeyWork.Persistence.Chat.csproj" />
+      <ProjectReference Include="..\..\persistence\DonkeyWork.Persistence.User\DonkeyWork.Persistence.User.csproj" />
+      <ProjectReference Include="..\..\persistence\DonkeyWork.Persistence.Agent\DonkeyWork.Persistence.Agent.csproj" />
       <ProjectReference Include="..\DonkeyWork.Chat.McpServer\DonkeyWork.Chat.McpServer.csproj" />
     </ItemGroup>
 

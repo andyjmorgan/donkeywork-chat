@@ -9,7 +9,8 @@ using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common.Api;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 using Microsoft.Graph.Drives.Item.Items.Item.Copy;
 using Microsoft.Graph.Drives.Item.Items.Item.CreateLink;
 using Microsoft.Graph.Models;
@@ -17,10 +18,12 @@ using Microsoft.Graph.Models;
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Drive.Tool;
 
 /// <inheritdoc cref="DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Drive.Tool.IMicrosoftGraphDriveTool" />
-[OAuthToolProvider(UserProviderType.Microsoft)]
+[OAuthToolProvider(ToolProviderType.Microsoft)]
+[ToolProviderApplicationType(ToolProviderApplicationType.MicrosoftOneDrive)]
 public class MicrosoftGraphDriveTool(
-    IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory)
-    : Base.Tool, IMicrosoftGraphDriveTool
+    IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory,
+    ILogger<MicrosoftGraphDriveTool> logger)
+    : Base.Tool(logger), IMicrosoftGraphDriveTool
 {
     /// <inheritdoc />
     [ToolFunction]

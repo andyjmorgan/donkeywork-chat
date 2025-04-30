@@ -23,6 +23,11 @@ export interface ChatComponentProps {
   promptId?: string;
   
   /**
+   * Full array of prompt content items
+   */
+  fullPromptContent?: string[];
+  
+  /**
    * Initial messages to populate the chat with (for continuing conversations)
    */
   initialMessages?: any[];

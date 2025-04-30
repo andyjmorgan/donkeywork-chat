@@ -7,14 +7,18 @@
 using System.ComponentModel;
 using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Delay.Tool;
 
 /// <summary>
 /// A tool to delay the execution of a task.
 /// </summary>
-public class DelayTool
-    : Base.Tool, IDelayTool
+[GenericToolProvider(ToolProviderType.BuiltIn)]
+[ToolProviderApplicationType(ToolProviderApplicationType.Delay)]
+public class DelayTool(ILogger<DelayTool> logger)
+    : Base.Tool(logger), IDelayTool
 {
     /// <inheritdoc />
     [ToolFunction]

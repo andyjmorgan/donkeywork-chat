@@ -83,7 +83,7 @@ public class KeycloakUser
     /// Gets or sets the required actions for the user.
     /// </summary>
     [JsonPropertyName("requiredActions")]
-    public List<string> RequiredActions { get; set; } = new();
+    public List<string> RequiredActions { get; set; } = new ();
 
     /// <summary>
     /// Gets or sets the federated identities associated with the user.
@@ -101,5 +101,5 @@ public class KeycloakUser
     /// Gets or sets the access settings for the user.
     /// </summary>
     [JsonPropertyName("access")]
-    public AccessSettings Access { get; set; } = new();
+    public AccessSettings Access { get; set; } = new ();
 }

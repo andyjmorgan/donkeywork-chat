@@ -44,14 +44,14 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
         }
 
         /// <inheritdoc/>
-        public async Task<JsonNode> GetStackAsync(string name)
+        public async Task<JsonNode> GetStackServicesAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentException("Stack name cannot be empty", nameof(name));
             }
 
-            return await this.GetJsonAsync($"/api/stacks/{name}");
+            return await this.GetJsonAsync($"/api/stacks/{name}/services");
         }
 
         /// <inheritdoc/>
@@ -218,7 +218,7 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
         private async Task<JsonNode> PostJsonAsync(string endpoint, object? data)
         {
             HttpResponseMessage response;
-            
+
             if (data != null)
             {
                 var jsonContent = JsonSerializer.Serialize(data);
@@ -233,14 +233,14 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
-            
+
             // Check if the response is empty or whitespace
             if (string.IsNullOrWhiteSpace(responseContent))
             {
                 // Return an empty JSON object for empty responses
                 return JsonNode.Parse("{}") ?? throw new InvalidOperationException("Could not create empty JSON object");
             }
-            
+
             try
             {
                 return JsonNode.Parse(responseContent) ?? throw new InvalidOperationException($"Could not parse JSON response from {endpoint}");

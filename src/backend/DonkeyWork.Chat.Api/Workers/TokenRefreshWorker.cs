@@ -4,9 +4,9 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers;
-using DonkeyWork.Chat.Persistence;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using DonkeyWork.Chat.Providers.Services.TokenRefresh;
+using DonkeyWork.Persistence.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -39,19 +39,24 @@ public class TokenRefreshWorker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Token refresh background service is starting");
-        try
+        while (!cancellationToken.IsCancellationRequested)
         {
-            this.logger.LogInformation("Starting token refresh cycle at {Time}", DateTime.UtcNow);
-            await this.RefreshTokensAsync(cancellationToken);
+            try
+            {
+                this.logger.LogInformation("Starting token refresh cycle at {Time}", DateTime.UtcNow);
+                await this.RefreshTokensAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                this.logger.LogInformation("Token refresh background service is stopping");
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "Error in token refresh background service");
+            }
+
+            this.logger.LogInformation("Token refresh background service is sleeping until {Time}", DateTime.UtcNow.Add(this.options.RefreshInterval));
             await Task.Delay(this.options.RefreshInterval, cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            this.logger.LogInformation("Token refresh background service is stopping");
-        }
-        catch (Exception ex)
-        {
-            this.logger.LogError(ex, "Error in token refresh background service");
         }
     }
 
@@ -63,13 +68,15 @@ public class TokenRefreshWorker : BackgroundService
     private async Task RefreshTokensAsync(CancellationToken cancellationToken)
     {
         using var scope = this.serviceProvider.CreateScope();
-        var apiPersistenceContext = scope.ServiceProvider.GetRequiredService<ApiPersistenceContext>();
+        var apiPersistenceContext = scope.ServiceProvider.GetRequiredService<UserPersistenceContext>();
         var expiryThreshold = DateTimeOffset.UtcNow.Add(this.options.RefreshThreshold);
         var userTokens = await apiPersistenceContext.UserTokens
             .IgnoreQueryFilters()
             .AsNoTracking()
             .Where(x => x.ExpiresAt < expiryThreshold)
             .ToListAsync(cancellationToken);
+
+        this.logger.LogInformation("Found {TokenCount} tokens for refresh", userTokens.Count);
         foreach (var group in userTokens.GroupBy(x => x.ProviderType))
         {
             var tokenClient = GetTokenClient(scope, group.Key.ToString());
@@ -90,8 +97,9 @@ public class TokenRefreshWorker : BackgroundService
                             token.Data[UserProviderDataKeyType.RefreshToken] = newToken.RefreshToken;
                         }
 
+                        this.logger.LogInformation("Token refreshed for user {UserId}. New Expiry {Expiry}", token.UserId, newToken.ExpiresOn);
                         token.Data[UserProviderDataKeyType.AccessToken] = newToken.AccessToken;
-                        await apiPersistenceContext.UserTokens
+                        var result = await apiPersistenceContext.UserTokens
                             .IgnoreQueryFilters()
                             .Where(t => t.Id == token.Id)
                             .ExecuteUpdateAsync(
@@ -101,6 +109,10 @@ public class TokenRefreshWorker : BackgroundService
                                     .SetProperty(t => t.UpdatedAt, DateTimeOffset.UtcNow)
                                     .SetProperty(t => t.Scopes, newToken.Scopes.ToList()),
                                 cancellationToken);
+                        if (result <= 0)
+                        {
+                            this.logger.LogError("Failed to update token for user {UserId}. Token not updated.", token.UserId);
+                        }
                     }
                     else
                     {

@@ -23,6 +23,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
     model,
     systemPrompt = '',
     promptId = undefined,
+    fullPromptContent = undefined,
     initialMessages = []
 }) => {
     // Get conversation ID from URL params if available
@@ -112,10 +113,12 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
     }, [urlConversationId]);
     
     const systemPromptRef = useRef<string>(systemPrompt || '');
+    const fullPromptContentRef = useRef<string[] | undefined>(fullPromptContent);
     
     useEffect(() => {
         systemPromptRef.current = systemPrompt || '';
-    }, [systemPrompt]);
+        fullPromptContentRef.current = fullPromptContent;
+    }, [systemPrompt, fullPromptContent]);
     
     useEffect(() => {
         const hasIdParam = new URLSearchParams(window.location.search).has('id');
@@ -207,11 +210,25 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
         
         // Add system prompt if available and promptId is not provided
         // If promptId is provided, we'll use the prompt from the server side
-        if (systemPromptRef.current && !promptId) {
-            formattedMessages.push({
-                content: systemPromptRef.current,
-                role: 'system'
-            });
+        if (!promptId) {
+            // If we have fullPromptContent array, add all content items as system messages
+            if (fullPromptContentRef.current && fullPromptContentRef.current.length > 0) {
+                fullPromptContentRef.current.forEach(content => {
+                    if (content.trim()) {
+                        formattedMessages.push({
+                            content: content,
+                            role: 'system'
+                        });
+                    }
+                });
+            } 
+            // Otherwise use the single system prompt if available
+            else if (systemPromptRef.current) {
+                formattedMessages.push({
+                    content: systemPromptRef.current,
+                    role: 'system'
+                });
+            }
         }
         
         // Add all other messages
@@ -296,6 +313,32 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
                     });
                     
                     return newMetadata;
+                });
+            },
+            onChatStart: (startFragment) => {
+                // Store model name and provider ID in message metadata
+                setMessageMetadata(prev => {
+                    const messageId = currentMessageIdRef.current;
+                    const currentMetadata = prev[messageId] || {};
+                    
+                    // Initialize the message provider IDs array if it doesn't exist
+                    // or append the new ID to the existing array
+                    const existingIds = currentMetadata.messageProviderIds || [];
+                    const newIds = [...existingIds];
+                    
+                    // Only add the ID if it's not already in the array
+                    if (startFragment.MessageProviderId && !newIds.includes(startFragment.MessageProviderId)) {
+                        newIds.push(startFragment.MessageProviderId);
+                    }
+                    
+                    return {
+                        ...prev,
+                        [messageId]: {
+                            ...currentMetadata,
+                            modelName: startFragment.ModelName,
+                            messageProviderIds: newIds
+                        }
+                    };
                 });
             },
             onFragment: (content) => {
@@ -834,7 +877,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
                     <div className="progress-container">
                         <ProgressBar mode="indeterminate" style={{ height: '6px' }} />
                         <div className="progress-text">
-                            {currentAction === 'thinking' && 'AI is thinking...'}
+                            {currentAction === 'thinking' && 'Thinking...'}
                             {currentAction === 'generating response' && 'Generating response...'}
                             {currentAction.startsWith('using tool') && currentAction}
                             {currentAction === 'processing tool results' && 'Processing tool results...'}

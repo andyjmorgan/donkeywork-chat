@@ -6,7 +6,7 @@
 
 using DonkeyWork.Chat.AiTooling.Base;
 using DonkeyWork.Chat.AiTooling.Base.Models;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Posture;
 
 namespace DonkeyWork.Chat.AiTooling.Services;
 

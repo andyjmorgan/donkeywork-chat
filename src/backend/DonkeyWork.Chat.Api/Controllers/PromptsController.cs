@@ -7,9 +7,9 @@
 using AutoMapper;
 using DonkeyWork.Chat.Api.Models.Conversation;
 using DonkeyWork.Chat.Api.Models.Prompt;
-using DonkeyWork.Chat.Persistence.Common;
-using DonkeyWork.Chat.Persistence.Repository.Prompt;
-using DonkeyWork.Chat.Persistence.Repository.Prompt.Models;
+using DonkeyWork.Persistence.Agent.Repository.Prompt;
+using DonkeyWork.Persistence.Agent.Repository.Prompt.Models.SystemPrompt;
+using DonkeyWork.Persistence.Common.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DonkeyWork.Chat.Api.Controllers;

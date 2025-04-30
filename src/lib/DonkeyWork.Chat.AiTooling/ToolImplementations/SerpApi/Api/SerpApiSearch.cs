@@ -6,7 +6,7 @@
 
 using System.Collections;
 using System.Text.Json;
-using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Configuration;
+using DonkeyWork.Chat.Common.Models.Providers.Tools.GenericProvider.Implementations;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SerpApi;

@@ -10,11 +10,11 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using DonkeyWork.Chat.AiServices.Clients;
 using DonkeyWork.Chat.AiServices.Clients.Models;
-using DonkeyWork.Chat.AiServices.Streaming;
-using DonkeyWork.Chat.AiServices.Streaming.Request;
 using DonkeyWork.Chat.AiTooling.Exceptions;
 using DonkeyWork.Chat.AiTooling.Services;
 using DonkeyWork.Chat.Common.Contracts;
+using DonkeyWork.Chat.Common.Models.Streaming;
+using DonkeyWork.Chat.Common.Models.Streaming.Request;
 
 namespace DonkeyWork.Chat.AiServices.Services;
 

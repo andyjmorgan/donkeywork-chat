@@ -3,8 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Card } from 'primereact/card';
 import { ProgressBar } from 'primereact/progressbar';
 import { Button } from 'primereact/button';
-import { UserProviderType } from '../../models/api/provider/UserProviderType';
+import { ToolProviderType } from '../../models/api/provider/ToolProviderType';
 import { ProviderCallbackResponseModel } from '../../models/api/provider/ProviderCallbackResponseModel';
+import { integrationsService } from '../../services/api';
 
 // Logo component for consistent branding
 const Logo = ({ size = 140 }: { size?: number }) => (
@@ -127,16 +128,22 @@ const SimpleCallback: React.FC = () => {
         return;
       }
       
-      let providerType: UserProviderType;
+      let providerType: ToolProviderType;
       switch (providerFromPath.toLowerCase()) {
         case 'microsoft':
-          providerType = UserProviderType.Microsoft;
+          providerType = ToolProviderType.Microsoft;
           break;
         case 'google':
-          providerType = UserProviderType.Google;
+          providerType = ToolProviderType.Google;
           break;
         case 'discord':
-          providerType = UserProviderType.Discord;
+          providerType = ToolProviderType.Discord;
+          break;
+        case 'swarmpit':
+          providerType = ToolProviderType.Swarmpit;
+          break;
+        case 'serp':
+          providerType = ToolProviderType.Serp;
           break;
         default:
           setStatus('error');
@@ -149,37 +156,21 @@ const SimpleCallback: React.FC = () => {
       // Create the full redirect URL that was originally used
       // Important: This needs to match what we sent in the original request 
       // when starting the OAuth flow in the Integrations.tsx component
-      const redirectUrl = `${window.location.origin}/integrations/simple-callback/${providerFromPath.toLowerCase()}`;
-      const callbackUrl = `/api/Provider/callback/${providerType}?code=${encodeURIComponent(code)}&redirectUrl=${encodeURIComponent(redirectUrl)}`;
+      const redirectUrl = `${window.location.origin}/integrations/callback/${providerFromPath.toLowerCase()}`;
+      const callbackUrl = `/api/Integrations/callback/${providerType}?code=${encodeURIComponent(code)}&redirectUrl=${encodeURIComponent(redirectUrl)}`;
       
       setMessage(`Connecting to ${providerFromPath}...`);
       callbackProcessed.current = true;
       
       try {
-        const response = await fetch(callbackUrl, {
-          credentials: 'include',
-          headers: {
-            'Cache-Control': 'no-cache'
-          }
-        });
+        // Use the new integrations service directly
+        const fullUrl = new URL(callbackUrl, window.location.origin);
+        const params = fullUrl.searchParams;
+        const code = params.get('code') || '';
+        const redirectUrlParam = params.get('redirectUrl') || '';
         
-        if (!response.ok) {
-          try {
-            const errorData = await response.json();
-            setStatus('error');
-            setMessage(`Failed to connect to ${providerFromPath}`);
-            setError(errorData.detail || 'Failed to connect to provider');
-          } catch (jsonError) {
-            setStatus('error');
-            setMessage(`Failed to connect to ${providerFromPath}`);
-            setError(`Error ${response.status}: ${response.statusText}`);
-          }
-          
-          setTimeout(() => navigate('/integrations'), 3000);
-          return;
-        }
-        
-        const responseData = await response.json() as ProviderCallbackResponseModel;
+        // Make the API call through the service layer
+        const responseData = await integrationsService.handleCallback(providerType, code, redirectUrlParam);
         setStatus('success');
         setMessage(`Successfully connected to ${providerFromPath}`);
         

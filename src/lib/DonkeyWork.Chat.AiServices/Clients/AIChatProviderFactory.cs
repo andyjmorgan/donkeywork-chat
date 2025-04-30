@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Chat.AiServices.Clients;

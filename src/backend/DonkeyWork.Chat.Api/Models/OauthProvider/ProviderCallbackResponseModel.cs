@@ -4,9 +4,9 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 
-namespace DonkeyWork.Chat.Api.Models.Provider;
+namespace DonkeyWork.Chat.Api.Models.OauthProvider;
 
 /// <summary>
 /// Response model for provider callbacks.
@@ -16,7 +16,7 @@ public class ProviderCallbackResponseModel
     /// <summary>
     /// Gets or sets the provider type.
     /// </summary>
-    public UserProviderType ProviderType { get; set; }
+    public ToolProviderType ProviderType { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the connection was successful.

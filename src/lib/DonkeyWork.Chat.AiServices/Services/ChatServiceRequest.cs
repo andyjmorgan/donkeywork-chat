@@ -4,9 +4,8 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.AiServices.Clients;
 using DonkeyWork.Chat.AiServices.Clients.Models;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers;
 
 namespace DonkeyWork.Chat.AiServices.Services;
 

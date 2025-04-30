@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Menu } from 'primereact/menu';
 import { Tag } from 'primereact/tag';
 import { Card } from 'primereact/card';
 import { Divider } from 'primereact/divider';
@@ -141,21 +142,41 @@ const ConversationList: React.FC = () => {
   };
 
   const actionsTemplate = (rowData: ConversationItem, column: any) => {
+    const menuRef = useRef<any>(null);
+    
+    const menuItems = [
+      {
+        label: 'View',
+        icon: 'pi pi-eye',
+        command: () => openConversation(rowData)
+      },
+      {
+        separator: true
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        className: 'p-error',
+        command: () => confirmDelete(rowData)
+      }
+    ];
+    
     return (
-      <div className="flex gap-2 justify-content-start">
-        <Button 
-          icon="pi pi-eye" 
-          label="View"
-          className="p-button-text p-button-sm p-button-rounded" 
-          onClick={() => openConversation(rowData)}
-          tooltip="View Conversation"
+      <div className="flex justify-content-center">
+        <Button
+          icon="pi pi-ellipsis-v"
+          className="p-button-rounded p-button-text p-button-plain action-menu-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            menuRef.current.toggle(e);
+          }}
+          aria-label="Options"
         />
-        <Button 
-          icon="pi pi-trash" 
-          label="Delete"
-          className="p-button-text p-button-sm p-button-rounded p-button-danger" 
-          onClick={() => confirmDelete(rowData)}
-          tooltip="Delete"
+        <Menu
+          model={menuItems}
+          popup
+          ref={menuRef}
+          popupAlignment="right"
         />
       </div>
     );
@@ -239,9 +260,7 @@ const ConversationList: React.FC = () => {
             <Column body={() => <Skeleton width="2rem" height="1.2rem" />} style={{ width: '10%' }} />
             <Column body={() => <Skeleton width="4rem" height="1.2rem" />} style={{ width: '10%' }} />
             <Column body={() => (
-              <div className="flex gap-2 justify-content-end">
-                <Skeleton shape="circle" size="2rem" />
-                <Skeleton shape="circle" size="2rem" />
+              <div className="flex justify-content-center">
                 <Skeleton shape="circle" size="2rem" />
               </div>
             )} style={{ width: '10%' }} />
@@ -269,7 +288,15 @@ const ConversationList: React.FC = () => {
           <Column field="lastMessage" header="Last Message" body={messagePreviewTemplate} headerClassName="w-5 column-message" />
           <Column field="messageCount" header="Messages" body={messageCountTemplate} sortable headerClassName="w-1 column-count" />
           <Column field="timestamp" header="Time" body={timestampTemplate} sortable headerClassName="w-1 column-time" />
-          <Column header="Actions" body={actionsTemplate} headerClassName="w-2 column-actions" headerStyle={{ textAlign: 'center' }} />
+          <Column 
+            header="Actions" 
+            body={actionsTemplate} 
+            headerClassName="w-2 column-actions text-center"
+            bodyClassName="text-center"
+            style={{ width: '10%' }}
+            frozen
+            alignFrozen="right"
+          />
         </DataTable>
       )}
     </div>

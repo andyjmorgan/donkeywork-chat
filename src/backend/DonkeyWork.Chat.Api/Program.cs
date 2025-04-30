@@ -18,17 +18,24 @@ using DonkeyWork.Chat.Api.Services.Conversation;
 using DonkeyWork.Chat.Api.Workers;
 using DonkeyWork.Chat.Common.Contracts;
 using DonkeyWork.Chat.Common.Extensions;
+using DonkeyWork.Chat.Logging.Extensions;
 using DonkeyWork.Chat.McpServer.Extensions;
-using DonkeyWork.Chat.Persistence;
-using DonkeyWork.Chat.Persistence.Extensions;
 using DonkeyWork.Chat.Providers.Extensions;
+using DonkeyWork.Persistence.Agent;
+using DonkeyWork.Persistence.Agent.Extensions;
+using DonkeyWork.Persistence.Chat;
+using DonkeyWork.Persistence.Chat.Extensions;
+using DonkeyWork.Persistence.User;
+using DonkeyWork.Persistence.User.Extensions;
+using DonkeyWork.Workflows.Core.Extensions;
+using DonkeyWork.Workflows.Core.Scheduler.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using Serilog;
 using ServiceCollectionExtensions = DonkeyWork.Chat.AiTooling.Extensions.ServiceCollectionExtensions;
 
+Console.WriteLine("Starting DonkeyWork.Chat.Api...");
 var builder = WebApplication.CreateBuilder(args);
 
 // Add support for environment variable configuration
@@ -41,9 +48,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
-builder.Host.UseSerilog((context, services, configuration) => configuration
-    .ReadFrom.Configuration(context.Configuration)
-    .ReadFrom.Services(services));
+builder.Host.AddCentralizedLogging(builder.Configuration, builder.Environment.ApplicationName);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache(); // For session storage
@@ -147,10 +152,13 @@ builder.Services.AddHostedService<TokenRefreshWorker>();
 builder.Services.AddUserContext();
 builder.Services.AddAiServices();
 builder.Services.AddApiCoreServices();
+builder.Services.AddWorkflowCore(builder.Configuration);
 ServiceCollectionExtensions.AddToolServices(builder.Services);
 builder.Services.AddProviderConfiguration(builder.Configuration);
 builder.Services.AddScoped<IUserPostureService, UserPostureService>();
-builder.Services.AddCredentialsPersistence(builder.Configuration);
+builder.Services.AddUserPersistence(builder.Configuration)
+    .AddChatPersistence(builder.Configuration)
+    .AddAgentPersistence(builder.Configuration);
 
 builder.Services.AddMcpServices();
 
@@ -200,13 +208,31 @@ app.MapScalarApiReference()
     .AllowAnonymous();
 
 using var scope = app.Services.CreateScope();
-using var context = scope.ServiceProvider.GetRequiredService<ApiPersistenceContext>();
+var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Applying database migrations.");
 
-if (context.Database.GetPendingMigrations().Any())
+try
 {
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    logger.LogInformation("Performing migrations.");
+    await using var context = scope.ServiceProvider.GetRequiredService<ChatPersistenceContext>();
+    logger.LogInformation("Applying Chat migrations");
     await context.Database.MigrateAsync();
+    logger.LogInformation("Chat migrations completed successfully.");
+
+    await using var agentContext = scope.ServiceProvider.GetRequiredService<AgentPersistenceContext>();
+    logger.LogInformation("Applying Agent migrations");
+    await agentContext.Database.MigrateAsync();
+    logger.LogInformation("Agent migrations completed successfully.");
+    var quartzSchemaInitializer = scope.ServiceProvider.GetRequiredService<IQuartzSchemaInitializer>();
+    await quartzSchemaInitializer.EnsureSchemaCreatedAsync();
+
+    await using var userContext = scope.ServiceProvider.GetRequiredService<UserPersistenceContext>();
+    logger.LogInformation("Applying User migrations");
+    await userContext.Database.MigrateAsync();
+    logger.LogInformation("User migrations completed successfully.");
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "An error occurred while applying database migrations.");
 }
 
-app.Run();
+await app.RunAsync();

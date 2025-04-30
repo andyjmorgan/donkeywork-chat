@@ -65,7 +65,7 @@ public class MicrosoftTokenRefreshHandler : IOAuthTokenRefreshHandler
             var result = tokenResponse.ToTokenResult();
 
             this.logger.LogInformation(
-                "Successfully refreshed token for user {UserId}. Token expires at {ExpiresOn}", 
+                "Successfully refreshed token for user {UserId}. Token expires at {ExpiresOn}",
                 userId,
                 result.ExpiresOn);
 

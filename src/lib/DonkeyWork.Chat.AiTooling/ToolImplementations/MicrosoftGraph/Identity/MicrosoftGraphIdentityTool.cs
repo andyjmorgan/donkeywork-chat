@@ -9,16 +9,20 @@ using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common.Api;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Identity;
 
 /// <summary>
 /// A class that implements the <see cref="IMicrosoftGraphIdentityTool"/> interface.
 /// </summary>
-[OAuthToolProvider(UserProviderType.Microsoft)]
-public class MicrosoftGraphIdentityTool(IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory)
-    : Base.Tool, IMicrosoftGraphIdentityTool
+[OAuthToolProvider(ToolProviderType.Microsoft)]
+[ToolProviderApplicationType(ToolProviderApplicationType.MicrosoftIdentity)]
+public class MicrosoftGraphIdentityTool(
+    IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory,
+    ILogger<MicrosoftGraphIdentityTool> logger)
+    : Base.Tool(logger), IMicrosoftGraphIdentityTool
 {
     /// <param name="cancellationToken"></param>
     /// <inheritdoc />

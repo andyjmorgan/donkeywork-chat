@@ -59,3 +59,113 @@
   background-color: var(--surface-hover) !important;
   transition: background-color 0.2s;
 }
+
+/* Content item styles */
+.prompt-textarea {
+  width: 100% !important;
+  font-family: monospace !important;
+  min-height: 150px !important;
+  resize: vertical !important;
+  overflow: auto !important;
+  /* Better scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color-lighter) var(--surface-ground);
+}
+
+/* Ensure the textarea can be scrolled independently */
+.p-inputtextarea.prompt-textarea {
+  overflow: auto !important;
+}
+
+/* Handle overflowing content */
+.p-accordion-content {
+  overflow: visible !important; /* Allow the textarea to handle scrolling */
+  padding: 1rem !important;
+}
+
+/* Ensure the accordion content is fully visible */
+.p-accordion .p-accordion-tab .p-accordion-content {
+  overflow: visible !important;
+  height: auto !important;
+}
+
+/* Make sure the dialog can scroll if it gets too tall */
+.p-dialog-content {
+  max-height: 80vh !important;
+  overflow-y: auto;
+}
+
+/* For maximized mode */
+.p-dialog-maximized .p-dialog-content {
+  max-height: calc(100vh - 120px) !important;
+  overflow-y: auto;
+}
+
+/* Content container with scrolling for many items */
+.content-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 500px;
+  /* Ensure consistent scrolling behavior */
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color-lighter) var(--surface-ground);
+}
+
+/* Custom scrollbar styling for WebKit browsers */
+.content-container::-webkit-scrollbar,
+.prompt-textarea::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.content-container::-webkit-scrollbar-track,
+.prompt-textarea::-webkit-scrollbar-track {
+  background: var(--surface-ground);
+}
+
+.content-container::-webkit-scrollbar-thumb,
+.prompt-textarea::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color-lighter);
+  border-radius: 4px;
+}
+
+/* Variable highlighting */
+.variable-highlight {
+  background-color: var(--primary-100);
+  color: var(--primary-700);
+  border: 1px solid var(--primary-200);
+  font-weight: 500;
+  border-radius: 3px;
+  display: inline-block;
+  margin: 0 1px;
+}
+
+/* Preview panel for messages */
+.message-preview {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background-color: var(--surface-50);
+  border-radius: 6px;
+  border: 1px solid var(--surface-200);
+  white-space: pre-wrap;
+  min-height: 3rem;
+}
+
+/* Make sure dialog adapts to screen size */
+@media screen and (max-height: 768px) {
+  .content-container {
+    max-height: 350px;
+  }
+}
+
+@media screen and (min-height: 1000px) {
+  .content-container {
+    max-height: 650px;
+  }
+}

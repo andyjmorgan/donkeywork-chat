@@ -2,7 +2,7 @@
 import type { ChatRequestMessage } from "../../models/api/chat/ChatRequestMessage";
 import type { ChatRequest } from "../../models/api/chat/ChatRequest";
 import type { TokenUsage } from "../../models/api/stream/Chat/TokenUsage";
-import type { ChatFragment } from "../../models/api/stream/Chat/ChatFragment";
+import type { ChatFragment, ChatStartFragment } from "../../models/api/stream/Chat/ChatFragment";
 import type { ToolCall } from "../../models/api/stream/Tool/ToolCall";
 import type { ToolResult } from "../../models/api/stream/Tool/ToolResult";
 import type { BaseStreamItem } from "../../models/api/stream/BaseStreamItem";
@@ -93,6 +93,7 @@ export class ChatService extends ApiBase {
             // Define handlers object to use in processStream
             const handlers = {
                 onStart: options.onStart,
+                onChatStart: options.onChatStart,
                 onFragment: options.onFragment,
                 onUsage: options.onUsage,
                 onToolCall: options.onToolCall,
@@ -120,6 +121,8 @@ export class ChatService extends ApiBase {
                                         handlers.onStart?.(baseMessage.ExecutionId);
                                         break;
                                     case 'ChatStartFragment':
+                                        const startMsg = data as ChatStartFragment;
+                                        handlers.onChatStart?.(startMsg);
                                         break;
                                     case 'ChatFragment':
                                         const chatMsg = data as ChatFragment;

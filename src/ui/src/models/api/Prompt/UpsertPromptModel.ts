@@ -3,9 +3,9 @@
  */
 export interface UpsertPromptModel {
   /**
-   * The prompt title
+   * The prompt name
    */
-  title: string;
+  name: string;
 
   /**
    * The prompt description
@@ -15,5 +15,5 @@ export interface UpsertPromptModel {
   /**
    * The prompt content
    */
-  content: string;
+  content: string[];
 }

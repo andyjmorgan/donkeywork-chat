@@ -8,8 +8,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using DonkeyWork.Chat.Api.Core.AuthenticationSchemes;
 using DonkeyWork.Chat.Api.Core.Services.Keycloak;
-using DonkeyWork.Chat.Common.UserContext;
-using DonkeyWork.Chat.Persistence.Repository.ApiKey;
+using DonkeyWork.Persistence.User.Repository.ApiKey;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -39,7 +38,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
         UrlEncoder encoder,
         IApiKeyRepository apiKeyRepository,
         IKeycloakClient keycloakClient)
-        : base(options, logger, encoder) // Removed the clock/timeProvider parameter
+        : base(options, logger, encoder)
     {
         this.apiKeyRepository = apiKeyRepository;
         this.keycloakClient = keycloakClient;
@@ -53,9 +52,10 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             return AuthenticateResult.NoResult();
         }
 
-        if(!this.Request.Headers.Authorization.Contains("Bearer"))
+        if (this.Request.Headers.Authorization.Contains("Bearer"))
         {
-            this.Request.Headers[ApiKeyHeaderName] = this.Request.Headers.Authorization.FirstOrDefault()?.Split(' ')[1];
+            var apiKey = this.Request.Headers.Authorization.FirstOrDefault()?.Split(' ')[1];
+            this.Request.Headers[ApiKeyHeaderName] = apiKey ?? string.Empty;
         }
 
         if (!this.Request.Headers.TryGetValue(ApiKeyHeaderName, out var apiKeyHeaderValues))

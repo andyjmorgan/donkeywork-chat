@@ -8,16 +8,19 @@ using System.ComponentModel;
 using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Common.Api;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using Google.Apis.Drive.v3.Data;
+using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Drive;
 
 /// <inheritdoc cref="IGoogleDriveTool" />
-[OAuthToolProvider(UserProviderType.Google)]
+[OAuthToolProvider(ToolProviderType.Google)]
+[ToolProviderApplicationType(ToolProviderApplicationType.GoogleDrive)]
 public class GoogleDriveTool(
-    IGoogleApiClientFactory googleApiClientFactory)
-    : Base.Tool, IGoogleDriveTool
+    IGoogleApiClientFactory googleApiClientFactory,
+    ILogger<GoogleDriveTool> logger)
+    : Base.Tool(logger), IGoogleDriveTool
 {
     private readonly JsonSerializerOptions jsonSerializerOptions = new ()
     {

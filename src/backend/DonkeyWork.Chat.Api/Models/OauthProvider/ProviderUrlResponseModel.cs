@@ -4,9 +4,9 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 
-namespace DonkeyWork.Chat.Api.Models.Provider;
+namespace DonkeyWork.Chat.Api.Models.OauthProvider;
 
 /// <summary>
 /// A model to get the provider url.
@@ -16,7 +16,7 @@ public record ProviderUrlResponseModel
     /// <summary>
     /// Gets the provider type.
     /// </summary>
-    public UserProviderType ProviderType { get; init; }
+    public ToolProviderType ProviderType { get; init; }
 
     /// <summary>
     /// Gets the authorization url.

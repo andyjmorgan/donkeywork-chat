@@ -14,9 +14,21 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
       <PackageReference Include="StyleCop.Analyzers">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\persistence\DonkeyWork.Persistence.Agent\DonkeyWork.Persistence.Agent.csproj" />
+      <ProjectReference Include="..\DonkeyWork.Chat.AiServices\DonkeyWork.Chat.AiServices.csproj" />
+      <ProjectReference Include="..\DonkeyWork.Chat.AiTooling\DonkeyWork.Chat.AiTooling.csproj" />
+      <ProjectReference Include="..\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Actions\Services\ActionOrchestrator\Models\" />
     </ItemGroup>
 </Project>

@@ -7,11 +7,16 @@
 using System.ComponentModel;
 using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.CurrentDateTime.Tool;
 
 /// <inheritdoc cref="ICurrentDateTimeTool"/>
-public class CurrentDateTimeTool : Base.Tool, ICurrentDateTimeTool
+[GenericToolProvider(ToolProviderType.BuiltIn)]
+[ToolProviderApplicationType(ToolProviderApplicationType.DateTime)]
+public class CurrentDateTimeTool(ILogger<CurrentDateTimeTool> logger)
+    : Base.Tool(logger), ICurrentDateTimeTool
 {
     /// <summary>
     /// A tool to get the current date and time in utc format.

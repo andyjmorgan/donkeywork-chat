@@ -8,14 +8,16 @@ using System.ComponentModel;
 using System.Text.Json.Nodes;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api;
-using DonkeyWork.Chat.Common.Providers.GenericProvider;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Tool
 {
     /// <summary>
     /// Tool for interacting with Docker Swarm via Swarmpit API.
     /// </summary>
-    [GenericToolProvider(GenericProviderType.Swarmpit)]
+    [GenericToolProvider(ToolProviderType.Swarmpit)]
+    [ToolProviderApplicationType(ToolProviderApplicationType.Swarmpit)]
     public class SwarmpitTool : Base.Tool, ISwarmpitTool
     {
         private readonly ISwarmpitClientFactory clientFactory;
@@ -24,7 +26,9 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Tool
         /// Initializes a new instance of the <see cref="SwarmpitTool"/> class.
         /// </summary>
         /// <param name="clientFactory">The client factory.</param>
-        public SwarmpitTool(ISwarmpitClientFactory clientFactory)
+        /// <param name="logger">The logger.</param>
+        public SwarmpitTool(ISwarmpitClientFactory clientFactory, ILogger<SwarmpitTool> logger)
+            : base(logger)
         {
             this.clientFactory = clientFactory;
         }
@@ -50,7 +54,7 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Tool
         /// <inheritdoc/>
         [ToolFunction]
         [Description("Get detailed information for a specific stack.")]
-        public async Task<JsonNode> SwarmPit_GetStackAsync(
+        public async Task<JsonNode> SwarmPit_GetStackDetailsAsync(
             [Description("The name of the stack.")]
             string name)
         {
@@ -60,7 +64,7 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Tool
             }
 
             var client = await this.clientFactory.CreateClient();
-            return await client.GetStackAsync(name);
+            return await client.GetStackServicesAsync(name);
         }
 
         /// <inheritdoc/>

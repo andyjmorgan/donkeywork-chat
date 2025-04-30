@@ -9,7 +9,13 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+      <PackageReference Include="Polly" />
+      <PackageReference Include="Quartz.Extensions.DependencyInjection" />
+      <PackageReference Include="Quartz.Extensions.Hosting" />
+      <PackageReference Include="Quartz.Plugins.TimeZoneConverter" />
+      <PackageReference Include="Quartz.Serialization.Json" />
         <PackageReference Include="StyleCop.Analyzers">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,10 +33,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\lib\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj" />
       <ProjectReference Include="..\DonkeyWork.Persistence.Common\DonkeyWork.Persistence.Common.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Repository\" />
     </ItemGroup>
 
 </Project>

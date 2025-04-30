@@ -27,6 +27,11 @@ public record ChatRequest
     public Guid Id { get; init; } = Guid.NewGuid();
 
     /// <summary>
+    /// Gets the chat request metadata.
+    /// </summary>
+    public Dictionary<string, string> Metadata { get; init; } = [];
+
+    /// <summary>
     /// Gets the messages.
     /// </summary>
     public List<GenericChatMessage> Messages { get; init; } = [];

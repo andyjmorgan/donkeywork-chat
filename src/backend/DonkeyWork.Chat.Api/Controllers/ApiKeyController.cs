@@ -5,10 +5,10 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Chat.Api.Models.ApiKey;
-using DonkeyWork.Chat.Common.UserContext;
-using DonkeyWork.Chat.Persistence.Common;
-using DonkeyWork.Chat.Persistence.Repository.ApiKey;
-using DonkeyWork.Chat.Persistence.Repository.ApiKey.Models;
+using DonkeyWork.Chat.Common.Services.UserContext;
+using DonkeyWork.Persistence.Common.Common;
+using DonkeyWork.Persistence.User.Repository.ApiKey;
+using DonkeyWork.Persistence.User.Repository.ApiKey.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DonkeyWork.Chat.Api.Controllers;

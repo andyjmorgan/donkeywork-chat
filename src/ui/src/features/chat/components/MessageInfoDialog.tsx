@@ -101,6 +101,39 @@ const MessageInfoDialog: React.FC<MessageInfoDialogProps> = ({
                     </div>
                 )}
                 
+                {/* Model Information */}
+                {selectedMessage.role === 'assistant' && metadata?.modelName && (
+                    <div className="mb-3">
+                        <div className="font-semibold">Model</div>
+                        <div>{metadata.modelName}</div>
+                    </div>
+                )}
+                
+                {/* Message Provider IDs */}
+                {selectedMessage.role === 'assistant' && metadata?.messageProviderIds && metadata.messageProviderIds.length > 0 && (
+                    <div className="mb-3">
+                        <div className="font-semibold">Message Provider IDs</div>
+                        <div className="dialog-markdown-content" style={{ maxHeight: "150px", overflowY: "auto" }}>
+                            <table className="markdown-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Provider ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {metadata.messageProviderIds.map((id, index) => (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td style={{ fontFamily: "monospace", fontSize: "0.85rem" }}>{id}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+                
                 <div className="mb-3">
                     <div className="font-semibold">Timestamp</div>
                     <div>{selectedMessage.timestamp?.toLocaleString()}</div>

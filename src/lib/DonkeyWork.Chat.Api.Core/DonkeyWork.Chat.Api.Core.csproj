@@ -9,11 +9,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Serilog.AspNetCore" />
-      <PackageReference Include="StyleCop.Analyzers">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions"/>
+        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations"/>
+        <PackageReference Include="Microsoft.AspNetCore"/>
+        <PackageReference Include="Serilog.AspNetCore"/>
+        <PackageReference Include="StyleCop.Analyzers">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -27,9 +30,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\persistence\DonkeyWork.Persistence.User\DonkeyWork.Persistence.User.csproj" />
       <ProjectReference Include="..\DonkeyWork.Chat.Common\DonkeyWork.Chat.Common.csproj" />
       <ProjectReference Include="..\DonkeyWork.Chat.Providers\DonkeyWork.Chat.Providers.csproj" />
-      <ProjectReference Include="..\persistence\DonkeyWork.Chat.Persistence\DonkeyWork.Chat.Persistence.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
 </Project>

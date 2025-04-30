@@ -31,7 +31,7 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Tool
         /// </summary>
         /// <param name="name">The name of the stack.</param>
         /// <returns>The stack details as a JSON document.</returns>
-        Task<JsonNode> SwarmPit_GetStackAsync(string name);
+        Task<JsonNode> SwarmPit_GetStackDetailsAsync(string name);
 
         /// <summary>
         /// Redeploys a stack with all of its services.

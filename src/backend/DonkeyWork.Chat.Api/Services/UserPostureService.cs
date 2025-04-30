@@ -5,9 +5,10 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Chat.Common.Contracts;
-using DonkeyWork.Chat.Common.Providers;
-using DonkeyWork.Chat.Common.Providers.GenericProvider;
-using DonkeyWork.Chat.Persistence.Repository.Integration;
+using DonkeyWork.Chat.Common.Models.Providers.Posture;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using DonkeyWork.Chat.Common.Models.Providers.Tools.GenericProvider;
+using DonkeyWork.Persistence.User.Repository.Integration;
 
 namespace DonkeyWork.Chat.Api.Services;
 
@@ -39,7 +40,7 @@ public class UserPostureService(IIntegrationRepository integrationRepository)
     }
 
     /// <inheritdoc />
-    public async Task<UserProviderPosture?> GetUserPostureAsync(UserProviderType providerType, CancellationToken cancellationToken = default)
+    public async Task<UserProviderPosture?> GetUserPostureAsync(ToolProviderType providerType, CancellationToken cancellationToken = default)
     {
         var userIntegrations = await integrationRepository.GetUserOAuthTokenAsync(providerType, cancellationToken);
         return userIntegrations == null
@@ -53,7 +54,7 @@ public class UserPostureService(IIntegrationRepository integrationRepository)
     }
 
     /// <inheritdoc />
-    public async Task<GenericProviderPosture?> GetUserGenericPostureAsync(GenericProviderType providerType, CancellationToken cancellationToken = default)
+    public async Task<GenericProviderPosture?> GetUserGenericPostureAsync(ToolProviderType providerType, CancellationToken cancellationToken = default)
     {
         var userIntegration = await integrationRepository.GetGenericIntegrationAsync(providerType, cancellationToken);
         return userIntegration == null
@@ -61,7 +62,8 @@ public class UserPostureService(IIntegrationRepository integrationRepository)
             : new GenericProviderPosture()
             {
                 ProviderType = userIntegration.ProviderType,
-                Configuration = BaseGenericProviderConfiguration.FromJson(userIntegration.Configuration),
+                Configuration = BaseGenericProviderConfiguration.FromJson(userIntegration?.Configuration ?? string.Empty)
+                                ?? BaseGenericProviderConfiguration.GetConfigurationByProviderType(providerType),
             };
     }
 }

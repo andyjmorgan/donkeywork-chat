@@ -9,7 +9,8 @@ using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common.Api;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 using Microsoft.Graph.Models;
 using TaskStatus = Microsoft.Graph.Models.TaskStatus;
 
@@ -18,9 +19,10 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Todo;
 /// <summary>
 /// A Microsoft Graph Todo tool.
 /// </summary>
-[OAuthToolProvider(UserProviderType.Microsoft)]
-public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory)
-    : Base.Tool, IMicrosoftGraphTodoTool
+[OAuthToolProvider(ToolProviderType.Microsoft)]
+[ToolProviderApplicationType(ToolProviderApplicationType.MicrosoftTodo)]
+public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory, ILogger<MicrosoftGraphTodoTool> logger)
+    : Base.Tool(logger), IMicrosoftGraphTodoTool
 {
     /// <param name="cancellationToken"></param>
     /// <inheritdoc />
@@ -95,7 +97,7 @@ public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGra
     /// <inheritdoc />
     [ToolFunction]
     [Description("Create a new task in a specified To Do list using the Microsoft Graph Api.")]
-    [ToolProviderScopes(UserProviderScopeHandleType.Any,  "Tasks.Read", "Tasks.ReadWrite")]
+    [ToolProviderScopes(UserProviderScopeHandleType.Any,  "Tasks.ReadWrite")]
     public async Task<JsonDocument> CreateMicrosoftGraphTaskAsync(
         [Description("The ID of the To Do list.")]
         string listId,
@@ -141,7 +143,7 @@ public class MicrosoftGraphTodoTool(IMicrosoftGraphApiClientFactory microsoftGra
     /// <inheritdoc />
     [ToolFunction]
     [Description("Updates an existing task in a specified To Do list using the Microsoft Graph Api.")]
-    [ToolProviderScopes(UserProviderScopeHandleType.Any,  "Tasks.Read", "Tasks.ReadWrite")]
+    [ToolProviderScopes(UserProviderScopeHandleType.Any,  "Tasks.ReadWrite")]
     public async Task<JsonDocument> UpdateMicrosoftGraphTaskAsync(
         [Description("The ID of the To Do list.")]
         string listId,

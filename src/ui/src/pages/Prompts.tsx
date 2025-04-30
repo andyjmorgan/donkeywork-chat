@@ -4,6 +4,7 @@ import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Menu } from 'primereact/menu';
 import { Skeleton } from 'primereact/skeleton';
 import { Toast } from 'primereact/toast';
 import { formatDistanceToNow, parseISO } from 'date-fns';
@@ -31,7 +32,7 @@ const Prompts: React.FC = () => {
       // Convert API model to UI model
       const promptItems: PromptItem[] = (result.prompts || result.items || []).map(prompt => ({
         id: prompt.id,
-        title: prompt.title,
+        name: prompt.name,
         description: prompt.description,
         content: prompt.content,
         usageCount: prompt.usageCount || 0,
@@ -64,11 +65,11 @@ const Prompts: React.FC = () => {
 
   // Handle delete confirmation
   const confirmDelete = (prompt: PromptItem) => {
-    // Truncate title if it's too long
-    const truncatedTitle = truncateText(prompt.title, 50);
+    // Truncate name if it's too long
+    const truncatedName = truncateText(prompt.name, 50);
     
     confirmDialog({
-      message: `Are you sure you want to delete "${truncatedTitle}"?`,
+      message: `Are you sure you want to delete "${truncatedName}"?`,
       header: 'Delete Confirmation',
       icon: 'pi pi-exclamation-triangle',
       acceptClassName: 'p-button-danger',
@@ -113,7 +114,7 @@ const Prompts: React.FC = () => {
   const handleEdit = (prompt: PromptItem) => {
     setEditPrompt({
       id: prompt.id,
-      title: prompt.title,
+      name: prompt.name,
       description: prompt.description,
       content: prompt.content
     });
@@ -123,7 +124,7 @@ const Prompts: React.FC = () => {
   // Handle duplicate button click
   const handleDuplicate = (prompt: PromptItem) => {
     setEditPrompt({
-      title: `${prompt.title} (Copy)`,
+      name: `${prompt.name} (Copy)`,
       description: prompt.description,
       content: prompt.content
     });
@@ -136,33 +137,48 @@ const Prompts: React.FC = () => {
     setDialogVisible(true);
   };
 
-  // Template for actions column
+  // Template for actions column using a kebab menu
   const actionsTemplate = (rowData: PromptItem) => {
+    const menuRef = useRef<any>(null);
+    
+    const menuItems = [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => handleEdit(rowData)
+      },
+      {
+        label: 'Duplicate',
+        icon: 'pi pi-copy',
+        command: () => handleDuplicate(rowData)
+      },
+      {
+        separator: true
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        className: 'p-error',
+        command: () => confirmDelete(rowData)
+      }
+    ];
+    
     return (
-      <div className="flex gap-2 justify-content-start">
-        <Button 
-          icon="pi pi-pencil" 
-          label="Edit"
-          className="p-button-text p-button-sm p-button-secondary" 
-          tooltip="Edit" 
-          tooltipOptions={{ position: 'top' }}
-          onClick={() => handleEdit(rowData)}
+      <div className="flex justify-content-center">
+        <Button
+          icon="pi pi-ellipsis-v"
+          className="p-button-rounded p-button-text p-button-plain action-menu-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            menuRef.current.toggle(e);
+          }}
+          aria-label="Options"
         />
-        <Button 
-          icon="pi pi-copy" 
-          label="Duplicate"
-          className="p-button-text p-button-sm p-button-secondary" 
-          tooltip="Duplicate" 
-          tooltipOptions={{ position: 'top' }}
-          onClick={() => handleDuplicate(rowData)}
-        />
-        <Button 
-          icon="pi pi-trash" 
-          label="Delete"
-          className="p-button-text p-button-sm p-button-danger" 
-          tooltip="Delete" 
-          tooltipOptions={{ position: 'top' }}
-          onClick={() => confirmDelete(rowData)}
+        <Menu
+          model={menuItems}
+          popup
+          ref={menuRef}
+          popupAlignment="right"
         />
       </div>
     );
@@ -229,12 +245,10 @@ const Prompts: React.FC = () => {
               <Column body={skeletonTemplate} style={{ width: '40%' }} />
               <Column body={() => <Skeleton width="3rem" height="1.2rem" />} style={{ width: '15%' }} />
               <Column body={() => (
-                <div className="flex gap-2 justify-content-end">
-                  <Skeleton shape="circle" size="2rem" />
-                  <Skeleton shape="circle" size="2rem" />
+                <div className="flex justify-content-center">
                   <Skeleton shape="circle" size="2rem" />
                 </div>
-              )} style={{ width: '20%' }} />
+              )} style={{ width: '10%' }} />
             </DataTable>
           </Card>
         ) : (
@@ -262,7 +276,7 @@ const Prompts: React.FC = () => {
               rowClassName={() => "cursor-pointer"}
             >
               <Column 
-                field="title" 
+                field="name" 
                 header="Name" 
                 sortable 
                 headerClassName="w-3 column-title"
@@ -293,6 +307,9 @@ const Prompts: React.FC = () => {
                 body={actionsTemplate} 
                 headerClassName="w-2 column-actions text-center"
                 bodyClassName="text-center"
+                style={{ width: '10%' }}
+                frozen
+                alignFrozen="right"
               />
             </DataTable>
           </Card>

@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.AiServices.Streaming;
+using DonkeyWork.Chat.Common.Models.Streaming;
 
 namespace DonkeyWork.Chat.AiServices.Services;
 

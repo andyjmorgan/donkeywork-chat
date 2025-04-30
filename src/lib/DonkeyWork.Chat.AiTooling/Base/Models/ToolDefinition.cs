@@ -4,6 +4,8 @@
 // </copyright>
 // ------------------------------------------------------
 
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+
 namespace DonkeyWork.Chat.AiTooling.Base.Models;
 
 /// <summary>
@@ -11,6 +13,16 @@ namespace DonkeyWork.Chat.AiTooling.Base.Models;
 /// </summary>
 public class ToolDefinition
 {
+    /// <summary>
+    /// Gets or sets the provider.
+    /// </summary>
+    required public ToolProviderType Provider { get; set; }
+
+    /// <summary>
+    /// Gets or sets the provider application.
+    /// </summary>
+    required public ToolProviderApplicationType Application { get; set; }
+
     /// <summary>
     /// Gets or sets the tool name.
     /// </summary>
@@ -34,5 +46,5 @@ public class ToolDefinition
     /// <summary>
     /// Gets or sets the Tool.
     /// </summary>
-    public ITool Tool { get; set; } = new Tool();
+    public ITool? Tool { get; set; }
 }

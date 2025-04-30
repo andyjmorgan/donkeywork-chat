@@ -5,7 +5,7 @@
 // ------------------------------------------------------
 
 using System.Text.Json.Serialization;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using DonkeyWork.Chat.Providers.Models;
 
 namespace DonkeyWork.Chat.Providers.Provider.Implementation.Discord.Models;
@@ -68,7 +68,7 @@ public class DiscordTokenResponse
             AccessToken = this.AccessToken,
             RefreshToken = this.RefreshToken ?? string.Empty,
             ExpiresOn = this.ExpiresOn,
-            ProviderType = UserProviderType.Discord,
+            ProviderType = ToolProviderType.Discord,
             Scopes = this.Scopes,
         };
     }

@@ -13,4 +13,9 @@ export interface GetPromptsModel {
    * The list of prompts
    */
   prompts: GetPromptsItemModel[];
+  
+  /**
+   * The list of prompts (alternative field name for compatibility)
+   */
+  items?: GetPromptsItemModel[];
 }

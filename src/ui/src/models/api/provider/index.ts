@@ -3,3 +3,8 @@ export * from './UserProviderResponseModel';
 export * from './ProviderUrlResponseModel';
 export * from './ProviderCallbackResponseModel';
 export * from './GenericProviderTypes';
+export * from './ToolProviderType';
+export * from './ToolProviderModel';
+export * from './ToolProviderAuthorizationType';
+export * from './ToolProviderApplicationType';
+export * from './GetToolProvidersModel';

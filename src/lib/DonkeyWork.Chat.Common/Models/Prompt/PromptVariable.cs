@@ -12,19 +12,14 @@ namespace DonkeyWork.Chat.Common.Models.Prompt;
 public class PromptVariable
 {
     /// <summary>
-    /// Gets or sets the variable name.
-    /// </summary>
-    required public string Name { get; set; }
-
-    /// <summary>
     /// Gets or sets the variable description.
     /// </summary>
-    required public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets a value indicating whether the variable is required.
     /// </summary>
-    required public string IsRequired { get; set; }
+    public bool IsRequired { get; set; }
 
     /// <summary>
     /// Gets or sets an optional default value for the variable.

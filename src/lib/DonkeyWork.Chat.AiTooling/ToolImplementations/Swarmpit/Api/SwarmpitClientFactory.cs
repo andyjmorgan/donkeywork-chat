@@ -6,8 +6,8 @@
 
 using System.Net.Http.Headers;
 using DonkeyWork.Chat.Common.Contracts;
-using DonkeyWork.Chat.Common.Providers.GenericProvider;
-using DonkeyWork.Chat.Common.Providers.GenericProvider.Implementations;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using DonkeyWork.Chat.Common.Models.Providers.Tools.GenericProvider.Implementations;
 
 namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
 {
@@ -40,7 +40,7 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api
                 return this.swarmpitClient;
             }
 
-            var userPosture = await this.userPostureService.GetUserGenericPostureAsync(GenericProviderType.Swarmpit);
+            var userPosture = await this.userPostureService.GetUserGenericPostureAsync(ToolProviderType.Swarmpit).ConfigureAwait(false);
             if (userPosture is not { Configuration: SwarmpitConfiguration swarmpitConfiguration })
             {
                 throw new InvalidOperationException("User posture is not set.");

@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Chat.Common.Providers.GenericProvider;
+using DonkeyWork.Chat.Common.Models.Providers.Tools.GenericProvider;
 
 namespace DonkeyWork.Chat.Api.Models;
 
@@ -14,7 +14,7 @@ namespace DonkeyWork.Chat.Api.Models;
 public class GenericProvidersModel
 {
     /// <summary>
-    /// A list of known providers.
+    /// Gets or sets a list of known providers.
     /// </summary>
     public List<GenericProviderDefinition> Providers { get; set; } = [];
 }

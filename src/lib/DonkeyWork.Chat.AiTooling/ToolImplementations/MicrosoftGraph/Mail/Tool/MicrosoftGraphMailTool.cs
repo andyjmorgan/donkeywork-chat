@@ -9,7 +9,8 @@ using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Common.Api;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 using Microsoft.Graph.Me.SendMail;
 using Microsoft.Graph.Models;
 
@@ -18,10 +19,12 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Mail.Tool
 /// <summary>
 /// A microsoft graph mail tool implementation.
 /// </summary>
-[OAuthToolProvider(UserProviderType.Microsoft)]
+[OAuthToolProvider(ToolProviderType.Microsoft)]
+[ToolProviderApplicationType(ToolProviderApplicationType.MicrosoftOutlook)]
 public class MicrosoftGraphMailTool(
-    IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory)
-    : Base.Tool, IMicrosoftGraphMailTool
+    IMicrosoftGraphApiClientFactory microsoftGraphApiClientFactory,
+    ILogger<MicrosoftGraphMailTool> logger)
+    : Base.Tool(logger), IMicrosoftGraphMailTool
 {
     /// <inheritdoc />
     [ToolFunction]
@@ -34,7 +37,7 @@ public class MicrosoftGraphMailTool(
     public async Task<JsonDocument?> SearchMicrosoftGraphEmailAsync(
         [Description("The search query string (e.g., \"report\"). Ensure to us US Formatted date strings (MM/DD/YYYY) for date searches.")]
         string search,
-        [Description("The select query parameters (e.g., \"subject\",\"from\", \"to\") etc. Optional.")]
+        [Description("The select query parameters (e.g., \"subject\",\"from\", \"to\", \"webLink\", \"bodyPreview\", \"parentFolderId\", \"conversationId\", \"conversationIndex\", \"isRead\", \"importance\") etc. Optional.")]
         List<string>? select,
         [Description("The maximum number of messages to return.")]
         int? maxCount = null,
@@ -46,6 +49,7 @@ public class MicrosoftGraphMailTool(
         var messages = await client.Me.Messages.GetAsync(
             config =>
         {
+            config.Headers.Add("Prefer", "outlook.body-content-type=\"text\"");
             config.QueryParameters.Search = $"\"{search}\"";
             config.QueryParameters.Count = true;
             if (select?.Any() ?? false)
@@ -134,6 +138,8 @@ public class MicrosoftGraphMailTool(
         string body,
         [Description("A list of recipient email addresses.")]
         List<string> toRecipients,
+        [Description("The body type of the email. Default is Text.")]
+        BodyType? bodyType = null,
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
     {
         var client = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
@@ -143,7 +149,7 @@ public class MicrosoftGraphMailTool(
             Subject = subject,
             Body = new ItemBody
             {
-                ContentType = BodyType.Text,
+                ContentType = bodyType ?? BodyType.Text,
                 Content = body,
             },
             ToRecipients = toRecipients.Select(email => new Recipient
@@ -162,7 +168,7 @@ public class MicrosoftGraphMailTool(
             SaveToSentItems = true,
         }, cancellationToken: cancellationToken);
 
-        return JsonDocument.Parse("{\"status\":\"Email sent successfully\"}");
+        return JsonDocument.Parse(JsonSerializer.Serialize(this.CreateTaskResponse(nameof(this.SendMicrosoftGraphEmailAsync), true), MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
@@ -218,7 +224,7 @@ public class MicrosoftGraphMailTool(
         var client = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
 
         await client.Me.Messages[draftMessageId].Send.PostAsync(cancellationToken: cancellationToken);
-        return JsonDocument.Parse("{\"status\":\"Draft sent successfully\"}");
+        return JsonDocument.Parse(JsonSerializer.Serialize(this.CreateTaskResponse(nameof(this.SendMicrosoftGraphDraftEmailAsync), true), MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
@@ -235,7 +241,11 @@ public class MicrosoftGraphMailTool(
         [ToolIgnoredParameter] CancellationToken cancellationToken = default)
     {
         var client = await microsoftGraphApiClientFactory.CreateGraphClientAsync(cancellationToken);
-        var message = await client.Me.Messages[messageId].GetAsync(cancellationToken: cancellationToken);
+        var message = await client.Me
+            .Messages[messageId]
+            .GetAsync(
+                configuration => { configuration.Headers.Add("Prefer", "outlook.body-content-type=\"text\""); },
+                cancellationToken: cancellationToken);
         return JsonDocument.Parse(JsonSerializer.Serialize(message, MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
@@ -302,7 +312,7 @@ public class MicrosoftGraphMailTool(
             },
             cancellationToken: cancellationToken);
 
-        return JsonDocument.Parse("{\"status\":\"Email forwarded successfully\"}");
+        return JsonDocument.Parse(JsonSerializer.Serialize(this.CreateTaskResponse(nameof(this.ForwardMicrosoftGraphEmailAsync), true), MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 
     /// <inheritdoc />
@@ -347,6 +357,6 @@ public class MicrosoftGraphMailTool(
             },
             cancellationToken: cancellationToken);
 
-        return JsonDocument.Parse("{\"status\":\"Reply all sent successfully\"}");
+        return JsonDocument.Parse(JsonSerializer.Serialize(this.CreateTaskResponse(nameof(this.ReplyToAllMicrosoftGraphAsync), true), MicrosoftGraphSerializationOptions.MicrosoftGraphJsonSerializerOptions));
     }
 }

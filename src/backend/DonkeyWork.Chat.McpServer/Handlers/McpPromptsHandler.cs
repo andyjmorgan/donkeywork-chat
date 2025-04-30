@@ -5,9 +5,9 @@
 // ------------------------------------------------------
 
 using System.Security.Claims;
-using DonkeyWork.Chat.Common.UserContext;
-using DonkeyWork.Chat.Persistence.Common;
-using DonkeyWork.Chat.Persistence.Repository.Prompt;
+using DonkeyWork.Chat.Common.Services.UserContext;
+using DonkeyWork.Persistence.Agent.Repository.Prompt;
+using DonkeyWork.Persistence.Common.Common;
 using ModelContextProtocol.Protocol.Types;
 using ModelContextProtocol.Server;
 
@@ -36,7 +36,7 @@ public class McpPromptsHandler(
             Prompts = prompts.Prompts.Select(
                 x => new Prompt
                 {
-                    Name = x.Title,
+                    Name = x.Name,
                     Description = x.Description,
                     Arguments = [],
                 }).ToList(),
@@ -55,19 +55,18 @@ public class McpPromptsHandler(
             {
                 return new GetPromptResult()
                 {
-                    Description = prompt.Content,
-                    Messages = new List<PromptMessage>()
-                    {
-                        new PromptMessage()
-                        {
-                            Content = new Content()
+                    Description = prompt.Description,
+                    Messages = prompt.Content.Select(
+                        x =>
+                            new PromptMessage()
                             {
-                                Type = "text",
-                                Text = prompt.Content,
-                            },
-                            Role = Role.Assistant,
-                        },
-                    },
+                                Content = new Content()
+                                {
+                                    Type = "text",
+                                    Text = x,
+                                },
+                                Role = Role.Assistant,
+                            }).ToList(),
                 };
             }
         }

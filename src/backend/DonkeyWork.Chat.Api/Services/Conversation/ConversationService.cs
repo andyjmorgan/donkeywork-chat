@@ -9,12 +9,12 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Services;
-using DonkeyWork.Chat.AiServices.Streaming;
-using DonkeyWork.Chat.AiServices.Streaming.Chat;
-using DonkeyWork.Chat.AiServices.Streaming.Request;
-using DonkeyWork.Chat.AiServices.Streaming.Tool;
-using DonkeyWork.Chat.Persistence.Entity.Conversation;
-using DonkeyWork.Chat.Persistence.Repository.Conversation;
+using DonkeyWork.Chat.Common.Models;
+using DonkeyWork.Chat.Common.Models.Streaming;
+using DonkeyWork.Chat.Common.Models.Streaming.Chat;
+using DonkeyWork.Chat.Common.Models.Streaming.Request;
+using DonkeyWork.Chat.Common.Models.Streaming.Tool;
+using DonkeyWork.Persistence.Chat.Repository.Conversation;
 
 namespace DonkeyWork.Chat.Api.Services.Conversation;
 
@@ -22,6 +22,7 @@ namespace DonkeyWork.Chat.Api.Services.Conversation;
 /// A conversation service.
 /// </summary>
 /// <param name="chatService">The chat service.</param>
+/// <param name="conversationRepository">The conversation repository.</param>
 public class ConversationService(IChatService chatService, IConversationRepository conversationRepository)
     : IConversationService
 {

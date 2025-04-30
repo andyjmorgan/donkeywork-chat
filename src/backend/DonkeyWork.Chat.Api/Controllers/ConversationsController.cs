@@ -6,8 +6,8 @@
 
 using AutoMapper;
 using DonkeyWork.Chat.Api.Models.Conversation;
-using DonkeyWork.Chat.Persistence.Common;
-using DonkeyWork.Chat.Persistence.Repository.Conversation;
+using DonkeyWork.Persistence.Chat.Repository.Conversation;
+using DonkeyWork.Persistence.Common.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DonkeyWork.Chat.Api.Controllers;

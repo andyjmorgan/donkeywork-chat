@@ -79,28 +79,6 @@ public class KeycloakClient : IKeycloakClient
         }
     }
 
-    private async Task<string?> GetAdminTokenAsync()
-    {
-        var tokenResponse = await this.httpClient.PostAsync(
-            $"{this.keycloakConfig.BackChannelAddress}/protocol/openid-connect/token",
-            new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                ["grant_type"] = "client_credentials",
-                ["client_id"] = this.keycloakConfig.ClientId,
-                ["client_secret"] = this.keycloakConfig.ClientSecret,
-            }));
-
-        if (!tokenResponse.IsSuccessStatusCode)
-        {
-            this.logger.LogError("Failed to acquire admin token");
-            return null;
-        }
-
-        var tokenJson = JsonSerializer.Deserialize<JsonElement>(await tokenResponse.Content.ReadAsStringAsync());
-        var accessToken = tokenJson.GetProperty("access_token").GetString();
-        return accessToken;
-    }
-
     /// <inheritdoc/>
     public async Task<JsonElement?> ExchangeCodeForTokensAsync(string code, string codeVerifier, string redirectUri)
     {
@@ -167,5 +145,27 @@ public class KeycloakClient : IKeycloakClient
             this.logger.LogError(ex, "Failed to logout");
             return false;
         }
+    }
+
+    private async Task<string?> GetAdminTokenAsync()
+    {
+        var tokenResponse = await this.httpClient.PostAsync(
+            $"{this.keycloakConfig.BackChannelAddress}/protocol/openid-connect/token",
+            new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                ["grant_type"] = "client_credentials",
+                ["client_id"] = this.keycloakConfig.ClientId,
+                ["client_secret"] = this.keycloakConfig.ClientSecret,
+            }));
+
+        if (!tokenResponse.IsSuccessStatusCode)
+        {
+            this.logger.LogError("Failed to acquire admin token");
+            return null;
+        }
+
+        var tokenJson = JsonSerializer.Deserialize<JsonElement>(await tokenResponse.Content.ReadAsStringAsync());
+        var accessToken = tokenJson.GetProperty("access_token").GetString();
+        return accessToken;
     }
 }

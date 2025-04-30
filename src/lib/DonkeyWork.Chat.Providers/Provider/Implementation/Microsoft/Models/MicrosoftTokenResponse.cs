@@ -5,6 +5,7 @@
 // ------------------------------------------------------
 
 using System.Text.Json.Serialization;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using DonkeyWork.Chat.Providers.Models;
 
 namespace DonkeyWork.Chat.Providers.Provider.Implementation.Microsoft.Models;
@@ -79,7 +80,7 @@ public class MicrosoftTokenResponse
             AccessToken = this.AccessToken,
             RefreshToken = this.RefreshToken ?? string.Empty,
             ExpiresOn = this.ExpiresOn,
-            ProviderType = Common.Providers.UserProviderType.Microsoft,
+            ProviderType = ToolProviderType.Microsoft,
             Scopes = this.Scopes,
         };
     }

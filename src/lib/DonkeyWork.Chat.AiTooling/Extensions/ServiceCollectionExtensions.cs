@@ -19,10 +19,10 @@ using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Identity;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Mail.Tool;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.MicrosoftGraph.Todo;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Api;
-using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Configuration;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.SerpApi.Tool;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Api;
 using DonkeyWork.Chat.AiTooling.ToolImplementations.Swarmpit.Tool;
+using DonkeyWork.Chat.Common.Models.Providers.Tools.GenericProvider.Implementations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Chat.AiTooling.Extensions;

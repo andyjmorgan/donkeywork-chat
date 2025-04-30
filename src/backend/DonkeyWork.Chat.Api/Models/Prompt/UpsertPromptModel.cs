@@ -14,7 +14,7 @@ public class UpsertPromptModel
     /// <summary>
     /// Gets the title.
     /// </summary>
-    public string Title { get; init; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
 
     /// <summary>
     /// Gets the description.
@@ -24,5 +24,5 @@ public class UpsertPromptModel
     /// <summary>
     /// Gets the content.
     /// </summary>
-    public string Content { get; init; } = string.Empty;
+    public List<string> Content { get; init; } = [];
 }

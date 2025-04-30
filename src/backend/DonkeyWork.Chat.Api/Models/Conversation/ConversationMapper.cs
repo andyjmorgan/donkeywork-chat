@@ -5,7 +5,7 @@
 // ------------------------------------------------------
 
 using AutoMapper;
-using DonkeyWork.Chat.Persistence.Repository.Conversation.Models;
+using DonkeyWork.Persistence.Chat.Repository.Conversation.Models;
 
 namespace DonkeyWork.Chat.Api.Models.Conversation;
 

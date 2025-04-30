@@ -5,6 +5,7 @@ import { Menubar } from 'primereact/menubar';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Sidebar } from 'primereact/sidebar';
 
 import ChatComponent from '../../features/chat/components/ChatComponent';
 import PromptDialog from '../../features/prompts/components/PromptDialog';
@@ -68,6 +69,11 @@ const Chat: React.FC = () => {
   // Add states to force ChatComponent re-renders when needed
   const [chatKey, setChatKey] = useState<string>(Date.now().toString());
   const [showChat, setShowChat] = useState<boolean>(true);
+  
+  // Mobile sidebar state
+  const [chatOptionsSidebarVisible, setChatOptionsSidebarVisible] = useState<boolean>(false);
+  // Responsive state - using standard PrimeReact md breakpoint (768px)
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
   
   const fetchModels = async () => {
     try {
@@ -263,6 +269,41 @@ const Chat: React.FC = () => {
     fetchPrompts();
     fetchModels();
     
+    // Set initial mobile state
+    const initialIsMobile = window.innerWidth < 768;
+    
+    // Make sure isMobile is set correctly on initial render
+    if (isMobile !== initialIsMobile) {
+      setIsMobile(initialIsMobile);
+    }
+    
+    // Handle window resize for responsive design
+    const handleResize = () => {
+      const newIsMobile = window.innerWidth < 768;
+      
+      // Use a callback function to get the latest isMobile state
+      setIsMobile(currentIsMobile => {
+        // Only update if there's a change
+        if (newIsMobile !== currentIsMobile) {
+          // Force a UI refresh by updating the chat key after the state change
+          setTimeout(() => {
+            setChatKey(Date.now().toString());
+          }, 50);
+          
+          return newIsMobile;
+        }
+        
+        return currentIsMobile;
+      });
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Clean up event listener
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
@@ -452,6 +493,7 @@ const Chat: React.FC = () => {
       </div>
     );
   }
+  
   return (
     <div className="h-full" style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
       <Toast ref={toast} position="top-right" />
@@ -486,150 +528,304 @@ const Chat: React.FC = () => {
         editPrompt={editingPrompt}
       />
       
-      <Menubar
-        className="chat-settings-menubar"
-        model={[]} 
-        start={
-          <div className="menu-container">
-            <div className="dropdown-group provider-group">
-              {selectedProvider && (
-                <div className="provider-icon-container">
-                  <img 
-                    src={getProviderIcon(selectedProvider.value)} 
-                    alt={`${selectedProvider.name} icon`}
+      {/* Desktop Menu - Only visible on desktop */}
+      {!isMobile && (
+        <div style={{ width: '100%' }}>
+          <Menubar
+            className="chat-settings-menubar"
+            model={[]} 
+            start={
+              <div className="menu-container">
+                <div className="dropdown-group provider-group" id="desktop-provider-group">
+                  {selectedProvider && (
+                    <div className="provider-icon-container">
+                      <img 
+                        src={getProviderIcon(selectedProvider.value)} 
+                        alt={`${selectedProvider.name} icon`}
+                        style={{ 
+                          width: '18px', 
+                          height: '18px', 
+                          objectFit: 'contain'
+                        }}
+                      />
+                    </div>
+                  )}
+                  <Dropdown
+                    value={selectedProvider ? selectedProvider.value : null}
+                    options={providers}
+                    onChange={handleProviderChange}
+                    optionLabel="name"
+                    placeholder="Select Provider"
+                    className="p-inputtext-sm provider-dropdown"
+                    panelStyle={{ fontSize: '0.875rem' }}
+                    loading={modelsLoading}
+                    showClear={!!selectedProvider}
+                    itemTemplate={providerItemTemplate}
+                    valueTemplate={providerValueTemplate}
+                  />
+                </div>
+                
+                <div className="dropdown-group model-group" id="desktop-model-group">
+                  <Dropdown
+                    value={selectedModel ? selectedModel.value : null}
+                    options={getFilteredModels()}
+                    onChange={handleModelChange}
+                    optionLabel="name"
+                    placeholder="Select Model"
+                    className="p-inputtext-sm model-dropdown"
+                    panelStyle={{ fontSize: '0.875rem' }}
+                    disabled={!selectedProvider}
+                    showClear={!!selectedModel}
+                  />
+                </div>
+                
+                <div className="menu-separator" />
+                
+                <div className="dropdown-group prompt-group" id="desktop-prompt-group">
+                  <Dropdown
+                    value={selectedPrompt?.id || null}
+                    options={
+                      prompts.length > 0 
+                        ? [
+                            ...prompts, 
+                            { id: 'add-prompt', name: 'Add Prompt', value: 'add-prompt' }
+                          ]
+                        : [{ id: 'add-prompt', name: 'Add Prompt', value: 'add-prompt' }]
+                    }
+                    onChange={(e) => {
+                      if (e.value === 'add-prompt') {
+                        // Reset selected prompt
+                        setSelectedPrompt(null);
+                        // Open a fresh prompt dialog
+                        setEditingPrompt({
+                          name: '',
+                          description: '',
+                          content: ['']
+                        });
+                        setPromptDialogVisible(true);
+                      } else {
+                        handlePromptChange(e);
+                      }
+                    }}
+                    optionLabel="name"
+                    optionValue="id"
+                    className="p-inputtext-sm prompt-dropdown"
+                    style={{ minWidth: '12rem' }}
+                    panelStyle={{ 
+                      fontSize: '0.875rem',
+                      maxHeight: '400px', /* Increased height from default */
+                      overflow: 'auto'
+                    }}
+                    itemTemplate={(option) => {
+                      if (option.id === 'add-prompt') {
+                        return (
+                          <div className="flex align-items-center" style={{ 
+                            padding: '2px 4px',
+                            cursor: 'pointer',
+                            borderRadius: '4px',
+                            transition: 'background-color 0.2s',
+                            margin: '0'
+                          }}>
+                            <i className="pi pi-plus mr-2" style={{ fontSize: '0.875rem', color: 'var(--primary-color)' }}></i>
+                            <span style={{ fontWeight: 'medium', fontSize: '0.875rem' }}>Add Prompt</span>
+                          </div>
+                        );
+                      }
+                      return promptItemTemplate(option);
+                    }}
+                    loading={isLoading}
+                    placeholder="Select Prompt"
+                    emptyMessage="No prompts available"
+                    showClear={!!selectedPrompt}
+                  />
+                  
+                  <Button
+                    icon="pi pi-pencil"
+                    className="p-button-rounded p-button-text p-button-sm edit-prompt-button"
+                    tooltip="Edit Selected Prompt"
+                    tooltipOptions={{ position: 'top' }}
+                    onClick={(e) => {
+                      openPromptDialog();
+                      if (e.currentTarget) {
+                        e.currentTarget.blur();
+                      }
+                    }}
+                    disabled={!selectedPrompt}
+                    tabIndex={-1}
                     style={{ 
-                      width: '18px', 
-                      height: '18px', 
-                      objectFit: 'contain'
+                      width: '2rem', 
+                      height: '2rem',
+                      outline: 'none'
                     }}
                   />
                 </div>
-              )}
-              <Dropdown
-                value={selectedProvider ? selectedProvider.value : null}
-                options={providers}
-                onChange={handleProviderChange}
-                optionLabel="name"
-                placeholder="Select Provider"
-                className="p-inputtext-sm provider-dropdown"
-                panelStyle={{ fontSize: '0.875rem' }}
-                loading={modelsLoading}
-                showClear={!!selectedProvider}
-                itemTemplate={providerItemTemplate}
-                valueTemplate={providerValueTemplate}
-              />
-            </div>
-            
-            <div className="dropdown-group model-group">
-              <Dropdown
-                value={selectedModel ? selectedModel.value : null}
-                options={getFilteredModels()}
-                onChange={handleModelChange}
-                optionLabel="name"
-                placeholder="Select Model"
-                className="p-inputtext-sm model-dropdown"
-                panelStyle={{ fontSize: '0.875rem' }}
-                disabled={!selectedProvider}
-                showClear={!!selectedModel}
-              />
-            </div>
-            
-            <div className="menu-separator desktop-only" />
-            
-            <div className="dropdown-group prompt-group">
-              <Dropdown
-                value={selectedPrompt?.id || null}
-                options={
-                  prompts.length > 0 
-                    ? [
-                        ...prompts, 
-                        { id: 'add-prompt', name: 'Add Prompt', value: 'add-prompt' }
-                      ]
-                    : [{ id: 'add-prompt', name: 'Add Prompt', value: 'add-prompt' }]
-                }
-                onChange={(e) => {
-                  if (e.value === 'add-prompt') {
-                    // Reset selected prompt
-                    setSelectedPrompt(null);
-                    // Open a fresh prompt dialog
-                    setEditingPrompt({
-                      name: '',
-                      description: '',
-                      content: ['']
-                    });
-                    setPromptDialogVisible(true);
-                  } else {
-                    handlePromptChange(e);
-                  }
-                }}
-                optionLabel="name"
-                optionValue="id"
-                className="p-inputtext-sm prompt-dropdown"
-                style={{ minWidth: '12rem' }}
-                panelStyle={{ 
-                  fontSize: '0.875rem',
-                  maxHeight: '400px', /* Increased height from default */
-                  overflow: 'auto'
-                }}
-                itemTemplate={(option) => {
-                  if (option.id === 'add-prompt') {
-                    return (
-                      <div className="flex align-items-center" style={{ 
-                        padding: '2px 4px',
-                        cursor: 'pointer',
-                        borderRadius: '4px',
-                        transition: 'background-color 0.2s',
-                        margin: '0'
-                      }}>
-                        <i className="pi pi-plus mr-2" style={{ fontSize: '0.875rem', color: 'var(--primary-color)' }}></i>
-                        <span style={{ fontWeight: 'medium', fontSize: '0.875rem' }}>Add Prompt</span>
-                      </div>
-                    );
-                  }
-                  return promptItemTemplate(option);
-                }}
-                loading={isLoading}
-                placeholder="Select Prompt"
-                emptyMessage="No prompts available"
-                showClear={!!selectedPrompt}
-              />
-              
+              </div>
+            }
+            end={
               <Button
-                icon="pi pi-pencil"
-                className="p-button-rounded p-button-text p-button-sm edit-prompt-button"
-                tooltip="Edit Selected Prompt"
-                tooltipOptions={{ position: 'top' }}
-                onClick={(e) => {
-                  openPromptDialog();
-                  if (e.currentTarget) {
-                    e.currentTarget.blur();
-                  }
+                label="New Chat"
+                icon="pi pi-plus"
+                className="p-button-sm"
+                onClick={() => {
+                  window.location.href = '/chat';
                 }}
-                disabled={!selectedPrompt}
-                tabIndex={-1}
-                style={{ 
-                  width: '2rem', 
-                  height: '2rem',
-                  outline: 'none'
-                }}
+                tooltip="Start a new conversation"
+                tooltipOptions={{ position: 'left' }}
               />
+            }
+          />
+        </div>
+      )}
+        
+      {/* Mobile Floating Button - Only visible on mobile */}
+      {isMobile && (
+        <Button
+          icon="pi pi-cog"
+          onClick={() => setChatOptionsSidebarVisible(true)}
+          className="mobile-fab p-button-rounded p-button-primary"
+          tooltip="Chat Options"
+          tooltipOptions={{ position: 'right' }}
+          aria-label="Chat Options"
+          style={{
+            position: 'fixed',
+            top: '120px', 
+            left: '16px',
+            zIndex: 999,
+            width: '52px',
+            height: '52px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)'
+          }}
+        />
+      )}
+        
+        {/* Mobile Chat Options Sidebar */}
+        <Sidebar
+          visible={chatOptionsSidebarVisible}
+          onHide={() => setChatOptionsSidebarVisible(false)}
+          position="right"
+          className="p-sidebar-md mobile-chat-options-sidebar"
+          style={{ width: '85%', maxWidth: '320px', zIndex: 999 }}
+          showCloseIcon={true}
+          icons={
+            <div className="flex align-items-center">
+              <span className="font-semibold text-lg">Chat Options</span>
+            </div>
+          }
+        >
+          <div className="p-3">
+            <div className="mobile-chat-options">
+              {/* Provider Selection */}
+              <div className="option-group mb-4">
+                <h3 className="text-base font-medium mb-2">Provider</h3>
+                <Dropdown
+                  value={selectedProvider ? selectedProvider.value : null}
+                  options={providers}
+                  onChange={handleProviderChange}
+                  optionLabel="name"
+                  placeholder="Select Provider"
+                  className="w-full"
+                  loading={modelsLoading}
+                  showClear={!!selectedProvider}
+                  itemTemplate={providerItemTemplate}
+                />
+              </div>
+              
+              {/* Model Selection */}
+              <div className="option-group mb-4">
+                <h3 className="text-base font-medium mb-2">Model</h3>
+                <Dropdown
+                  value={selectedModel ? selectedModel.value : null}
+                  options={getFilteredModels()}
+                  onChange={handleModelChange}
+                  optionLabel="name"
+                  placeholder="Select Model"
+                  className="w-full"
+                  disabled={!selectedProvider}
+                  showClear={!!selectedModel}
+                />
+              </div>
+              
+              {/* Prompt Selection */}
+              <div className="option-group mb-4">
+                <h3 className="text-base font-medium mb-2">Prompt</h3>
+                <Dropdown
+                  value={selectedPrompt?.id || null}
+                  options={
+                    prompts.length > 0 
+                      ? [
+                          ...prompts, 
+                          { id: 'add-prompt', name: 'Add Prompt', value: 'add-prompt' }
+                        ]
+                      : [{ id: 'add-prompt', name: 'Add Prompt', value: 'add-prompt' }]
+                  }
+                  onChange={(e) => {
+                    if (e.value === 'add-prompt') {
+                      // Reset selected prompt
+                      setSelectedPrompt(null);
+                      // Open a fresh prompt dialog
+                      setEditingPrompt({
+                        name: '',
+                        description: '',
+                        content: ['']
+                      });
+                      setPromptDialogVisible(true);
+                      setChatOptionsSidebarVisible(false);
+                    } else {
+                      handlePromptChange(e);
+                    }
+                  }}
+                  optionLabel="name"
+                  optionValue="id"
+                  className="w-full"
+                  itemTemplate={(option) => {
+                    if (option.id === 'add-prompt') {
+                      return (
+                        <div className="flex align-items-center" style={{ 
+                          padding: '6px 4px',
+                          cursor: 'pointer',
+                          borderRadius: '4px',
+                          transition: 'background-color 0.2s',
+                          margin: '0'
+                        }}>
+                          <i className="pi pi-plus mr-2" style={{ fontSize: '0.875rem', color: 'var(--primary-color)' }}></i>
+                          <span style={{ fontWeight: 'medium', fontSize: '0.875rem' }}>Add Prompt</span>
+                        </div>
+                      );
+                    }
+                    return promptItemTemplate(option);
+                  }}
+                  loading={isLoading}
+                  placeholder="Select Prompt"
+                  emptyMessage="No prompts available"
+                  showClear={!!selectedPrompt}
+                />
+                
+                {selectedPrompt && (
+                  <Button
+                    label="Edit Prompt"
+                    icon="pi pi-pencil"
+                    className="p-button-outlined mt-2 w-full"
+                    onClick={() => {
+                      openPromptDialog();
+                      setChatOptionsSidebarVisible(false);
+                    }}
+                  />
+                )}
+              </div>
+              
+              <div className="option-group mt-4">
+                <Button
+                  label="New Chat"
+                  icon="pi pi-plus"
+                  className="p-button-primary w-full"
+                  onClick={() => {
+                    window.location.href = '/chat';
+                  }}
+                />
+              </div>
             </div>
           </div>
-        }
-        end={
-          <Button
-            label="New Chat"
-            icon="pi pi-plus"
-            className="p-button-sm"
-            onClick={() => {
-              // The simplest solution: reload the page
-              window.location.href = '/chat';
-            }}
-            tooltip="Start a new conversation"
-            tooltipOptions={{ position: 'left' }}
-          />
-        }
-      />
+        </Sidebar>
       
       <div style={{ flex: 1, minHeight: 0 }}>
         {showChat ? (

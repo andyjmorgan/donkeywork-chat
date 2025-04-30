@@ -8,6 +8,9 @@ import Home from './pages/Home';
 import Chat from './pages/chat/Chat';
 import Conversations from './pages/chat/Conversations';
 import Prompts from './pages/Prompts';
+import ActionPrompts from './pages/ActionPrompts';
+import Actions from './pages/Actions';
+import ActionLogs from './pages/ActionLogs';
 import Integrations from './pages/Integrations';
 import ApiKeys from './pages/ApiKeys';
 import IntegrationCallback from './pages/integrations/Callback';
@@ -81,7 +84,7 @@ const App: React.FC = () => {
           } />
           
           {/* Protected callback route (requires login) */}
-          <Route path="/integrations/callback/:provider" element={
+          <Route path="/integrations/protected-callback/:provider" element={
             <ProtectedRoute>
               <AppLayout>
                 <IntegrationCallback />
@@ -90,7 +93,7 @@ const App: React.FC = () => {
           } />
           
           {/* Unprotected callback route for direct OAuth returns */}
-          <Route path="/integrations/simple-callback/:provider" element={
+          <Route path="/integrations/callback/:provider" element={
             <SimpleCallback />
           } />
           
@@ -98,6 +101,30 @@ const App: React.FC = () => {
             <ProtectedRoute>
               <AppLayout>
                 <Prompts />
+              </AppLayout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/actionprompts" element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ActionPrompts />
+              </AppLayout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/actions" element={
+            <ProtectedRoute>
+              <AppLayout>
+                <Actions />
+              </AppLayout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/actionlogs" element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ActionLogs />
               </AppLayout>
             </ProtectedRoute>
           } />

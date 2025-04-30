@@ -17,9 +17,9 @@ public record GetPromptsItemModel
     public Guid Id { get; init; }
 
     /// <summary>
-    /// Gets the title.
+    /// Gets the Name.
     /// </summary>
-    public string Title { get; init; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
 
     /// <summary>
     /// Gets the description.
@@ -29,7 +29,7 @@ public record GetPromptsItemModel
     /// <summary>
     /// Gets the content.
     /// </summary>
-    public string Content { get; init; } = string.Empty;
+    public List<string> Content { get; init; } = [];
 
     /// <summary>
     /// Gets the usage count.

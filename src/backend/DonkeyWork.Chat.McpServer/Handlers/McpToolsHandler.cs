@@ -9,8 +9,8 @@ using System.Text.Json;
 using DonkeyWork.Chat.AiTooling.Base.Models;
 using DonkeyWork.Chat.AiTooling.Services;
 using DonkeyWork.Chat.Common.Contracts;
-using DonkeyWork.Chat.Common.Providers;
-using DonkeyWork.Chat.Common.UserContext;
+using DonkeyWork.Chat.Common.Models.Providers.Posture;
+using DonkeyWork.Chat.Common.Services.UserContext;
 using ModelContextProtocol.Protocol.Types;
 using ModelContextProtocol.Server;
 
@@ -75,10 +75,10 @@ public class McpToolsHandler(
            return ReturnErrorResult("Parameters not provided");
         }
 
-        var result = await tool.Tool.InvokeFunctionAsync(
+        var result = await tool.Tool?.InvokeFunctionAsync(
             context.Params.Name,
             context.Params.Arguments,
-            cancellationToken);
+            cancellationToken) !;
 
         return ReturnResultOrError(result);
     }

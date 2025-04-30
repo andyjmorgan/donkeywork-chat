@@ -12,7 +12,7 @@ using DonkeyWork.Chat.AiServices.Clients.Google.Configuration;
 using DonkeyWork.Chat.AiServices.Clients.OpenAi;
 using DonkeyWork.Chat.AiServices.Clients.OpenAi.Configuration;
 using DonkeyWork.Chat.AiServices.Services;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Chat.AiServices.Extensions;

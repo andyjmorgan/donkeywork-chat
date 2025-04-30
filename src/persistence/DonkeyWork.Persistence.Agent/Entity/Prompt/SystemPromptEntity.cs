@@ -4,12 +4,10 @@
 // </copyright>
 // ------------------------------------------------------
 
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DonkeyWork.Persistence.Common.Entity.Base;
 
 // ReSharper disable EntityFramework.ModelValidation.UnlimitedStringLength
-namespace DonkeyWork.Persistence.Agents.Entity.Prompt;
+namespace DonkeyWork.Persistence.Agent.Entity.Prompt;
 
 /// <summary>
 /// Gets the prompt entity.
@@ -19,6 +17,6 @@ public class SystemPromptEntity : BasePromptEntity
     /// <summary>
     /// Gets or sets the text of the prompt.
     /// </summary>
-    [Column("jsonb")]
+    [Column(TypeName = "jsonb")]
     public List<string> Content { get; set; } = [];
 }

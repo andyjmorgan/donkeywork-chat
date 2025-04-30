@@ -1,4 +1,5 @@
 import type { TokenUsage } from "../../api/stream/Chat/TokenUsage";
+import type { ChatStartFragment } from "../../api/stream/Chat/ChatFragment";
 import type { ToolCall } from "../../api/stream/Tool/ToolCall";
 import type { ToolResult } from "../../api/stream/Tool/ToolResult";
 
@@ -30,6 +31,12 @@ export interface StreamChatOptions {
    * Callback when the request starts
    */
   onStart?: (executionId: string) => void;
+  
+  /**
+   * Callback when the chat start fragment is received
+   * Contains model information
+   */
+  onChatStart?: (startFragment: ChatStartFragment) => void;
   
   /**
    * Callback when a new content fragment is received

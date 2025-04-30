@@ -4,6 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
+using System.Text.Json.Serialization;
 using DonkeyWork.Chat.Common.Models.Prompt.Content;
 
 namespace DonkeyWork.Chat.Common.Models.Prompt;
@@ -16,6 +17,7 @@ public class PromptMessage
     /// <summary>
     /// Gets or sets the unique identifier of the prompt message.
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public MessageOwner Role { get; set; }
 
     /// <summary>

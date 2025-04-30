@@ -12,14 +12,17 @@ using System.Text.Json.Serialization;
 using DonkeyWork.Chat.AiTooling.Attributes;
 using DonkeyWork.Chat.AiTooling.Base.Models;
 using DonkeyWork.Chat.AiTooling.Exceptions;
-using DonkeyWork.Chat.Common.Providers;
+using DonkeyWork.Chat.Common.Models.Providers.Posture;
+using DonkeyWork.Chat.Common.Models.Providers.Tools;
+using Microsoft.Extensions.Logging;
 
 namespace DonkeyWork.Chat.AiTooling.Base;
 
 /// <summary>
 /// A base tool implementation.
 /// </summary>
-public class Tool : ITool
+public class Tool(ILogger<Tool> logger)
+    : ITool
 {
     /// <inheritdoc />
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1101:Prefix local calls with this", Justification = "Record")]
@@ -36,9 +39,12 @@ public class Tool : ITool
         }
 
         var genericProviderAttribute = toolType.GetCustomAttribute<GenericToolProviderAttribute>();
-        if (genericProviderAttribute is not null && userProviderPosture.GenericIntegrations.All(x => x.ProviderType != genericProviderAttribute.ProviderType))
+        if (genericProviderAttribute is not null && genericProviderAttribute.ProviderType != ToolProviderType.BuiltIn)
         {
-            return [];
+            if (userProviderPosture.GenericIntegrations.All(x => x.ProviderType != genericProviderAttribute.ProviderType))
+            {
+                return [];
+            }
         }
 
         var methods = toolType.GetMethods().Where(x => x.GetCustomAttribute<ToolFunctionAttribute>() is not null);
@@ -50,11 +56,21 @@ public class Tool : ITool
                 continue;
             }
 
+            var toolProvider = GetToolProvider(toolType);
+            var applicationAttribute = toolType.GetCustomAttribute<ToolProviderApplicationTypeAttribute>();
+
+            if (applicationAttribute is null)
+            {
+                throw new NotImplementedException($"toolProvider or ToolProviderApplicationType is required on {toolType.Name} - {method.Name}");
+            }
+
             ToolDefinition toolDefinition = new ToolDefinition
             {
                 Name = method.Name,
                 Description = method.GetCustomAttribute<DescriptionAttribute>()?.Description ?? string.Empty,
                 Tool = this,
+                Provider = toolProvider,
+                Application = applicationAttribute.ProviderApplicationType,
             };
 
             var parameters = method.GetParameters()
@@ -111,12 +127,14 @@ public class Tool : ITool
     /// <inheritdoc />
     public virtual async Task<JsonDocument?> InvokeFunctionAsync(string functionName, JsonDocument arguments, CancellationToken cancellationToken = default)
     {
+        logger.LogInformation($"Invoking function {functionName} With Arguments: {arguments.RootElement.GetRawText()}");
         var method = this.GetType().GetMethods()
             .FirstOrDefault(x => x.GetCustomAttribute<ToolFunctionAttribute>() != null
                                  && x.Name == functionName);
 
         if (method == null)
         {
+            logger.LogError($"Function {functionName} not found.");
             throw new InvalidOperationException($"Function {functionName} not found.");
         }
 
@@ -155,6 +173,8 @@ public class Tool : ITool
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, $"Error deserializing arguments for function {functionName}");
+
             // Return this error to the llm and attempt to allow it to self correct.
             return JsonDocument.Parse(JsonSerializer.Serialize(new
             {
@@ -201,12 +221,14 @@ public class Tool : ITool
         IReadOnlyDictionary<string, JsonElement>? arguments,
         CancellationToken cancellationToken = default)
     {
+        logger.LogInformation($"Invoking function {functionName} With Arguments: {JsonSerializer.Serialize(arguments)}");
         var method = this.GetType().GetMethods()
             .FirstOrDefault(x => x.GetCustomAttribute<ToolFunctionAttribute>() != null
                                  && x.Name == functionName);
 
         if (method == null)
         {
+            logger.LogError($"Function {functionName} not found.");
             throw new InvalidOperationException($"Function {functionName} not found.");
         }
 
@@ -220,6 +242,7 @@ public class Tool : ITool
                 var param = parameters[i];
                 if (param.Name is null)
                 {
+                    logger.LogError($"Parameter {param.Name} not found in {functionName}.");
                     throw new ToolParameterMissingException(param.Name ?? "Unknown Name");
                 }
 
@@ -229,12 +252,13 @@ public class Tool : ITool
                     continue;
                 }
 
-                if (arguments.TryGetValue(param.Name, out var element))
+                if (arguments!.TryGetValue(param.Name, out var element))
                 {
                     parameterValues[i] = DeserializeParameter(element, param.ParameterType);
                 }
                 else if (!param.IsOptional)
                 {
+                    logger.LogError($"Parameter {param.Name} not found in {functionName}.");
                     throw new ToolArgumentMissingException(param.Name ?? "Unknown Name");
                 }
                 else
@@ -245,6 +269,8 @@ public class Tool : ITool
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, $"Error deserializing arguments for function {functionName}");
+
             // Return this error to the llm and attempt to allow it to self correct.
             return JsonDocument.Parse(JsonSerializer.Serialize(new
             {
@@ -273,6 +299,7 @@ public class Tool : ITool
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, $"Error invoking function {functionName}");
             return JsonDocument.Parse(JsonSerializer.Serialize(
                 new
                 {
@@ -283,6 +310,36 @@ public class Tool : ITool
         }
 
         return null;
+    }
+
+    /// <inheritdoc />
+    public object CreateTaskResponse(string functionName, bool successful, Dictionary<string, string>? metadata = null, string? errorMessage = null)
+    {
+        return new
+        {
+            FunctionName = functionName,
+            Success = successful,
+            Completed = true,
+            Metadata = metadata,
+            ErrorMessage = errorMessage,
+        };
+    }
+
+    private static ToolProviderType GetToolProvider(Type type)
+    {
+        var genericToolProviderAttribute = type.GetCustomAttribute<GenericToolProviderAttribute>();
+        if (genericToolProviderAttribute is not null)
+        {
+            return genericToolProviderAttribute.ProviderType;
+        }
+
+        var oAuthToolProviderAttribute = type.GetCustomAttribute<OAuthToolProviderAttribute>();
+        if (oAuthToolProviderAttribute is not null)
+        {
+            return oAuthToolProviderAttribute.ProviderType;
+        }
+
+        throw new NotImplementedException($"toolProvider or ToolProviderApplicationType is required on {type.Name}");
     }
 
     private static JsonDocument? CreateJsonDocument(object? result)
@@ -298,6 +355,7 @@ public class Tool : ITool
     private static ToolFunctionParameterDefinition GetJsonSchema(Type type)
     {
         Type actualType = Nullable.GetUnderlyingType(type) ?? type;
+
         // Handle enums at the schema creation level
         if (actualType.IsEnum)
         {

@@ -1,0 +1,12 @@
+.execution-failed {
+  background-color: rgba(var(--red-500), 0.1) !important;
+}
+
+.p-datatable .p-datatable-tbody > tr.execution-failed:nth-child(even) {
+  background-color: rgba(var(--red-500), 0.05) !important;
+}
+
+/* Add a subtle hover effect on rows */
+.p-datatable .p-datatable-tbody > tr:hover {
+  background-color: rgba(var(--primary-color), 0.05) !important;
+}

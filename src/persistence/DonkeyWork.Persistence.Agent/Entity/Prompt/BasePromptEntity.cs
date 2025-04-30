@@ -7,7 +7,7 @@
 using System.ComponentModel.DataAnnotations;
 using DonkeyWork.Persistence.Common.Entity.Base;
 
-namespace DonkeyWork.Persistence.Agents.Entity.Prompt;
+namespace DonkeyWork.Persistence.Agent.Entity.Prompt;
 
 /// <summary>
 /// A base prompt entity.
