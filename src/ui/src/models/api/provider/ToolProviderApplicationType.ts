@@ -1,3 +1,5 @@
+import { ToolProviderType } from './ToolProviderType';
+
 export enum ToolProviderApplicationType {
   GoogleIdentity = 'GoogleIdentity',
   GoogleDrive = 'GoogleDrive',
@@ -20,4 +22,5 @@ export interface ToolProviderApplicationDefinition {
   name: string;
   description: string;
   icon: string;
+  scopes?: string[];
 }

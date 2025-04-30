@@ -1,0 +1,54 @@
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-icon {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.action-details {
+  background-color: var(--surface-ground);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.action-details h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.action-details p {
+  margin: 0 0 0.5rem 0;
+  line-height: 1.5;
+}
+
+/* Success state styling */
+.execution-success-icon {
+  font-size: 3rem;
+  color: var(--green-500);
+  margin-bottom: 1rem;
+}
+
+/* Progress spinner container */
+.execution-progress-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.execution-progress-container h3 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.execution-progress-container p {
+  text-align: center;
+  color: var(--text-color-secondary);
+}

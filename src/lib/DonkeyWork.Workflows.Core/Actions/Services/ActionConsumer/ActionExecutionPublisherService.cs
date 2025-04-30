@@ -19,19 +19,15 @@ public sealed class ActionExecutionPublisherService : IActionExecutionPublisherS
     /// </summary>
     private readonly IActionExecutionHostService hostService;
 
-    private readonly IActionExecutionRepository executionRepository;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ActionExecutionPublisherService"/> class.
     /// </summary>
     /// <param name="hostService">The host service that manages worker tasks and the central queue.</param>
-    /// <param name="executionRepository">The execution repository.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="hostService"/> is null.</exception>
-    public ActionExecutionPublisherService(IActionExecutionHostService hostService, IActionExecutionRepository executionRepository)
+    public ActionExecutionPublisherService(IActionExecutionHostService hostService)
     {
         this.hostService = hostService ??
                             throw new ArgumentNullException(nameof(hostService));
-        this.executionRepository = executionRepository;
     }
 
     /// <inheritdoc />

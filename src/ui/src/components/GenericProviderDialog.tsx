@@ -73,7 +73,7 @@ const GenericProviderDialog: React.FC<GenericProviderDialogProps> = ({
       console.error("Failed to load provider configuration:", error);
       // Initialize a default config if none exists
       setConfig({
-        providerType,
+        providerType: providerType as GenericProviderType,
         isEnabled: false,
         properties: {}
       });

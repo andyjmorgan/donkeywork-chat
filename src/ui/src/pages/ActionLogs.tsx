@@ -133,7 +133,7 @@ const ActionLogs: React.FC = () => {
 
   // Template for status column
   const statusTemplate = (rowData: ActionExecutionItem) => {
-    let severity;
+    let severity: 'success' | 'info' | 'secondary' | 'contrast' | 'warning' | 'danger' | null | undefined = 'secondary';
     
     switch (rowData.executionStatus) {
       case ActionExecutionStatus.Completed:

@@ -50,6 +50,12 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
   const [selectedProvider, setSelectedProvider] = useState<string>('');
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [parameters, setParameters] = useState<Record<string, string>>({}); // Dictionary for model parameters
+  // Temporary state for parameter being edited to preserve focus
+  const [parameterBeingEdited, setParameterBeingEdited] = useState<{
+    originalKey: string;
+    currentKey: string;
+    value: string;
+  } | null>(null);
   
   const [saving, setSaving] = useState(false);
   const [nameError, setNameError] = useState('');
@@ -125,7 +131,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
 
   // Template for status column
   const statusTemplate = (rowData: ActionExecutionItem) => {
-    let severity;
+    let severity: 'success' | 'info' | 'secondary' | 'contrast' | 'warning' | 'danger' | null | undefined = 'secondary';
     
     switch (rowData.executionStatus) {
       case ActionExecutionStatus.Completed:
@@ -232,7 +238,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
     // If a provider is selected, a model should also be selected
     const modelValid = !selectedProvider || (selectedProvider && selectedModel);
     
-    return basicValid && modelValid;
+    return Boolean(basicValid && modelValid);
   }, [name, description, selectedProvider, selectedModel]);
 
   // Update form validity when any required field changes
@@ -411,7 +417,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
     if (!editAction || !toolOptions.length) return;
     
     // Convert from enum values to our custom values
-    const toolsArray = editAction.allowedTools || editAction.toolProviderApplicationTypes || [];
+    const toolsArray = editAction.allowedTools || [];
     
     if (toolsArray.length === 0) {
       return;
@@ -457,7 +463,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
       return tool;
     });
     
-    setAllowedTools(mappedTools);
+    setAllowedTools(mappedTools as ToolProviderApplicationType[]);
   }, [toolOptions, editAction]);
 
   // Reset form when the dialog is opened or editAction changes
@@ -499,6 +505,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
         setSelectedProvider('');
         setSelectedModel('');
         setParameters({});
+        setParameterBeingEdited(null);
         // Clear executions when creating a new action
         setExecutions([]);
         setExecutionsCount(0);
@@ -582,7 +589,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
         icon: icon.trim() || undefined,
         systemPromptIds: systemPromptIds,
         userPromptIds: userPromptIds,
-        allowedTools: toolApplicationTypes,
+        allowedTools: toolApplicationTypes as ToolProviderApplicationType[],
         actionModelConfiguration: backendModelConfig || { 
           providerType: '',
           modelName: '',
@@ -762,7 +769,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
                         <i className="pi pi-box mr-2" style={{ fontSize: '1rem' }}></i>}
                       <span>{option.label}</span>
                       <span className="ml-auto text-color-secondary">
-                        ({option.items.filter(item => item.isConnected).length})
+                        ({option.items.filter((item: any) => item.isConnected).length})
                       </span>
                     </div>
                   )}
@@ -865,57 +872,167 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
                   </div>
                   
                   {/* Show existing parameters */}
-                  {Object.entries(parameters).map(([key, value]) => (
-                    <div className="grid mb-2 align-items-center" key={key}>
-                      <div className="col-5">
-                        <InputText
-                          value={key}
-                          onChange={(e) => {
-                            // Create a new parameters object with the updated key
-                            const newKey = e.target.value;
-                            if (newKey && newKey !== key) {
+                  {Object.entries(parameters).map(([key, value], index) => {
+                    // Handle special case for the parameter being edited
+                    const isBeingEdited = parameterBeingEdited?.originalKey === key;
+                    
+                    // Render a different input when being edited
+                    if (isBeingEdited) {
+                      return (
+                        <div className="grid mb-2 align-items-center" key={`editing-param-${index}`}>
+                          <div className="col-5">
+                            <InputText
+                              value={parameterBeingEdited.currentKey}
+                              onChange={(e) => {
+                                setParameterBeingEdited({
+                                  ...parameterBeingEdited,
+                                  currentKey: e.target.value
+                                });
+                              }}
+                              onBlur={() => {
+                                if (parameterBeingEdited.currentKey.trim()) {
+                                  // Apply changes to the parameters object
+                                  const newParams: Record<string, string> = {};
+                                  Object.entries(parameters).forEach(([k, v]) => {
+                                    if (k === parameterBeingEdited.originalKey) {
+                                      // Use the new key and value
+                                      newParams[parameterBeingEdited.currentKey.trim()] = parameterBeingEdited.value;
+                                    } else {
+                                      newParams[k] = v;
+                                    }
+                                  });
+                                  setParameters(newParams);
+                                }
+                                setParameterBeingEdited(null);
+                                setIsFormValid(checkFormValidity());
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  (e.target as HTMLInputElement).blur();
+                                }
+                              }}
+                              autoFocus
+                              className="w-full"
+                              placeholder="parameter"
+                              disabled={saving}
+                            />
+                          </div>
+                          <div className="col-6">
+                            <InputText
+                              value={parameterBeingEdited.value}
+                              onChange={(e) => {
+                                setParameterBeingEdited({
+                                  ...parameterBeingEdited,
+                                  value: e.target.value
+                                });
+                              }}
+                              onBlur={() => {
+                                if (parameterBeingEdited.currentKey.trim()) {
+                                  // Apply changes to the parameters object
+                                  const newParams: Record<string, string> = {};
+                                  Object.entries(parameters).forEach(([k, v]) => {
+                                    if (k === parameterBeingEdited.originalKey) {
+                                      // Use the new key and value
+                                      newParams[parameterBeingEdited.currentKey.trim()] = parameterBeingEdited.value;
+                                    } else {
+                                      newParams[k] = v;
+                                    }
+                                  });
+                                  setParameters(newParams);
+                                }
+                                setParameterBeingEdited(null);
+                                setIsFormValid(checkFormValidity());
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  (e.target as HTMLInputElement).blur();
+                                }
+                              }}
+                              className="w-full"
+                              placeholder="value"
+                              disabled={saving}
+                            />
+                          </div>
+                          <div className="col-1 text-center">
+                            <Button
+                              icon="pi pi-trash"
+                              className="p-button-text p-button-danger p-button-rounded"
+                              onClick={() => {
+                                // Create a new object without the deleted key
+                                const newParams: Record<string, string> = {};
+                                Object.entries(parameters).forEach(([k, v]) => {
+                                  if (k !== parameterBeingEdited.originalKey) {
+                                    newParams[k] = v;
+                                  }
+                                });
+                                setParameters(newParams);
+                                setParameterBeingEdited(null);
+                                setIsFormValid(checkFormValidity());
+                              }}
+                              disabled={saving}
+                            />
+                          </div>
+                        </div>
+                      );
+                    }
+                    
+                    // Regular display when not being edited
+                    return (
+                      <div className="grid mb-2 align-items-center" key={`param-${index}-${key}`}>
+                        <div className="col-5">
+                          <InputText
+                            value={key}
+                            onClick={() => {
+                              // When clicked, start editing this parameter
+                              setParameterBeingEdited({
+                                originalKey: key,
+                                currentKey: key,
+                                value: value
+                              });
+                            }}
+                            readOnly
+                            className="w-full cursor-text"
+                            placeholder="parameter"
+                            disabled={saving}
+                          />
+                        </div>
+                        <div className="col-6">
+                          <InputText
+                            value={value}
+                            onChange={(e) => {
+                              const newValue = e.target.value;
+                              // Update just the value
                               const newParams = { ...parameters };
-                              // Copy value to new key and delete old key
-                              newParams[newKey] = parameters[key];
-                              delete newParams[key];
+                              newParams[key] = newValue;
                               setParameters(newParams);
                               setIsFormValid(checkFormValidity());
-                            }
-                          }}
-                          className="w-full"
-                          placeholder="parameter"
-                          disabled={saving}
-                        />
+                            }}
+                            className="w-full"
+                            placeholder="value"
+                            disabled={saving}
+                          />
+                        </div>
+                        <div className="col-1 text-center">
+                          <Button
+                            icon="pi pi-trash"
+                            className="p-button-text p-button-danger p-button-rounded"
+                            onClick={() => {
+                              // Create a new object without the deleted key
+                              const newParams: Record<string, string> = {};
+                              Object.entries(parameters).forEach(([k, v]) => {
+                                if (k !== key) {
+                                  newParams[k] = v;
+                                }
+                              });
+                              setParameters(newParams);
+                              setIsFormValid(checkFormValidity());
+                            }}
+                            disabled={saving}
+                          />
+                        </div>
                       </div>
-                      <div className="col-6">
-                        <InputText
-                          value={value}
-                          onChange={(e) => {
-                            const newParams = { ...parameters };
-                            newParams[key] = e.target.value;
-                            setParameters(newParams);
-                            setIsFormValid(checkFormValidity());
-                          }}
-                          className="w-full"
-                          placeholder="value"
-                          disabled={saving}
-                        />
-                      </div>
-                      <div className="col-1 text-center">
-                        <Button
-                          icon="pi pi-trash"
-                          className="p-button-text p-button-danger p-button-rounded"
-                          onClick={() => {
-                            const newParams = { ...parameters };
-                            delete newParams[key];
-                            setParameters(newParams);
-                            setIsFormValid(checkFormValidity());
-                          }}
-                          disabled={saving}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   
                   {/* Add parameter button */}
                   <Button
@@ -924,16 +1041,23 @@ const ActionDialog: React.FC<ActionDialogProps> = ({ visible, onHide, onSave, ed
                     className="p-button-outlined p-button-secondary mt-2"
                     onClick={() => {
                       // Generate a unique key for the new parameter
-                      let newKey = 'parameter';
+                      let newKey = '';
                       let counter = 1;
-                      while (newKey in parameters) {
-                        newKey = `parameter${counter}`;
+                      while (newKey in parameters || newKey === '') {
+                        newKey = `param${counter}`;
                         counter++;
                       }
                       
-                      setParameters({
-                        ...parameters,
-                        [newKey]: ''
+                      // Add the parameter to the state
+                      const newParams = { ...parameters };
+                      newParams[newKey] = '';
+                      setParameters(newParams);
+                      
+                      // Immediately enter edit mode for the new parameter
+                      setParameterBeingEdited({
+                        originalKey: newKey,
+                        currentKey: newKey,
+                        value: ''
                       });
                     }}
                     disabled={saving}

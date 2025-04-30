@@ -4,6 +4,7 @@ import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Toast } from 'primereact/toast';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import './ActionExecuteDialog.css'; // Import CSS file
 import { actionExecutionService } from '../../../services/api/actionExecutionService';
 import { ActionItem } from '../../../models/api/Action';
 
@@ -110,7 +111,7 @@ const ActionExecuteDialog: React.FC<ActionExecuteDialogProps> = ({ visible, onHi
       <Dialog
         header={
           <div className="dialog-header">
-            <i className="pi pi-play-circle header-icon" style={{ color: 'var(--primary-color)' }}></i>
+            <i className="pi pi-play-circle header-icon"></i>
             <span>Execute Action: {action?.name}</span>
           </div>
         }
@@ -124,14 +125,14 @@ const ActionExecuteDialog: React.FC<ActionExecuteDialogProps> = ({ visible, onHi
         dismissableMask={false}
       >
         {executing ? (
-          <div className="flex align-items-center justify-content-center flex-column p-5">
+          <div className="execution-progress-container">
             <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="4" animationDuration=".5s" />
-            <h3 className="mt-3">Executing action...</h3>
-            <p className="text-center text-color-secondary">Please wait while the action is being executed.</p>
+            <h3>Executing action...</h3>
+            <p>Please wait while the action is being executed.</p>
           </div>
         ) : executionId ? (
           <div className="p-3 text-center">
-            <i className="pi pi-check-circle" style={{ fontSize: '3rem', color: 'var(--green-500)' }}></i>
+            <i className="pi pi-check-circle execution-success-icon"></i>
             <h3>Action executed successfully!</h3>
             <p>Execution ID: <code>{executionId}</code></p>
           </div>
@@ -169,11 +170,11 @@ const ActionExecuteDialog: React.FC<ActionExecuteDialogProps> = ({ visible, onHi
               )}
             </div>
             
-            <div className="action-details mt-4 p-3 border-1 surface-border border-round">
-              <h3 className="mt-0 mb-2">Action Details</h3>
-              <p className="m-0 mb-2"><strong>Name:</strong> {action?.name}</p>
-              <p className="m-0 mb-2"><strong>Description:</strong> {action?.description}</p>
-              <p className="m-0"><strong>Provider:</strong> {action?.actionModelConfiguration?.providerType || 'Default'}</p>
+            <div className="action-details border-1 surface-border">
+              <h3>Action Details</h3>
+              <p><strong>Name:</strong> {action?.name}</p>
+              <p><strong>Description:</strong> {action?.description}</p>
+              <p><strong>Provider:</strong> {action?.actionModelConfiguration?.providerType || 'Default'}</p>
             </div>
           </div>
         )}

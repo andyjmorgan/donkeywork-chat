@@ -61,7 +61,9 @@ class ProviderService extends ApiBase {
         // Collect scopes from all applications
         Object.values(provider.applications).forEach(app => {
           if (app.application) {
-            scopes.push(...(app.scopes || []));
+            // Safe access to scopes with fallback to empty array
+            const appScopes = (app as any).scopes || [];
+            scopes.push(...appScopes);
           }
         });
         

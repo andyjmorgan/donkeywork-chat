@@ -438,7 +438,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         onClick={() => navigate('/')}
         style={{ cursor: 'pointer' }}
       >
-        <img src="https://chatbot.donkeywork.dev/src/assets/donkeywork-icon-40.png" alt="DonkeyWork Logo" className="mr-2" style={{ height: '28px', width: 'auto' }} />
+        <img src="/images/donkeywork.png" alt="DonkeyWork Logo" className="mr-2" style={{ height: '28px', width: 'auto' }} />
         <h2 className="m-0 text-lg">DonkeyWork</h2>
       </div>
       
@@ -452,7 +452,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           transform: 'translateX(-50%)'
         }}
       >
-        <img src="https://chatbot.donkeywork.dev/src/assets/donkeywork-icon-40.png" alt="DonkeyWork Logo" className="mr-2" style={{ height: '28px', width: 'auto' }} />
+        <img src="/images/donkeywork.png" alt="DonkeyWork Logo" className="mr-2" style={{ height: '28px', width: 'auto' }} />
         <h2 className="m-0 text-lg">DonkeyWork</h2>
       </div>
       
@@ -537,7 +537,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           }}
           icons={
             <div className="flex align-items-center">
-              <img src="https://chatbot.donkeywork.dev/src/assets/donkeywork-icon-40.png" alt="DonkeyWork Logo" className="mr-2" style={{ height: '28px', width: 'auto' }} />
+              <img src="/images/donkeywork.png" alt="DonkeyWork Logo" className="mr-2" style={{ height: '28px', width: 'auto' }} />
               <span className="text-lg font-medium">DonkeyWork</span>
             </div>
           }

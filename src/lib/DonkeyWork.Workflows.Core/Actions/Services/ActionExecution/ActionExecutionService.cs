@@ -41,13 +41,8 @@ public class ActionExecutionService : IActionExecutionService
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<BaseStreamItem> ExecuteActionAsync(ActionExecutionItem actionItem, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<BaseStreamItem> ExecuteActionAsync(ActionExecutionItem actionItem, string? userInput, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        // Pull the client.
-        // hydrate the messages.
-        // Send the messages to the client.
-        // Collect the results.
-        // Set the result.
         var chatClient = this.chatProviderFactory.CreateChatClient(actionItem.ActionModelConfiguration.ProviderType);
         yield return new RequestStart()
         {
@@ -72,6 +67,15 @@ public class ActionExecutionService : IActionExecutionService
             Content = ((TextContent)x.Content).Text,
             Role = x.Role == MessageOwner.Assistant ? GenericMessageRole.Assistant : GenericMessageRole.User,
         }));
+
+        if (!string.IsNullOrWhiteSpace(userInput))
+        {
+            request.Messages.Add(new GenericChatMessage()
+            {
+                Content = userInput,
+                Role = GenericMessageRole.User,
+            });
+        }
 
         Stopwatch stopWatch = Stopwatch.StartNew();
         await foreach (var streamItem in chatClient.ChatAsync(

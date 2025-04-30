@@ -87,7 +87,7 @@ public class ActionOrchestratorService : IActionOrchestratorService
             await this.actionExecutionRepository.SetTaskRunningAsync(actionExecutionId, token);
             try
             {
-                await foreach (var result in this.actionExecutionService.ExecuteActionAsync(action, token))
+                await foreach (var result in this.actionExecutionService.ExecuteActionAsync(action, actionExecutionRequest.ActionInput, token))
                 {
                     results.Add(result);
                     if (result is ExceptionResult exceptionResult)

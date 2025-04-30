@@ -18,9 +18,11 @@ public interface IActionExecutionService
     /// Executes an action asynchronously.
     /// </summary>
     /// <param name="actionItem">The action item.</param>
+    /// <param name="userInput">The user input.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public IAsyncEnumerable<BaseStreamItem> ExecuteActionAsync(
         ActionExecutionItem actionItem,
+        string userInput,
         CancellationToken cancellationToken = default);
 }
