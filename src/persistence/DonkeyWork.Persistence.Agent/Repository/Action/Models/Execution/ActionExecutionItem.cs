@@ -47,5 +47,5 @@ public class ActionExecutionItem
     /// <summary>
     /// Gets or sets the action model configuration.
     /// </summary>
-    required public ActionModelConfiguration ActionModelConfiguration { get; set; }
+    required public ModelConfiguration ModelConfiguration { get; set; }
 }

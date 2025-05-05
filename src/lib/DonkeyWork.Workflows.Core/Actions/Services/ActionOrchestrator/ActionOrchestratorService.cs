@@ -140,7 +140,7 @@ public class ActionOrchestratorService : IActionOrchestratorService
         {
             List<BaseStreamItem> results = [];
 
-            await foreach (var result in this.actionExecutionService.ExecuteActionAsync(action, cancellationToken))
+            await foreach (var result in this.actionExecutionService.ExecuteActionAsync(action, actionExecutionRequest.ActionInput, cancellationToken))
             {
                 results.Add(result);
                 yield return result;

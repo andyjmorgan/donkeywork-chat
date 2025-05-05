@@ -4,9 +4,9 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Persistence.Agent.Entity.Agent.Models;
+using DonkeyWork.Chat.Common.Models.Agents.Models;
 
-namespace DonkeyWork.Persistence.Agent.Entity.Agent.Metadata;
+namespace DonkeyWork.Chat.Common.Models.Agents.Metadata;
 
 /// <summary>
 /// Gets or sets the agent condition node metadata.

@@ -55,7 +55,7 @@ namespace DonkeyWork.Persistence.Agent.Migrations
                 {
                     b.HasBaseType("DonkeyWork.Persistence.Common.Entity.Base.BaseUserEntity");
 
-                    b.Property<ActionModelConfiguration>("ActionModelConfiguration")
+                    b.Property<ModelConfiguration>("ActionModelConfiguration")
                         .IsRequired()
                         .HasColumnType("jsonb");
 

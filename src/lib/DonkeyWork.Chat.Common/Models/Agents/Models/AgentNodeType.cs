@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-namespace DonkeyWork.Persistence.Agent.Entity.Agent.Models;
+namespace DonkeyWork.Chat.Common.Models.Agents.Models;
 
 /// <summary>
 /// An agent node type.

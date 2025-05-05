@@ -1,0 +1,348 @@
+.custom-node {
+  padding: 10px;
+  border-radius: 4px;
+  width: 150px;
+  font-size: 12px;
+  color: var(--text-color);
+  text-align: center;
+  border: 1px solid var(--primary-color, #6366F1);
+  background: var(--surface-card, #f8f9fa);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Removed selected styling */
+
+.input-node {
+  /*border-left: 5px solid #6366F1;*/
+}
+
+.model-node {
+  /*border-left: 5px solid #22C55E;*/
+}
+
+.output-node {
+  /*border-left: 5px solid #EF4444;*/
+}
+
+.string-formatter-node {
+  /*border-left: 5px solid #F59E0B;*/
+}
+
+.conditional-node {
+  padding: 10px 10px 40px 10px !important;  /* Increased bottom padding for handles */
+  width: 200px !important;
+  position: relative;
+}
+
+/* Removed conditional node selected styling */
+
+.conditional-node .node-content {
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.node-content {
+  position: relative; /* Needed for absolute positioning of child elements */
+  cursor: pointer;
+  padding: 0 2px 2px 2px; /* Add some padding to prevent content from touching edges */
+  min-height: 40px; /* Ensure enough space for model info + metadata */
+}
+
+.conditional-node .condition-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0;
+  position: relative;
+}
+
+.conditional-node .condition-item {
+  padding: 4px 8px;
+  border-radius: 3px;
+  background-color: var(--surface-card, #EEF2FF);
+  position: relative;
+  border-left: 2px solid var(--primary-color, #6366F1);
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+.conditional-node .more-conditions {
+  border-left: 2px solid var(--orange-500, #f59e0b);
+  background-color: var(--surface-hover, #f9fafb);
+}
+
+.conditional-node .condition-expression {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.conditional-node .condition-index {
+  font-weight: bold;
+  color: var(--primary-color, #4F46E5);
+  font-size: 11px;
+  display: inline-block;
+  min-width: 16px;
+  text-align: center;
+}
+
+.more-conditions .condition-index {
+  color: var(--orange-500, #f59e0b);
+}
+
+.conditional-node .condition-expression code {
+  font-family: monospace;
+  background-color: transparent;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conditional-node .condition-empty {
+  padding: 8px;
+  color: var(--text-color-secondary, #6B7280);
+  font-style: italic;
+  font-size: 11px;
+  text-align: center;
+  background-color: var(--surface-card, #EEF2FF);
+  border-radius: 3px;
+  border: 1px dashed var(--surface-border, #C7D2FE);
+}
+
+/* New styles for the output handles section */
+.conditional-node .output-handles {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 0;
+  border-top: 1px solid var(--surface-border, #C7D2FE);
+  background-color: var(--surface-section, #EEF2FF);
+  border-radius: 0 0 4px 4px;
+}
+
+.conditional-node .output-handle-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.conditional-node .output-handle-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-color, #4338CA);
+  text-align: center;
+  margin-bottom: 3px;
+  background-color: var(--surface-card, #E0E7FF);
+  border-radius: 4px;
+  padding: 2px 6px;
+  border: 1px solid var(--surface-border, #C7D2FE);
+  white-space: nowrap;
+}
+
+.template-preview {
+  margin-top: 8px;
+  padding: 4px;
+  background-color: var(--surface-card, #e9ecef);
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 10px;
+  color: var(--text-color);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 1px solid var(--surface-border);
+}
+
+/* Model node styles */
+.model-info {
+  margin: 5px 0;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  min-height: 40px; /* Ensure space for content and metadata */
+}
+
+.model-name {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--primary-color);
+  background-color: var(--surface-hover);
+  padding: 3px 5px;
+  border-radius: 3px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2px; /* Reduced margin since we're using natural flow now */
+}
+
+.model-streaming {
+  display: block;
+  font-size: 9px;
+  margin-top: 3px;
+  color: var(--text-color-secondary);
+}
+
+/* Container for metadata, centered at the bottom */
+.model-metadata-container {
+  padding: 2px;
+  margin-top: 5px; /* Add some space between model name and metadata */
+}
+
+.model-metadata {
+  display: flex;
+  justify-content: center; /* Changed back to center alignment */
+  gap: 6px; /* Keep icons closer together */
+  align-items: center;
+}
+
+.metadata-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Explicitly override any height that might be inherited */
+  height: auto !important;
+}
+
+.metadata-item i {
+  color: var(--text-color-secondary);
+}
+
+/* Simple count display */
+.metadata-count {
+  font-size: 10px;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+.metadata-count.dynamic {
+  color: var(--orange-500, #f97316);
+}
+
+.empty-model-config {
+  padding: 8px;
+  color: var(--text-color-secondary, #6B7280);
+  font-style: italic;
+  font-size: 11px;
+  text-align: center;
+  background-color: var(--surface-card, #EEF2FF);
+  border-radius: 3px;
+  border: 1px dashed var(--surface-border, #C7D2FE);
+  cursor: pointer;
+}
+
+.provider-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  object-fit: contain;
+}
+
+.node-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.node-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.node-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.node-title {
+  font-weight: 600;
+  flex-grow: 1;
+  text-align: center;
+  cursor: default;
+}
+
+.node-title[title="Click to rename"] {
+  cursor: pointer;
+  position: relative;
+}
+
+.node-title[title="Click to rename"]:hover {
+  color: var(--primary-color, #4F46E5);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+}
+
+.react-flow__handle {
+  width: 8px;
+  height: 8px;
+  background-color: var(--primary-color, #6366F1);
+}
+
+.react-flow__handle-connecting {
+  background-color: var(--red-500, #ff6b6b);
+}
+
+.react-flow__handle-valid {
+  background-color: var(--green-500, #22C55E);
+}
+
+/* Validation styles */
+.invalid-node {
+  border: 1px solid var(--orange-500, #f59e0b) !important;
+}
+
+.validation-indicator {
+  cursor: help;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.validation-errors {
+  margin-top: 4px;
+  padding: 2px 4px;
+  background-color: var(--orange-100, #FFEDD5);
+  border-radius: 3px;
+  border: 1px solid var(--orange-500, #F59E0B);
+}
+
+.error-hint {
+  color: var(--orange-800, #B45309);
+  font-size: 9px;
+  text-align: center;
+  display: block;
+  margin: 0;
+}
+
+.validation-error-list {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.placeholder-text {
+  color: var(--text-color-secondary, #94a3b8);
+  font-style: italic;
+  font-size: 10px;
+}

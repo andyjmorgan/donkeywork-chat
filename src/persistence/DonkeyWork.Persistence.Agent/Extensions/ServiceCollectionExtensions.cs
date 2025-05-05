@@ -6,12 +6,12 @@
 
 using DonkeyWork.Persistence.Agent.Repository.Action;
 using DonkeyWork.Persistence.Agent.Repository.ActionExecution;
+using DonkeyWork.Persistence.Agent.Repository.Agent;
 using DonkeyWork.Persistence.Agent.Repository.Prompt;
 using DonkeyWork.Persistence.Common.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Quartz;
 
 namespace DonkeyWork.Persistence.Agent.Extensions;
 
@@ -33,7 +33,8 @@ public static class ServiceCollectionExtensions
         serviceCollection
             .AddScoped<IPromptRepository, PromptRepository>()
             .AddScoped<IActionRepository, ActionRepository>()
-            .AddScoped<IActionExecutionRepository, ActionExecutionRepository>();
+            .AddScoped<IActionExecutionRepository, ActionExecutionRepository>()
+            .AddScoped<IAgentRepository, AgentRepository>();
 
         return serviceCollection
             .AddScoped<CreatedOrUpdatedInterceptor>()

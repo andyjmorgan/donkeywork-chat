@@ -48,7 +48,7 @@ namespace DonkeyWork.Persistence.Agent.Migrations
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     Icon = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
-                    ActionModelConfiguration = table.Column<ActionModelConfiguration>(type: "jsonb", nullable: false),
+                    ActionModelConfiguration = table.Column<ModelConfiguration>(type: "jsonb", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },

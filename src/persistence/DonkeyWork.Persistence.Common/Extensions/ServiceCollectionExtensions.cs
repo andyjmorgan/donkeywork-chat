@@ -5,10 +5,7 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Persistence.Common.Contracts;
-using DonkeyWork.Persistence.Common.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DonkeyWork.Persistence.Common.Extensions;
 

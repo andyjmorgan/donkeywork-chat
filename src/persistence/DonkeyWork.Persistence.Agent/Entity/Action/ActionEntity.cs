@@ -55,5 +55,5 @@ public class ActionEntity : BaseUserEntity
     /// Gets or sets the action model configuration.
     /// </summary>
     [Column(TypeName = "jsonb")]
-    public ActionModelConfiguration ActionModelConfiguration { get; set; } = new ActionModelConfiguration();
+    public ModelConfiguration ModelConfiguration { get; set; } = new ModelConfiguration();
 }

@@ -218,6 +218,26 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       }
     },
     {
+      label: 'Agents',
+      icon: 'pi pi-sitemap',
+      command: () => {
+        navigate('/agents');
+        setMobileMenuVisible(false);
+      },
+      template: (item, options) => {
+        const active = location.pathname.includes('/agents');
+        return (
+          <a 
+            className={`${options.className} menu-item ${active ? 'active-route' : ''}`} 
+            onClick={options.onClick}
+          >
+            <span className={`${options.iconClassName} ${active ? 'text-purple-500' : 'text-primary'}`}></span>
+            <span className={options.labelClassName}>{item.label}</span>
+          </a>
+        );
+      }
+    },
+    {
       label: 'Integrations',
       icon: 'pi pi-link',
       command: () => {

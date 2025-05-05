@@ -6,7 +6,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace DonkeyWork.Persistence.Agent.Entity.Agent.Metadata;
+namespace DonkeyWork.Chat.Common.Models.Agents.Metadata;
 
 /// <summary>
 /// A base agent node metadata entity.
@@ -15,6 +15,8 @@ namespace DonkeyWork.Persistence.Agent.Entity.Agent.Metadata;
 [JsonDerivedType(typeof(AgentModelNodeMetadata), nameof(AgentModelNodeMetadata))]
 [JsonDerivedType(typeof(AgentStringFormatterNodeMetadata), nameof(AgentStringFormatterNodeMetadata))]
 [JsonDerivedType(typeof(AgentConditionNodeMetadata), nameof(AgentConditionNodeMetadata))]
+[JsonDerivedType(typeof(AgentInputNodeMetadata), nameof(AgentInputNodeMetadata))]
+[JsonDerivedType(typeof(AgentOutputNodeMetadata), nameof(AgentOutputNodeMetadata))]
 public abstract class AgentNodeBaseMetadata
 {
 }

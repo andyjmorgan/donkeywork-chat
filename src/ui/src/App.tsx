@@ -11,6 +11,8 @@ import Prompts from './pages/Prompts';
 import ActionPrompts from './pages/ActionPrompts';
 import Actions from './pages/Actions';
 import ActionLogs from './pages/ActionLogs';
+import Agents from './pages/Agents';
+import AgentEditor from './pages/agents/AgentEditor';
 import Integrations from './pages/Integrations';
 import ApiKeys from './pages/ApiKeys';
 import IntegrationCallback from './pages/integrations/Callback';
@@ -125,6 +127,30 @@ const App: React.FC = () => {
             <ProtectedRoute>
               <AppLayout>
                 <ActionLogs />
+              </AppLayout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/agents" element={
+            <ProtectedRoute>
+              <AppLayout>
+                <Agents />
+              </AppLayout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/agents/new" element={
+            <ProtectedRoute>
+              <AppLayout>
+                <AgentEditor />
+              </AppLayout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/agents/edit/:agentId" element={
+            <ProtectedRoute>
+              <AppLayout>
+                <AgentEditor />
               </AppLayout>
             </ProtectedRoute>
           } />

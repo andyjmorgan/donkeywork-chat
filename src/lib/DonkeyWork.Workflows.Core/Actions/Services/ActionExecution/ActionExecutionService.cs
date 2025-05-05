@@ -43,7 +43,7 @@ public class ActionExecutionService : IActionExecutionService
     /// <inheritdoc />
     public async IAsyncEnumerable<BaseStreamItem> ExecuteActionAsync(ActionExecutionItem actionItem, string? userInput, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var chatClient = this.chatProviderFactory.CreateChatClient(actionItem.ActionModelConfiguration.ProviderType);
+        var chatClient = this.chatProviderFactory.CreateChatClient(actionItem.ModelConfiguration.ProviderType);
         yield return new RequestStart()
         {
             ExecutionId = actionItem.ExecutionId,
@@ -52,8 +52,8 @@ public class ActionExecutionService : IActionExecutionService
         var toolDefinitions = this.toolService.GetUserScopedTools(await this.userPostureService.GetUserPosturesAsync(cancellationToken));
         var request = new ChatRequest()
         {
-            Metadata = actionItem.ActionModelConfiguration.Metadata.Select(x => new KeyValuePair<string, string>(x.Key, x.Value.ToString() ?? string.Empty)).ToDictionary(),
-            ModelName = actionItem.ActionModelConfiguration.ModelName,
+            Metadata = actionItem.ModelConfiguration.Metadata.Select(x => new KeyValuePair<string, string>(x.Key, x.Value.ToString() ?? string.Empty)).ToDictionary(),
+            ModelName = actionItem.ModelConfiguration.ModelName,
             Id = actionItem.ExecutionId,
             Messages = actionItem.SystemPrompts.SelectMany(x => x.Content).Select(x => new GenericChatMessage
             {

@@ -46,6 +46,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.AllowOutOfOrderMetadataProperties = true;
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 builder.Host.AddCentralizedLogging(builder.Configuration, builder.Environment.ApplicationName);

@@ -17,47 +17,47 @@ code {
 }
 
 /* ReactFlow custom styles */
-.agent-node {
-  width: 200px;
-  background: var(--surface-card);
-  border: 1px solid var(--surface-border);
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  overflow: visible; /* Allow handles to overflow */
-}
+/*.agent-node {*/
+/*  width: 200px;*/
+/*  background: var(--surface-card);*/
+/*  border: 1px solid var(--surface-border);*/
+/*  border-radius: 8px;*/
+/*  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);*/
+/*  overflow: visible; !* Allow handles to overflow *!*/
+/*}*/
 
-/* Fix for extra white box */
-.react-flow__node {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
+/*!* Fix for extra white box *!*/
+/*.react-flow__node {*/
+/*  background: transparent !important;*/
+/*  border: none !important;*/
+/*  box-shadow: none !important;*/
+/*}*/
 
-.agent-node-header {
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  color: white;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
+/*.agent-node-header {*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  padding: 12px;*/
+/*  color: white;*/
+/*  border-top-left-radius: 8px;*/
+/*  border-top-right-radius: 8px;*/
+/*}*/
 
-/* Flow sidebar styles */
-.flow-sidebar {
-  height: 100%;
-  padding: 10px;
-  text-align: left;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-}
+/*!* Flow sidebar styles *!*/
+/*.flow-sidebar {*/
+/*  height: 100%;*/
+/*  padding: 10px;*/
+/*  text-align: left;*/
+/*  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);*/
+/*}*/
 
-.flow-sidebar-content {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-  padding-right: 6px;
-}
+/*.flow-sidebar-content {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  gap: 10px;*/
+/*  max-height: calc(100vh - 200px);*/
+/*  overflow-y: auto;*/
+/*  padding-right: 6px;*/
+/*}*/
 
 .sidebar-node {
   border: 1px solid var(--surface-border);
@@ -119,43 +119,43 @@ code {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.dndflow .reactflow-wrapper {
-  flex-grow: 1;
-  height: 100%;
-}
+/*.dndflow .reactflow-wrapper {*/
+/*  flex-grow: 1;*/
+/*  height: 100%;*/
+/*}*/
 
-.reactflow-wrapper {
-  height: 100%;
-}
+/*.reactflow-wrapper {*/
+/*  height: 100%;*/
+/*}*/
 
-/* Make sure handles are visible and interactive */
-.react-flow__handle {
-  width: 12px !important;
-  height: 12px !important;
-  border: 2px solid white !important;
-  transition: transform 0.2s;
-  z-index: 10 !important;
-}
+/*!* Make sure handles are visible and interactive *!*/
+/*.react-flow__handle {*/
+/*  width: 12px !important;*/
+/*  height: 12px !important;*/
+/*  border: 2px solid white !important;*/
+/*  transition: transform 0.2s;*/
+/*  z-index: 10 !important;*/
+/*}*/
 
-.react-flow__handle:hover {
-  transform: scale(1.2);
-}
+/*.react-flow__handle:hover {*/
+/*  transform: scale(1.2);*/
+/*}*/
 
-/* Edge styling */
-.react-flow__edge-path {
-  stroke-width: 2px !important;
-}
+/*!* Edge styling *!*/
+/*.react-flow__edge-path {*/
+/*  stroke-width: 2px !important;*/
+/*}*/
 
-/* Highlight drop target area during drag */
-.react-flow.drag-active {
-  background-color: rgba(99, 102, 241, 0.05);
-  border: 2px dashed #6366F1;
-}
+/*!* Highlight drop target area during drag *!*/
+/*.react-flow.drag-active {*/
+/*  background-color: rgba(99, 102, 241, 0.05);*/
+/*  border: 2px dashed #6366F1;*/
+/*}*/
 
-/* Hide ReactFlow attribution */
-.react-flow__attribution {
-  display: none !important;
-}
+/*!* Hide ReactFlow attribution *!*/
+/*.react-flow__attribution {*/
+/*  display: none !important;*/
+/*}*/
 
 /* Simplify node header colors */
 .agent-node-header-input {
@@ -287,14 +287,14 @@ code {
 }
 
 /* Edge styling */
-.react-flow__edge-path {
-  stroke: var(--primary-color);
-  stroke-width: 2;
-}
+/*.react-flow__edge-path {*/
+/*  stroke: var(--primary-color);*/
+/*  stroke-width: 2;*/
+/*}*/
 
-.react-flow__edge-text {
-  font-size: 12px;
-  fill: var(--text-color);
-  background-color: var(--surface-card);
-  padding: 2px 4px;
-}
+/*.react-flow__edge-text {*/
+/*  font-size: 12px;*/
+/*  fill: var(--text-color);*/
+/*  background-color: var(--surface-card);*/
+/*  padding: 2px 4px;*/
+/*}*/

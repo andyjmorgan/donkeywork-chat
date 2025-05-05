@@ -4,7 +4,7 @@
 // </copyright>
 // ------------------------------------------------------
 
-namespace DonkeyWork.Persistence.Agent.Entity.Agent.Metadata;
+namespace DonkeyWork.Chat.Common.Models.Agents.Metadata;
 
 /// <summary>
 /// Agents string formatter node metadata entity.

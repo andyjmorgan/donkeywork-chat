@@ -32,6 +32,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'build', // To match CRA's default output directory
+    sourcemap: false,
+    minify: false, // Skip minification to make errors more readable
   },
   test: {
     globals: true,

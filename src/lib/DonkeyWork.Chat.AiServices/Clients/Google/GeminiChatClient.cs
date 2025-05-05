@@ -287,7 +287,7 @@ public class GeminiChatClient : IAIChatClient
                 foreach (var candidate in message.Candidates)
                 {
                     parts.AddRange(candidate.Content?.Parts ?? []);
-                    foreach (var part in candidate?.Content?.Parts ?? [])
+                    foreach (var part in candidate.Content?.Parts ?? [])
                     {
                         if (part.Text is not null)
                         {
@@ -363,9 +363,7 @@ public class GeminiChatClient : IAIChatClient
         var systemMessages = request.GetSystemMessages();
         var generateContentRequest = new GenerateContentRequest()
         {
-            GenerationConfig = new GenerationConfig()
-            {
-            },
+            GenerationConfig = new GenerationConfig(),
             Contents = request.GetNonSystemMessages().Select(x => new Content()
             {
                 Role = x.Role.ToString(),

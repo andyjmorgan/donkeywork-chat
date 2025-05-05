@@ -4,7 +4,6 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Persistence.Agent.Repository.ActionExecution;
 using DonkeyWork.Workflows.Core.Actions.Models;
 
 namespace DonkeyWork.Workflows.Core.Actions.Services.ActionConsumer;

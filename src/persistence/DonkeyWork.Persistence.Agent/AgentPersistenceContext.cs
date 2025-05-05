@@ -9,6 +9,7 @@ using DonkeyWork.Chat.Common.Models.Prompt;
 using DonkeyWork.Chat.Common.Services.UserContext;
 using DonkeyWork.Persistence.Agent.Entity.Action;
 using DonkeyWork.Persistence.Agent.Entity.ActionExecution;
+using DonkeyWork.Persistence.Agent.Entity.Agent;
 using DonkeyWork.Persistence.Agent.Entity.Prompt;
 using DonkeyWork.Persistence.Common.Entity.Base;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,11 @@ namespace DonkeyWork.Persistence.Agent;
 public class AgentPersistenceContext(DbContextOptions<AgentPersistenceContext> options, IUserContextProvider userContextProvider)
     : DbContext(options)
 {
+    /// <summary>
+    /// Gets or sets the agents.
+    /// </summary>
+    public DbSet<AgentEntity> Agents { get; set; }
+
     /// <summary>
     /// Gets or sets the system prompts.
     /// </summary>
@@ -60,17 +66,21 @@ public class AgentPersistenceContext(DbContextOptions<AgentPersistenceContext> o
         modelBuilder.Entity<BaseUserEntity>()
             .UseTpcMappingStrategy();
 
+        modelBuilder.Entity<AgentEntity>()
+            .HasIndex(a => new { a.Name, a.UserId })
+            .IsUnique();
+
         modelBuilder.Entity<ActionEntity>()
             .HasIndex(a => new { a.Name, a.UserId })
-            .IsUnique(true);
+            .IsUnique();
 
         modelBuilder.Entity<SystemPromptEntity>()
             .HasIndex(p => new { p.Name, p.UserId })
-            .IsUnique(true);
+            .IsUnique();
 
         modelBuilder.Entity<ActionPromptEntity>()
             .HasIndex(p => new { p.Name, p.UserId })
-            .IsUnique(true);
+            .IsUnique();
 
         modelBuilder.Entity<ActionSystemPromptRelationEntity>()
             .HasOne(a => a.Action)

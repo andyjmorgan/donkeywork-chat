@@ -4,9 +4,9 @@
 // </copyright>
 // ------------------------------------------------------
 
-using DonkeyWork.Persistence.Agent.Entity.Agent.Metadata;
+using DonkeyWork.Chat.Common.Models.Agents.Metadata;
 
-namespace DonkeyWork.Persistence.Agent.Entity.Agent.Models;
+namespace DonkeyWork.Chat.Common.Models.Agents.Models;
 
 /// <summary>
 /// Agent node entity.

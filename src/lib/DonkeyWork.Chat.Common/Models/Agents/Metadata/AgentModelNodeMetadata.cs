@@ -7,7 +7,7 @@
 using DonkeyWork.Chat.Common.Models.Actions;
 using DonkeyWork.Chat.Common.Models.Providers.Tools;
 
-namespace DonkeyWork.Persistence.Agent.Entity.Agent.Metadata;
+namespace DonkeyWork.Chat.Common.Models.Agents.Metadata;
 
 /// <summary>
 /// Gets or sets the agent model node metadata.

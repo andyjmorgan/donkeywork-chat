@@ -40,7 +40,7 @@ public class ActionRepository(AgentPersistenceContext persistenceContext)
                 Name = a.Name,
                 Description = a.Description,
                 Icon = a.Icon,
-                ActionModelConfiguration = a.ActionModelConfiguration,
+                ModelConfiguration = a.ModelConfiguration,
                 SystemPromptIds = a.SystemPrompts.Select(sp => sp.SystemPromptId).ToList(),
                 UserPromptIds = a.ActionPrompts.Select(up => up.ActionPromptId).ToList(),
                 CreatedAt = a.CreatedAt,
@@ -77,7 +77,7 @@ public class ActionRepository(AgentPersistenceContext persistenceContext)
             Name = action.Name,
             Description = action.Description,
             Icon = action.Icon,
-            ActionModelConfiguration = action.ActionModelConfiguration,
+            ModelConfiguration = action.ModelConfiguration,
             SystemPromptIds = action.SystemPrompts.Select(sp => sp.SystemPromptId).ToList(),
             UserPromptIds = action.ActionPrompts.Select(up => up.ActionPromptId).ToList(),
             CreatedAt = action.CreatedAt,
@@ -106,7 +106,7 @@ public class ActionRepository(AgentPersistenceContext persistenceContext)
             Name = action.Name,
             Description = action.Description,
             Icon = action.Icon,
-            ActionModelConfiguration = action.ActionModelConfiguration,
+            ModelConfiguration = action.ModelConfiguration,
             SystemPromptIds = action.SystemPrompts.Select(sp => sp.SystemPromptId).ToList(),
             UserPromptIds = action.ActionPrompts.Select(up => up.ActionPromptId).ToList(),
             CreatedAt = action.CreatedAt,
@@ -136,7 +136,7 @@ public class ActionRepository(AgentPersistenceContext persistenceContext)
         var actionExecutionItem = new ActionExecutionItem
         {
             AllowedTools = action.AllowedTools,
-            ActionModelConfiguration = action.ActionModelConfiguration,
+            ModelConfiguration = action.ModelConfiguration,
             ActionId = action.Id,
             Name = action.Name,
         };
@@ -215,7 +215,7 @@ public class ActionRepository(AgentPersistenceContext persistenceContext)
             action.Description = actionItem.Description;
             action.Icon = actionItem.Icon;
             action.AllowedTools = actionItem.AllowedTools;
-            action.ActionModelConfiguration = actionItem.ActionModelConfiguration;
+            action.ModelConfiguration = actionItem.ModelConfiguration;
 
             // Update system prompt relations
             var currentSystemPromptIds = action.SystemPrompts.Select(sp => sp.SystemPromptId).ToList();
@@ -291,7 +291,7 @@ public class ActionRepository(AgentPersistenceContext persistenceContext)
                 Name = actionItem.Name,
                 Description = actionItem.Description,
                 Icon = actionItem.Icon,
-                ActionModelConfiguration = actionItem.ActionModelConfiguration,
+                ModelConfiguration = actionItem.ModelConfiguration,
                 AllowedTools = actionItem.AllowedTools,
             };
 

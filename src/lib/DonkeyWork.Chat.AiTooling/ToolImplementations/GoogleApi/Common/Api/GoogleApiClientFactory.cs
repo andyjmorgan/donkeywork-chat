@@ -20,22 +20,20 @@ namespace DonkeyWork.Chat.AiTooling.ToolImplementations.GoogleApi.Common.Api;
 public class GoogleApiClientFactory : IGoogleApiClientFactory
 {
     /// <summary>
-    /// The google provider agent name.
+    /// The Google provider agent name.
     /// </summary>
     private static readonly string AgentName = "DonkeyWorkTooling";
-
-    private readonly HttpClient httpClient;
     private readonly IUserPostureService userPostureService;
 
     /// <summary>
     /// A gmail service.
     /// </summary>
-    private GmailService? gmailService = null;
+    private GmailService? gmailService;
 
     /// <summary>
     /// A drive service.
     /// </summary>
-    private DriveService? driveService = null;
+    private DriveService? driveService;
 
     /// <summary>
     /// A google credential.
@@ -45,16 +43,14 @@ public class GoogleApiClientFactory : IGoogleApiClientFactory
     /// <summary>
     /// An oauth2 service.
     /// </summary>
-    private Oauth2Service? oauth2Service = null;
+    private Oauth2Service? oauth2Service;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GoogleApiClientFactory"/> class.
     /// </summary>
-    /// <param name="httpClientFactory">The http client factory.</param>
     /// <param name="userPostureService">The user posture service.</param>
-    public GoogleApiClientFactory(IHttpClientFactory httpClientFactory, IUserPostureService userPostureService)
+    public GoogleApiClientFactory(IUserPostureService userPostureService)
     {
-        this.httpClient = httpClientFactory.CreateClient(nameof(ToolProviderType.Google));
         this.userPostureService = userPostureService;
     }
 

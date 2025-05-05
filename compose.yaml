@@ -39,6 +39,7 @@
       - donkeywork
   markitdown-mcp:
     image: 192.168.0.140:8443/markitdown-mcp:latest
+    platform: linux/amd64
     build:
       context: .
       dockerfile: src/mcp/MarkitDown/Dockerfile

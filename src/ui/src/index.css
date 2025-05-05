@@ -104,110 +104,110 @@ code {
   color: var(--text-color-secondary);
 }
 
-/* Add a dashed outline when dragging over the pane */
-.react-flow__pane.drag-active {
-  outline: 2px dashed var(--primary-color);
-  outline-offset: -2px;
-}
+/*!* Add a dashed outline when dragging over the pane *!*/
+/*.react-flow__pane.drag-active {*/
+/*  outline: 2px dashed var(--primary-color);*/
+/*  outline-offset: -2px;*/
+/*}*/
 
-/* DnD Flow specific styles */
-.dndflow {
-  flex-direction: column;
-  display: flex;
-  height: 100%;
-  width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+/*!* DnD Flow specific styles *!*/
+/*.dndflow {*/
+/*  flex-direction: column;*/
+/*  display: flex;*/
+/*  height: 100%;*/
+/*  width: 100%;*/
+/*  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);*/
+/*}*/
 
-.dndflow .reactflow-wrapper {
-  flex-grow: 1;
-  height: 100%;
-}
+/*.dndflow .reactflow-wrapper {*/
+/*  flex-grow: 1;*/
+/*  height: 100%;*/
+/*}*/
 
-.reactflow-wrapper {
-  height: 100%;
-}
+/*.reactflow-wrapper {*/
+/*  height: 100%;*/
+/*}*/
 
-/* Make sure handles are visible and interactive */
-.react-flow__handle {
-  width: 12px !important;
-  height: 12px !important;
-  border: 2px solid white !important;
-  transition: transform 0.2s;
-  z-index: 10 !important;
-}
+/*!* Make sure handles are visible and interactive *!*/
+/*.react-flow__handle {*/
+/*  width: 12px !important;*/
+/*  height: 12px !important;*/
+/*  border: 2px solid white !important;*/
+/*  transition: transform 0.2s;*/
+/*  z-index: 10 !important;*/
+/*}*/
 
-.react-flow__handle:hover {
-  transform: scale(1.2);
-}
+/*.react-flow__handle:hover {*/
+/*  transform: scale(1.2);*/
+/*}*/
 
-/* Edge styling */
-.react-flow__edge-path {
-  stroke-width: 2px !important;
-}
+/*!* Edge styling *!*/
+/*.react-flow__edge-path {*/
+/*  stroke-width: 2px !important;*/
+/*}*/
 
-/* Highlight drop target area during drag */
-.react-flow.drag-active {
-  background-color: rgba(99, 102, 241, 0.05);
-  border: 2px dashed #6366F1;
-}
+/*!* Highlight drop target area during drag *!*/
+/*.react-flow.drag-active {*/
+/*  background-color: rgba(99, 102, 241, 0.05);*/
+/*  border: 2px dashed #6366F1;*/
+/*}*/
 
-/* Hide ReactFlow attribution */
-.react-flow__attribution {
-  display: none !important;
-}
+/*!* Hide ReactFlow attribution *!*/
+/*.react-flow__attribution {*/
+/*  display: none !important;*/
+/*}*/
 
-/* Simplify node header colors */
-.agent-node-header-input {
-  background-color: #3B82F6; /* Blue for input */
-}
+/*!* Simplify node header colors *!*/
+/*.agent-node-header-input {*/
+/*  background-color: #3B82F6; !* Blue for input *!*/
+/*}*/
 
-.agent-node-header-processing {
-  background-color: #6366F1; /* Indigo for model */
-}
+/*.agent-node-header-processing {*/
+/*  background-color: #6366F1; !* Indigo for model *!*/
+/*}*/
 
-.agent-node-header-output {
-  background-color: #10B981; /* Green for output */
-}
+/*.agent-node-header-output {*/
+/*  background-color: #10B981; !* Green for output *!*/
+/*}*/
 
-.agent-node-icon {
-  font-size: 1.5rem;
-  margin-right: 8px;
-}
+/*.agent-node-icon {*/
+/*  font-size: 1.5rem;*/
+/*  margin-right: 8px;*/
+/*}*/
 
-.agent-node-title {
-  font-weight: bold;
-  font-size: 1rem;
-}
+/*.agent-node-title {*/
+/*  font-weight: bold;*/
+/*  font-size: 1rem;*/
+/*}*/
 
-.agent-node-body {
-  padding: 12px;
-  font-size: 0.9rem;
-  color: var(--text-color);
-}
+/*.agent-node-body {*/
+/*  padding: 12px;*/
+/*  font-size: 0.9rem;*/
+/*  color: var(--text-color);*/
+/*}*/
 
-/* Adjust controls position to avoid overlapping with panel */
-.react-flow__controls {
-  bottom: 20px;
-  right: 20px;
-}
+/*!* Adjust controls position to avoid overlapping with panel *!*/
+/*.react-flow__controls {*/
+/*  bottom: 20px;*/
+/*  right: 20px;*/
+/*}*/
 
 /* Minimap styling */
-.react-flow__minimap {
-  background-color: var(--surface-ground);
-  border: 1px solid var(--surface-border);
-  border-radius: 4px;
-}
+/*.react-flow__minimap {*/
+/*  background-color: var(--surface-ground);*/
+/*  border: 1px solid var(--surface-border);*/
+/*  border-radius: 4px;*/
+/*}*/
 
-/* Background pattern */
-.react-flow__background {
-  background-color: var(--surface-ground);
-}
+/*!* Background pattern *!*/
+/*.react-flow__background {*/
+/*  background-color: var(--surface-ground);*/
+/*}*/
 
-/* Panel styling */
-.react-flow__panel {
-  margin: 10px;
-}
+/*!* Panel styling *!*/
+/*.react-flow__panel {*/
+/*  margin: 10px;*/
+/*}*/
 
 /* Legend styling */
 .legend-container {

@@ -1,0 +1,154 @@
+.agent-builder-container {
+  width: 100%;
+  height: 100%; /* Use parent height */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent overflow scrolling */
+  position: relative; /* Create positioning context */
+}
+
+.agent-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Fill parent height */
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden; /* Prevent overflow scrolling */
+}
+
+/* Add overflow and sizing to the content inside the card */
+.agent-card .p-card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  height: 100%;
+  overflow: hidden; /* Prevent overflow scrolling */
+}
+
+.agent-card .p-card-content {
+  flex-grow: 1;
+  padding: 0;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent overflow scrolling */
+}
+
+.flow-container {
+  flex-grow: 1;
+  width: 100%;
+  height: calc(100vh - 140px); /* Adjusted to fit properly */
+  max-height: calc(100% - 20px); /* Provide some margin */
+  border: 1px solid var(--surface-border);
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: var(--surface-ground);
+  position: relative; /* Ensure position context for ReactFlow */
+}
+
+.agent-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--surface-card);
+  border-bottom: 1px solid var(--surface-border);
+  min-height: 60px; /* Ensure consistent height */
+}
+
+.agent-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+}
+
+.agent-name {
+  font-family: monospace;
+  color: var(--primary-color);
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agent-config-icon {
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+  transition: color 0.2s;
+}
+
+.agent-config-icon:hover {
+  color: var(--primary-color);
+}
+
+.agent-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.agent-toolbar .p-button {
+  margin-left: 0.5rem;
+}
+
+.node-palette {
+  display: flex;
+  gap: 8px;
+}
+
+.node-item {
+  border: 1px solid var(--surface-border);
+  background-color: var(--surface-card);
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-color);
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.node-item:hover {
+  background-color: var(--surface-hover);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.model-node-item {
+  border-left: 3px solid #6366F1;
+}
+
+.string-formatter-node-item {
+  border-left: 3px solid #F59E0B;
+}
+
+.conditional-node-item {
+  border-left: 3px solid #10B981;
+}
+
+
+.validation-error-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.agent-json-display {
+  background-color: var(--surface-card, #f8f9fa);
+  color: var(--text-color, #333);
+  padding: 1rem;
+  border-radius: 4px;
+  max-height: 400px;
+  overflow: auto;
+  font-size: 14px;
+  font-family: monospace;
+  border: 1px solid var(--surface-border, #ddd);
+  line-height: 1.5;
+}

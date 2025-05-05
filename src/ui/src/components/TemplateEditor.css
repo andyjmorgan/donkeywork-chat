@@ -1,0 +1,61 @@
+/* Monaco editor container styling */
+.monaco-editor-container {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.template-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Style for autocomplete items */
+.monaco-editor .suggest-widget .monaco-list .monaco-list-row .suggest-icon.variable {
+  color: #0074d9;
+}
+
+.monaco-editor .suggest-widget .monaco-list .monaco-list-row .suggest-icon.property {
+  color: #2ecc40;
+}
+
+.monaco-editor .suggest-widget .monaco-list .monaco-list-row .suggest-icon.snippet {
+  color: #ff851b;
+}
+
+/* Custom syntax highlighting */
+.monaco-editor .mtk1.delimiter.curly {
+  color: #4a90e2;
+  font-weight: bold;
+}
+
+.monaco-editor .mtk1.variable.scriban {
+  color: #e2845b;
+}
+
+.monaco-editor .mtk1.delimiter.dot {
+  color: #9b59b6;
+}
+
+/* Button group styling */
+.template-editor button {
+  transition: all 0.2s ease-in-out;
+}
+
+.template-editor button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Dropdown menu styling */
+.template-editor .p-dropdown {
+  border-radius: 4px;
+}
+
+.template-editor .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding: 0.75rem 1rem;
+}
+
+.template-editor .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+  background-color: #f8f9fa;
+}

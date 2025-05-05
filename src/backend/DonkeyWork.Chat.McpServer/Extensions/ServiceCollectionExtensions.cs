@@ -38,7 +38,7 @@ public static class ServiceCollectionExtensions
             .WithHttpTransport(htpTransportOptions =>
             {
                 htpTransportOptions.ConfigureSessionOptions =
-                    (HttpContext context, McpServerOptions options, CancellationToken _) =>
+                    (_, options, _) =>
                     {
                         options.ServerInfo = DefaultImplementation;
                         return Task.CompletedTask;

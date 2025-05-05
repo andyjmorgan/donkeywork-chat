@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@types/jwt-decode": "^3.1.0",
     "@types/react": "^19.0.10",

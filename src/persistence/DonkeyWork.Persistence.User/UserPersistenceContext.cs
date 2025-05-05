@@ -45,14 +45,14 @@ public class UserPersistenceContext(DbContextOptions<UserPersistenceContext> opt
 
         modelBuilder.Entity<ApiKeyEntity>()
             .HasIndex(x => x.ApiKey)
-            .IsUnique(true);
+            .IsUnique();
 
         modelBuilder.Entity<GenericProviderEntity>()
             .HasIndex(p => new { p.ProviderType, p.UserId })
-            .IsUnique(true);
+            .IsUnique();
 
         modelBuilder.Entity<GenericProviderEntity>()
             .HasIndex(p => new { p.ProviderType, p.UserId })
-            .IsUnique(true);
+            .IsUnique();
     }
 }

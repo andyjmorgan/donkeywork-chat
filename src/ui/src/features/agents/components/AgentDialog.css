@@ -1,0 +1,26 @@
+.dialog-header {
+  display: flex;
+  align-items: center;
+}
+
+.dialog-header .header-icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.agent-builder-wrapper {
+  height: 100%;
+  min-height: 500px;
+}
+
+@media screen and (max-width: 768px) {
+  .agent-builder-wrapper {
+    min-height: 400px;
+  }
+}

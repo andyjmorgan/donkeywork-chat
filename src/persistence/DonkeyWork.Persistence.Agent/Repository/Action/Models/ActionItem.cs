@@ -47,7 +47,7 @@ public class ActionItem
     /// <summary>
     /// Gets or sets the action model configuration.
     /// </summary>
-    public ActionModelConfiguration ActionModelConfiguration { get; set; } = new ();
+    public ModelConfiguration ModelConfiguration { get; set; } = new ();
 
     /// <summary>
     /// Gets or sets the allowed tools.

@@ -1,0 +1,3 @@
+        this.CreateMap<ModelNodeMetadataDto, AgentModelNodeMetadata>()
+            .ForMember(dest => dest.AllowedTools, opt => opt.MapFrom(src =>
+                src.AllowedTools.Select(t => ParseToolProviderType(t)).ToList()));

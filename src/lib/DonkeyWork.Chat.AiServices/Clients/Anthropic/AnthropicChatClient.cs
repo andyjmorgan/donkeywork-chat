@@ -150,7 +150,7 @@ public class AnthropicChatClient : IAIChatClient
             messageParameters.TopK = Convert.ToInt32(topK);
         }
 
-        if (request.Metadata.TryGetValue(nameof(KnownMetaDataFields.ThinkingEnabled), out var thinkingEnabled))
+        if (request.Metadata.TryGetValue(nameof(KnownMetaDataFields.ThinkingEnabled), out var _))
         {
             messageParameters.Thinking = new ThinkingParameters();
             if (request.Metadata.TryGetValue(nameof(KnownMetaDataFields.BudgetThinkingTokens), out var thinkingBudget))

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using DonkeyWork.Chat.Common.Models.Actions;
+using DonkeyWork.Chat.Common.Models.Agents.Models;
 using DonkeyWork.Chat.Common.Models.Prompt;
 using DonkeyWork.Chat.Common.Models.Providers.Tools;
 using DonkeyWork.Chat.Common.Models.Streaming;
@@ -54,10 +55,6 @@ namespace DonkeyWork.Persistence.Agent.Migrations
                 {
                     b.HasBaseType("DonkeyWork.Persistence.Common.Entity.Base.BaseUserEntity");
 
-                    b.Property<ActionModelConfiguration>("ActionModelConfiguration")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
-
                     b.Property<List<ToolProviderApplicationType>>("AllowedTools")
                         .IsRequired()
                         .HasColumnType("jsonb");
@@ -70,6 +67,10 @@ namespace DonkeyWork.Persistence.Agent.Migrations
                     b.Property<string>("Icon")
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
+
+                    b.Property<ModelConfiguration>("ModelConfiguration")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -145,6 +146,39 @@ namespace DonkeyWork.Persistence.Agent.Migrations
                         .HasColumnType("integer");
 
                     b.ToTable("ActionExecutions", "AgentPersistenceContext");
+                });
+
+            modelBuilder.Entity("DonkeyWork.Persistence.Agent.Entity.Agent.AgentEntity", b =>
+                {
+                    b.HasBaseType("DonkeyWork.Persistence.Common.Entity.Base.BaseUserEntity");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ExecutionCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<List<AgentNodeEdge>>("NodeEdges")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<List<AgentNode>>("Nodes")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<List<string>>("Tags")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.HasIndex("Name", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("Agents", "AgentPersistenceContext");
                 });
 
             modelBuilder.Entity("DonkeyWork.Persistence.Agent.Entity.Prompt.ActionPromptEntity", b =>

@@ -29,7 +29,7 @@ namespace DonkeyWork.Chat.Logging.Extensions
                 : "appsettings.logging.json";
 
             configurationManager.AddJsonFile(basePath, optional: false, reloadOnChange: true);
-            return builder.UseSerilog((hostingContext, services, loggerConfiguration) =>
+            return builder.UseSerilog((_, services, loggerConfiguration) =>
             {
                 // Then apply host configuration which may override defaults
                 loggerConfiguration

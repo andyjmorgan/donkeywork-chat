@@ -1,45 +1,47 @@
 import ApiBase from './apiBase';
+import {BaseNodeData, NodeTypeEnum} from "../../types/nodes";
 
 export interface AgentNode {
   id: string;
-  type: string;
   label: string;
-  nodeType: string; 
-  position: {
-    x: number;
-    y: number;
-  };
-  immutable: boolean;
-  [key: string]: any; // Allow any additional properties
+  nodeType: NodeTypeEnum;
+  position: AgentNodePosition;
+  metadata: BaseNodeData; // this depends on the node type enum.
 }
 
-export interface AgentEdge {
-  id: string;
-  source: string;
-  target: string;
-  sourceHandle?: string | null;
-  targetHandle?: string | null;
-}
-
-export interface AgentModel {
+export interface AgentSummaryModel {
   id?: string;
   name: string;
   description: string;
   tags: string[];
-  nodes: AgentNode[];
-  edges?: AgentEdge[];
-  nodeEdges?: AgentEdge[];
   executionCount?: number;
   createdAt?: string;
   updatedAt?: string;
-  agent: {
+}
+
+export interface AgentNodePosition {
+    x: number,
+    y: number,
+}
+export interface AgentModel {
+    id: string;
     name: string;
     description: string;
-  };
+    tags: string[];
+    nodeEdges: AgentNodeEdgeModel[]
+    nodes: AgentNode[],
+}
+
+export interface AgentNodeEdgeModel {
+    id?: string;
+    sourceNodeId: string,
+    targetNodeId: string,
+    sourceNodeHandle: string | null,
+    targetNodeHandle: string | null,
 }
 
 export interface GetAgentsResponse {
-  agents: AgentModel[];
+  agents: AgentSummaryModel[];
   totalCount: number;
 }
 
@@ -80,69 +82,6 @@ export class AgentService extends ApiBase {
     };
   }
 
-  async getAgent(id: string): Promise<AgentModel> {
-    const response = await fetch(`${this.getApiBaseUrl()}/agents/${id}`, {
-      credentials: 'include',
-      headers: {
-        'Cache-Control': 'no-cache'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to get agent: ${response.status}`);
-    }
-
-    return await response.json();
-  }
-
-  async createAgent(agent: AgentModel): Promise<AgentModel> {
-    // Log the data being sent to the API for debugging
-    console.log("Creating agent with data:", JSON.stringify(agent, null, 2));
-    
-    const response = await fetch(`${this.getApiBaseUrl()}/agents`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache'
-      },
-      body: JSON.stringify(agent)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to create agent: ${response.status}`);
-    }
-
-    return await response.json();
-  }
-
-  async updateAgent(id: string, agent: AgentModel): Promise<AgentModel> {
-    // Log the data being sent to the API for debugging
-    console.log("Updating agent with data:", JSON.stringify(agent, null, 2));
-    
-    const response = await fetch(`${this.getApiBaseUrl()}/agents/${id}`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache'
-      },
-      body: JSON.stringify(agent)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to update agent: ${response.status}`);
-    }
-
-    // For 204 No Content responses, just return the agent we sent
-    if (response.status === 204) {
-      return agent;
-    }
-    
-    // For other successful responses, try to parse the JSON
-    return await response.json();
-  }
-
   async deleteAgent(id: string): Promise<void> {
     const response = await fetch(`${this.getApiBaseUrl()}/agents/${id}`, {
       method: 'DELETE',
@@ -155,6 +94,55 @@ export class AgentService extends ApiBase {
     if (!response.ok) {
       throw new Error(`Failed to delete agent: ${response.status}`);
     }
+  }
+  
+  // Implement the getAgent method to load an agent by ID
+  async getAgent(id: string): Promise<AgentModel> {
+    console.log('Loading agent data with ID:', id);
+    
+    const response = await fetch(`${this.getApiBaseUrl()}/agents/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+      },
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Failed to load agent:', errorText);
+      throw new Error(`Failed to load agent: ${response.status} - ${errorText}`);
+    }
+    
+    return await response.json();
+  }
+  
+  // Implement the saveAgent method to save an agent
+  async saveAgent(agentData: AgentModel): Promise<AgentModel> {
+    console.log('Saving agent data:', agentData);
+    
+    // Always use POST for saving agents
+    const method = 'POST';
+    const url = `${this.getApiBaseUrl()}/agents`;
+    
+    const response = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+      },
+      credentials: 'include',
+      body: JSON.stringify(agentData)
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Failed to save agent:', errorText);
+      throw new Error(`Failed to save agent: ${response.status} - ${errorText}`);
+    }
+    
+    return await response.json();
   }
 }
 

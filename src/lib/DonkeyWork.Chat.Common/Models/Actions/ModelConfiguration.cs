@@ -12,7 +12,7 @@ namespace DonkeyWork.Chat.Common.Models.Actions;
 /// <summary>
 /// A class representing the configuration for an action model.
 /// </summary>
-public class ActionModelConfiguration
+public class ModelConfiguration
 {
     /// <summary>
     /// Gets or sets the provider type.
