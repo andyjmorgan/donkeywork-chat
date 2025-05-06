@@ -5,8 +5,10 @@
 // ------------------------------------------------------
 
 using System.Text.Json.Serialization;
+using DonkeyWork.Chat.Common.Models.Streaming.Agent;
 using DonkeyWork.Chat.Common.Models.Streaming.Chat;
 using DonkeyWork.Chat.Common.Models.Streaming.Exceptions;
+using DonkeyWork.Chat.Common.Models.Streaming.Node;
 using DonkeyWork.Chat.Common.Models.Streaming.Request;
 using DonkeyWork.Chat.Common.Models.Streaming.Tool;
 
@@ -25,6 +27,10 @@ namespace DonkeyWork.Chat.Common.Models.Streaming;
 [JsonDerivedType(typeof(ToolResult), typeDiscriminator: nameof(ToolResult))]
 [JsonDerivedType(typeof(ExceptionResult), typeDiscriminator: nameof(ExceptionResult))]
 [JsonDerivedType(typeof(TokenUsage), typeDiscriminator: nameof(TokenUsage))]
+[JsonDerivedType(typeof(NodeStart), typeDiscriminator: nameof(NodeStart))]
+[JsonDerivedType(typeof(NodeEnd), typeDiscriminator: nameof(NodeEnd))]
+[JsonDerivedType(typeof(AgentStart), typeDiscriminator: nameof(AgentStart))]
+[JsonDerivedType(typeof(AgentEnd), typeDiscriminator: nameof(AgentEnd))]
 public abstract record BaseStreamItem
 {
     /// <summary>

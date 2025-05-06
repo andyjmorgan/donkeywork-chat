@@ -98,6 +98,7 @@
 .node-palette {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
 .node-item {

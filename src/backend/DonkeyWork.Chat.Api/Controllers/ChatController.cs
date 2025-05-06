@@ -10,6 +10,7 @@ using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Services;
 using DonkeyWork.Chat.Api.Models.Chat;
 using DonkeyWork.Chat.Api.Services.Conversation;
+using DonkeyWork.Chat.Common.Models.Chat;
 using DonkeyWork.Persistence.Agent.Repository.Prompt;
 using Microsoft.AspNetCore.Mvc;
 

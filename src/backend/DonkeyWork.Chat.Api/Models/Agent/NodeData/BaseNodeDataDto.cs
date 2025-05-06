@@ -16,7 +16,7 @@ namespace DonkeyWork.Chat.Api.Models.Agent.NodeData
     [JsonDerivedType(typeof(InputNodeDataDto), typeDiscriminator: "input")]
     [JsonDerivedType(typeof(OutputNodeDataDto), typeDiscriminator: "output")]
     [JsonDerivedType(typeof(ModelNodeDataDto), typeDiscriminator: "model")]
-    [JsonDerivedType(typeof(StringFormatterNodeDataDto), typeDiscriminator: "stringformatter")]
+    [JsonDerivedType(typeof(StringFormatterNodeDataDto), typeDiscriminator: "stringFormatter")]
     [JsonDerivedType(typeof(ConditionalNodeDataDto), typeDiscriminator: "conditional")]
     public abstract class BaseNodeDataDto
     {

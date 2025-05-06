@@ -5,6 +5,7 @@
 // ------------------------------------------------------
 
 using DonkeyWork.Chat.AiServices.Clients.Models;
+using DonkeyWork.Chat.Common.Models.Chat;
 using DonkeyWork.Chat.Common.Models.Providers;
 
 namespace DonkeyWork.Chat.Api.Models.Chat;

@@ -12,6 +12,7 @@ using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Clients.OpenAi.Configuration;
 using DonkeyWork.Chat.AiTooling.Base.Models;
 using DonkeyWork.Chat.AiTooling.Exceptions;
+using DonkeyWork.Chat.Common.Models.Chat;
 using DonkeyWork.Chat.Common.Models.Streaming;
 using DonkeyWork.Chat.Common.Models.Streaming.Chat;
 using DonkeyWork.Chat.Common.Models.Streaming.Tool;

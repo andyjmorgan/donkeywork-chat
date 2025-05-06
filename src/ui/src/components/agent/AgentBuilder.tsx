@@ -24,6 +24,7 @@ import ReactFlow, {
 import { nodeTypes } from '../nodes';
 import { nodeEvents } from '../../utils/nodeEvents';
 import { validateAgent, ValidationError } from '../../utils/nodeValidation';
+import { getLayoutedElements } from '../../utils/layoutUtils';
 import { NodeTypeEnum } from '../../types/nodes';
 import 'reactflow/dist/style.css';
 import '../nodes/nodeStyles.css';
@@ -129,6 +130,8 @@ export const AgentBuilder = ({
   // Only use the initialAgentId if it's provided - don't generate a random one for new agents
   const [agentId, setAgentId] = useState<string | undefined>(initialAgentId);
   const [isSaving, setIsSaving] = useState(false);
+  // Always use vertical layout (top to bottom)
+  const layoutDirection = 'TB';
   
   // Toast reference for notifications
   const toast = useRef<Toast>(null);
@@ -234,6 +237,20 @@ export const AgentBuilder = ({
   const onInit = useCallback((reactFlowInstance: any) => {
     setReactFlowInstance(reactFlowInstance);
   }, []);
+  
+  // Function to apply vertical auto-layout to the flow
+  const onLayout = useCallback(() => {
+    if (!nodes.length) return;
+    
+    const { nodes: layoutedNodes } = getLayoutedElements(nodes, edges, 'TB');
+    
+    setNodes([...layoutedNodes]);
+    
+    // Allow some time for the layout to update before fitting the view
+    setTimeout(() => {
+      reactFlowInstance?.fitView({ padding: 0.2 });
+    }, 100);
+  }, [nodes, edges, reactFlowInstance]);
   
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -647,20 +664,36 @@ export const AgentBuilder = ({
   }, [importJsonText, setNodes, setEdges]);
   
   // Helper function to convert NodeTypeEnum to ReactFlow node type
-  const getNodeTypeFromEnum = useCallback((nodeType: NodeTypeEnum) => {
-    switch (nodeType) {
+  const getNodeTypeFromEnum = useCallback((nodeType: NodeTypeEnum | string) => {
+    // If we're dealing with a string, normalize it to lowercase for case-insensitive comparison
+    const normalizedType = typeof nodeType === 'string' ? nodeType.toLowerCase() : nodeType;
+    
+    switch (normalizedType) {
       case NodeTypeEnum.INPUT:
+      case 'input':
         return 'inputNode';
       case NodeTypeEnum.OUTPUT:
+      case 'output':
         return 'outputNode';
       case NodeTypeEnum.MODEL:
+      case 'model':
         return 'modelNode';
       case NodeTypeEnum.STRING_FORMATTER:
+      case 'stringformatter':
         return 'stringFormatterNode';
       case NodeTypeEnum.CONDITIONAL:
+      case 'conditional':
         return 'conditionalNode';
       default:
-        return 'modelNode'; // Default to model node if unknown
+        // For unknown types, try to derive the node type from the string
+        if (typeof normalizedType === 'string') {
+          if (normalizedType.includes('input')) return 'inputNode';
+          if (normalizedType.includes('output')) return 'outputNode';
+          if (normalizedType.includes('model')) return 'modelNode';
+          if (normalizedType.includes('string') || normalizedType.includes('format')) return 'stringFormatterNode';
+          if (normalizedType.includes('condition')) return 'conditionalNode';
+        }
+        return 'modelNode'; // Default to model node if all else fails
     }
   }, []);
 
@@ -714,6 +747,24 @@ export const AgentBuilder = ({
         // Create a copy of the node data to modify for metadata
         const metadata = {...node.data};
         
+        // Ensure proper format of nodeType - this is crucial for case sensitivity
+        if (metadata.nodeType) {
+          // Ensure nodeType is in the exact format expected by the backend
+          if (typeof metadata.nodeType === 'string') {
+            if (metadata.nodeType.toLowerCase() === 'stringformatter') {
+              metadata.nodeType = 'stringFormatter'; // Ensure proper camelCase
+            } else if (metadata.nodeType.toLowerCase() === 'conditional') {
+              metadata.nodeType = 'conditional';
+            } else if (metadata.nodeType.toLowerCase() === 'model') {
+              metadata.nodeType = 'model';
+            } else if (metadata.nodeType.toLowerCase() === 'input') {
+              metadata.nodeType = 'input';
+            } else if (metadata.nodeType.toLowerCase() === 'output') {
+              metadata.nodeType = 'output';
+            }
+          }
+        }
+        
         // Ensure proper format of allowedTools for model nodes
         if (metadata.nodeType === 'model' && Array.isArray(metadata.allowedTools)) {
           // Convert tool IDs to proper format if needed
@@ -730,10 +781,26 @@ export const AgentBuilder = ({
           });
         }
         
+        // Ensure node.data.nodeType is in proper format for the root nodeType property
+        let nodeType = node.data.nodeType;
+        if (typeof nodeType === 'string') {
+          if (nodeType.toLowerCase() === 'stringformatter') {
+            nodeType = 'stringFormatter'; // Ensure proper camelCase
+          } else if (nodeType.toLowerCase() === 'conditional') {
+            nodeType = 'conditional';
+          } else if (nodeType.toLowerCase() === 'model') {
+            nodeType = 'model';
+          } else if (nodeType.toLowerCase() === 'input') {
+            nodeType = 'input';
+          } else if (nodeType.toLowerCase() === 'output') {
+            nodeType = 'output';
+          }
+        }
+        
         return {
           id: node.id,
           label: node.data.label, // Include the label field
-          nodeType: node.data.nodeType,
+          nodeType: nodeType, // Use the corrected nodeType
           position: { 
             x: node.position.x,
             y: node.position.y
@@ -756,7 +823,12 @@ export const AgentBuilder = ({
           targetNodeId: edge.target,
           sourceNodeHandle: edge.sourceHandle || null,
           targetNodeHandle: edge.targetHandle || null
-        }))
+        })),
+        // Add agent field to satisfy API requirements
+        agent: {
+          name: agentName,
+          description: agentDescription
+        }
       };
       
       // Call the API to save the agent
@@ -846,7 +918,16 @@ export const AgentBuilder = ({
               <i className="pi pi-code" style={{ marginRight: '8px' }}></i>
               <span>Condition</span>
             </div>
+            
           </div>
+          <Button 
+            label="Auto Layout" 
+            icon="pi pi-sitemap" 
+            className="p-button-sm p-button-secondary" 
+            onClick={onLayout}
+            tooltip="Auto arrange nodes in vertical layout"
+            tooltipOptions={{ position: 'bottom' }}
+          />
           <Button 
             label="Import JSON" 
             icon="pi pi-upload" 
@@ -881,6 +962,24 @@ export const AgentBuilder = ({
                   // Create a copy of the node data to modify for metadata
                   const metadata = {...node.data};
                   
+                  // Ensure proper format of nodeType in metadata - this is crucial for case sensitivity
+                  if (metadata.nodeType) {
+                    // Ensure nodeType is in the exact format expected by the backend
+                    if (typeof metadata.nodeType === 'string') {
+                      if (metadata.nodeType.toLowerCase() === 'stringformatter') {
+                        metadata.nodeType = 'stringFormatter'; // Ensure proper camelCase
+                      } else if (metadata.nodeType.toLowerCase() === 'conditional') {
+                        metadata.nodeType = 'conditional';
+                      } else if (metadata.nodeType.toLowerCase() === 'model') {
+                        metadata.nodeType = 'model';
+                      } else if (metadata.nodeType.toLowerCase() === 'input') {
+                        metadata.nodeType = 'input';
+                      } else if (metadata.nodeType.toLowerCase() === 'output') {
+                        metadata.nodeType = 'output';
+                      }
+                    }
+                  }
+                  
                   // Ensure proper format of allowedTools for model nodes
                   if (metadata.nodeType === 'model' && Array.isArray(metadata.allowedTools)) {
                     // Convert tool IDs to proper format if needed
@@ -897,10 +996,26 @@ export const AgentBuilder = ({
                     });
                   }
                   
+                  // Ensure node.data.nodeType is in proper format for the root nodeType property
+                  let nodeType = node.data.nodeType;
+                  if (typeof nodeType === 'string') {
+                    if (nodeType.toLowerCase() === 'stringformatter') {
+                      nodeType = 'stringFormatter'; // Ensure proper camelCase
+                    } else if (nodeType.toLowerCase() === 'conditional') {
+                      nodeType = 'conditional';
+                    } else if (nodeType.toLowerCase() === 'model') {
+                      nodeType = 'model';
+                    } else if (nodeType.toLowerCase() === 'input') {
+                      nodeType = 'input';
+                    } else if (nodeType.toLowerCase() === 'output') {
+                      nodeType = 'output';
+                    }
+                  }
+                  
                   return {
                     id: node.id,
                     label: node.data.label, // Include the label field
-                    nodeType: node.data.nodeType,
+                    nodeType: nodeType, // Use the corrected nodeType
                     position: { 
                       x: node.position.x,
                       y: node.position.y
@@ -922,7 +1037,12 @@ export const AgentBuilder = ({
                     targetNodeId: edge.target,
                     sourceNodeHandle: edge.sourceHandle || null,
                     targetNodeHandle: edge.targetHandle || null
-                  }))
+                  })),
+                  // Add agent field to satisfy API requirements
+                  agent: {
+                    name: agentName,
+                    description: agentDescription
+                  }
                 };
                 
                 // Set the JSON for display

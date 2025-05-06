@@ -67,31 +67,7 @@ public class ChatService
         await foreach (var streamItem in chatClient.StreamChatAsync(
                            request,
                            toolDefinitions,
-                           toolAction: async x =>
-                           {
-                               var tool = toolDefinitions
-                                   .FirstOrDefault(t => t.Name == x.ToolName);
-
-                               if (tool is null)
-                               {
-                                   throw new UnknownToolDefinitionException(x.ToolName);
-                               }
-
-                               var result = await tool.Tool.InvokeFunctionAsync(
-                                   x.ToolName,
-                                   x.ToolParameters,
-                                   cancellationToken);
-                               if (result is JsonDocument jsonDocument)
-                               {
-                                   return jsonDocument;
-                               }
-
-                               return JsonDocument.Parse(
-                                   JsonSerializer.Serialize(new
-                                   {
-                                       Result = result,
-                                   }));
-                           },
+                           toolAction: async x => await this.toolService.ExecuteToolAsync(x, cancellationToken),
                            cancellationToken))
         {
             yield return streamItem;

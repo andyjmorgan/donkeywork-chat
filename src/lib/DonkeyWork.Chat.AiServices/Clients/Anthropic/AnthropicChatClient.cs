@@ -16,6 +16,7 @@ using Anthropic.SDK.Messaging;
 using DonkeyWork.Chat.AiServices.Clients.Anthropic.Configuration;
 using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiTooling.Base.Models;
+using DonkeyWork.Chat.Common.Models.Chat;
 using DonkeyWork.Chat.Common.Models.Streaming;
 using DonkeyWork.Chat.Common.Models.Streaming.Chat;
 using DonkeyWork.Chat.Common.Models.Streaming.Tool;

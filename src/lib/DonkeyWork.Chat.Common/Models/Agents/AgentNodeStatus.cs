@@ -1,28 +1,28 @@
 // ------------------------------------------------------
-// <copyright file="GenericMessageRole.cs" company="DonkeyWork.Dev">
+// <copyright file="AgentNodeStatus.cs" company="DonkeyWork.Dev">
 // Provided as is by (c) DonkeyWork.Dev. No warranty or support is given.
 // </copyright>
 // ------------------------------------------------------
 
-namespace DonkeyWork.Chat.AiServices.Clients.Models;
+namespace DonkeyWork.Chat.Common.Models.Agents;
 
 /// <summary>
-/// A generic chat message role.
+/// Gets or sets the agent node status.
 /// </summary>
-public enum GenericMessageRole
+public enum AgentNodeStatus
 {
     /// <summary>
-    /// A system message.
+    /// Agent is not started.
     /// </summary>
-    System,
+    NotStarted,
 
     /// <summary>
-    /// An assistant message.
+    /// Agent is in progress
     /// </summary>
-    Assistant,
+    InProgress,
 
     /// <summary>
-    /// A user message.
+    /// Agent is completed.
     /// </summary>
-    User,
+    Completed,
 }

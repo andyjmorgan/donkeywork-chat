@@ -6,7 +6,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace DonkeyWork.Chat.AiServices.Clients.Models;
+namespace DonkeyWork.Chat.Common.Models.Chat;
 
 /// <summary>
 /// A generic chat completion request.

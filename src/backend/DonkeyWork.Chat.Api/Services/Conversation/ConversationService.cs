@@ -10,6 +10,7 @@ using System.Text;
 using DonkeyWork.Chat.AiServices.Clients.Models;
 using DonkeyWork.Chat.AiServices.Services;
 using DonkeyWork.Chat.Common.Models;
+using DonkeyWork.Chat.Common.Models.Chat;
 using DonkeyWork.Chat.Common.Models.Streaming;
 using DonkeyWork.Chat.Common.Models.Streaming.Chat;
 using DonkeyWork.Chat.Common.Models.Streaming.Request;

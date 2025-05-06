@@ -4,10 +4,16 @@
 // </copyright>
 // ------------------------------------------------------
 
+using DonkeyWork.Chat.Common.Contracts;
 using DonkeyWork.Persistence.Agent;
 using DonkeyWork.Workflows.Core.Actions.Services.ActionConsumer;
 using DonkeyWork.Workflows.Core.Actions.Services.ActionExecution;
 using DonkeyWork.Workflows.Core.Actions.Services.ActionOrchestrator;
+using DonkeyWork.Workflows.Core.Agents.Composer;
+using DonkeyWork.Workflows.Core.Agents.Execution;
+using DonkeyWork.Workflows.Core.Agents.Nodes;
+using DonkeyWork.Workflows.Core.Agents.Orchestrator;
+using DonkeyWork.Workflows.Core.Agents.Stream;
 using DonkeyWork.Workflows.Core.Scheduler.Jobs;
 using DonkeyWork.Workflows.Core.Scheduler.Services;
 using Microsoft.Extensions.Configuration;
@@ -74,6 +80,14 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IActionOrchestratorService, ActionOrchestratorService>();
         serviceCollection.AddScoped<IActionExecutionService, ActionExecutionService>();
         serviceCollection.AddTransient<IQuartzSchemaInitializer, QuartzSchemaInitializer>();
+
+        serviceCollection.AddScoped<IAgentNode, InputNode>();
+        serviceCollection.AddScoped<IAgentNode, OutputNode>();
+        serviceCollection.AddScoped<IAgentNode, ModelNode>();
+        serviceCollection.AddScoped<IAgentContext, AgentContext>();
+        serviceCollection.AddScoped<IAgentComposer, AgentComposer>();
+        serviceCollection.AddScoped<IAgentOrchestrator, AgentOrchestrator>();
+        serviceCollection.AddScoped<IStreamService, StreamService>();
         return serviceCollection;
     }
 }

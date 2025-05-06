@@ -121,7 +121,8 @@ public class AgentRepository(AgentPersistenceContext persistenceContext)
 
         if (agent == null)
         {
-            return false;
+            await this.AddAgentAsync(agentData, cancellationToken);
+            return true;
         }
 
         // Update properties
@@ -141,7 +142,6 @@ public class AgentRepository(AgentPersistenceContext persistenceContext)
     {
         var agent = new AgentEntity
         {
-            // Use provided ID if available
             Id = agentData.Id ?? Guid.NewGuid(),
             Name = agentData.Name,
             Description = agentData.Description,

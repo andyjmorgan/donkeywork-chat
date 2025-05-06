@@ -28,8 +28,12 @@ export interface AgentModel {
     name: string;
     description: string;
     tags: string[];
-    nodeEdges: AgentNodeEdgeModel[]
-    nodes: AgentNode[],
+    nodeEdges: AgentNodeEdgeModel[];
+    nodes: AgentNode[];
+    agent: {
+        name: string;
+        description: string;
+    };
 }
 
 export interface AgentNodeEdgeModel {

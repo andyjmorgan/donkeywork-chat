@@ -13,6 +13,7 @@ using DonkeyWork.Chat.AiTooling.Exceptions;
 using DonkeyWork.Chat.AiTooling.Services;
 using DonkeyWork.Chat.Common.Contracts;
 using DonkeyWork.Chat.Common.Models;
+using DonkeyWork.Chat.Common.Models.Chat;
 using DonkeyWork.Chat.Common.Models.Prompt.Content;
 using DonkeyWork.Chat.Common.Models.Streaming;
 using DonkeyWork.Chat.Common.Models.Streaming.Request;
@@ -81,31 +82,7 @@ public class ActionExecutionService : IActionExecutionService
         await foreach (var streamItem in chatClient.ChatAsync(
                            request,
                            toolDefinitions,
-                           toolAction: async x =>
-                           {
-                               var tool = toolDefinitions
-                                   .FirstOrDefault(t => t.Name == x.ToolName);
-
-                               if (tool is null)
-                               {
-                                   throw new UnknownToolDefinitionException(x.ToolName);
-                               }
-
-                               var result = await tool.Tool!.InvokeFunctionAsync(
-                                   x.ToolName,
-                                   x.ToolParameters,
-                                   cancellationToken);
-                               if (result is { } jsonDocument)
-                               {
-                                   return jsonDocument;
-                               }
-
-                               return JsonDocument.Parse(
-                                   JsonSerializer.Serialize(new
-                                   {
-                                       Result = result,
-                                   }));
-                           },
+                           toolAction: async x => await this.toolService.ExecuteToolAsync(x, cancellationToken),
                            cancellationToken))
         {
             yield return streamItem;
